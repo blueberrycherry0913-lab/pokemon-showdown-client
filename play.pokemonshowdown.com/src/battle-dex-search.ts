@@ -1176,6 +1176,12 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			tierSet = tierSet.slice(slices.Uber);
 		} else if (this.formatType === 'rs' || this.formatType === 'frlg') {
 			tierSet = tierSet.slice(slices.Regular);
+		} else if (this.formatType === 'champions' && format !== 'ou' && format !== 'ubers') {
+			// Testing Standard (and any future champions-mod format that doesn't
+			// route to a specific OU/Ubers slice): keep the full tierSet so
+			// 'Generation 1' / 'Generation 1 NFE' / 'Custom' headers all render.
+			// Don't fall into the default OU-first reorder below, which drops
+			// everything above OU.
 		} else if (!isDoublesOrBS) {
 			tierSet = [
 				...tierSet.slice(slices.OU, slices.UU),

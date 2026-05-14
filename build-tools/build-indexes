@@ -364,15 +364,28 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 					// Testing Standard / champions-mod conventions:
 					//   1. Gen 1 lineage species (Bulbasaur-Mew + forward/backward
 					//      evolutions + Mega/Primal/Ultra/G-Max formes):
-					//        - Mega Evolutions      → 'Megas'
-					//        - Still-evolving (NFE) → 'NFE'
-					//        - Fully evolved        → 'Gen1'
+					//        - Mega Evolutions             → 'Megas'
+					//        - G-Max forms / LGPE Starters → 'Other'
+					//        - Cosplay & Cap Pikachus      → 'Other'
+					//        - Pichu-Spiky-eared           → 'Other'
+					//        - Still-evolving (NFE)        → 'NFE'
+					//        - Fully evolved               → 'Gen1'
+					//      Regional formes (Raichu-Alola, Tauros-Paldea-*, etc.) stay
+					//      under 'Gen1'.
 					//   2. `isNonstandard: 'custom'` (lowercase, distinct from canon
 					//      'Custom' used for Missingno / Pokestar mons) → 'Custom'.
 					//   3. Everything else returns 'Illegal' — matches the server's
 					//      'Gen 1 Only' validator clause.
 					if (isGen1Lineage(Dex.mod(gen), species)) {
 						if (species.isMega) return 'Megas';
+						if (species.forme) {
+							if (species.forme.endsWith('Gmax')) return 'Other';
+							if ([
+								'Cosplay', 'Rock-Star', 'Belle', 'Pop-Star', 'PhD', 'Libre',
+								'Original', 'Hoenn', 'Sinnoh', 'Unova', 'Kalos', 'Partner', 'World',
+								'Spiky-eared', 'Starter',
+							].includes(species.forme)) return 'Other';
+						}
 						return species.nfe ? 'NFE' : 'Gen1';
 					}
 					if (species.isNonstandard === 'custom') {
@@ -671,11 +684,12 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			}
 			if (isChampions) {
 				// Testing Standard / champions: 'Gen1' (fully-evolved Gen 1 lineage)
-				// at the top, then 'Megas' (Mega Evolutions), then 'NFE' (still-evolving
-				// Gen 1 lineage), then 'Custom' for wholly-custom mons. Rest of the
-				// canonical tiers retained for future use.
+				// at the top, then 'Megas' (Mega Evolutions), 'NFE' (still-evolving
+				// Gen 1 lineage), 'Other' (G-Max / Cosplay & Cap Pikachus / LGPE
+				// Starters / Spiky-eared Pichu), then 'Custom' for wholly-custom
+				// mons. Rest of the canonical tiers retained for future use.
 				return [
-					"Gen1", "Megas", "NFE", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

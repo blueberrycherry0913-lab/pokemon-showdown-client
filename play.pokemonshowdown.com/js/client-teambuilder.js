@@ -33,7 +33,7 @@
 				if (this.curTeam.format.includes('legends')) {
 					this.curTeam.dex = Dex.mod('gen9legendsou');
 				}
-				if (this.curTeam.format.includes('champions')) {
+				if ((this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'))) {
 					this.curTeam.dex = Dex.mod('champions');
 				}
 				Storage.activeSetList = this.curSetList;
@@ -764,7 +764,7 @@
 			if (this.curTeam.format.includes('legends')) {
 				this.curTeam.dex = Dex.mod('gen9legendsou');
 			}
-			if (this.curTeam.format.includes('champions')) {
+			if ((this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'))) {
 				this.curTeam.dex = Dex.mod('champions');
 			}
 			Storage.activeSetList = this.curSetList = Storage.unpackTeam(this.curTeam.team);
@@ -1294,7 +1294,7 @@
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
 			var species = this.curTeam.dex.species.get(set.species);
-			var isChampions = baseFormat.includes('champions');
+			var isChampions = (baseFormat.includes('champions') || baseFormat.includes('teststandard'));
 			var isLetsGo = baseFormat.includes('letsgo');
 			var isBDSP = baseFormat.includes('bdsp');
 			var isNatDex = baseFormat.includes('nationaldex') || baseFormat.includes('natdex');
@@ -1635,7 +1635,7 @@
 			if (this.curTeam.format.includes('legends')) {
 				this.curTeam.dex = Dex.mod('gen9legendsou');
 			}
-			if (this.curTeam.format.includes('champions')) {
+			if ((this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'))) {
 				this.curTeam.dex = Dex.mod('champions');
 			}
 			this.save();
@@ -1910,7 +1910,7 @@
 			curSet.name = this.curSet.name || undefined;
 
 			// never preserve current set tera, even if smogon set used default
-			if (this.curSet.gen === 9 && !this.curTeam.format.includes('champions')) {
+			if (this.curSet.gen === 9 && !(this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'))) {
 				curSet.teraType = sampleSet.teraType || species.requiredTeraType || species.types[0];
 			}
 
@@ -2081,7 +2081,7 @@
 
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
-			var usesStatPoints = baseFormat.includes('champions');
+			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('teststandard'));
 			var supportsEVs = !baseFormat.includes('letsgo');
 			var isVGC = baseFormat.includes('battlespot') || baseFormat.includes('bss') ||
 				baseFormat.includes('vgc') || baseFormat.includes('battlefestival');
@@ -2367,7 +2367,7 @@
 
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
-			var usesStatPoints = baseFormat.includes('champions');
+			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('teststandard'));
 			var supportsEVs = !baseFormat.includes('letsgo') && !usesStatPoints;
 			// var supportsAVs = !supportsEVs && baseFormat.endsWith('norestrictions');
 			var defaultEV = this.curTeam.gen <= 2 ? 252 : 0;
@@ -2672,7 +2672,7 @@
 			var inputName = '';
 			inputName = e.currentTarget.name;
 			var val = Math.abs(parseInt(e.currentTarget.value, 10));
-			var usesStatPoints = this.curTeam.format.includes('champions');
+			var usesStatPoints = (this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'));
 			var supportsEVs = !this.curTeam.format.includes('letsgo') && !usesStatPoints;
 			var supportsAVs = !supportsEVs && this.curTeam.format.endsWith('norestrictions');
 			var set = this.curSet;
@@ -2795,7 +2795,7 @@
 			var val = +slider.value;
 			var originalVal = val;
 			var result = this.getStat(stat, set, val);
-			var usesStatPoints = this.curTeam.format.includes('champions');
+			var usesStatPoints = (this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'));
 			var supportsEVs = !this.curTeam.format.includes('letsgo') && !usesStatPoints;
 			var supportsAVs = !supportsEVs && this.curTeam.format.endsWith('norestrictions');
 			var step = usesStatPoints ? 1 : 4;
@@ -2897,7 +2897,7 @@
 		updateDetailsForm: function () {
 			var buf = '';
 			var set = this.curSet;
-			var isChampions = this.curTeam.format.includes('champions');
+			var isChampions = (this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'));
 			var isLetsGo = this.curTeam.format.includes('letsgo');
 			var isBDSP = this.curTeam.format.includes('bdsp');
 			var isNatDex = this.curTeam.format.includes('nationaldex') || this.curTeam.format.includes('natdex');
@@ -2999,7 +2999,7 @@
 			var set = this.curSet;
 			if (!set) return;
 			var species = this.curTeam.dex.species.get(set.species);
-			var isChampions = this.curTeam.format.includes('champions');
+			var isChampions = (this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'));
 			var isLetsGo = this.curTeam.format.includes('letsgo');
 			var isBDSP = this.curTeam.format.includes('bdsp');
 			var isNatDex = this.curTeam.format.includes('nationaldex') || this.curTeam.format.includes('natdex');
@@ -3522,7 +3522,7 @@
 
 			if (this.curTeam.format.includes('1v1') || this.curTeam.format.includes('categoryswap') ||
 				this.curTeam.format.includes('partnersincrime') || this.curTeam.format.includes('typesplit') ||
-				this.curTeam.format.includes('champions')) return;
+				(this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'))) return;
 			if (this.curTeam.format === 'gen7hiddentype') return;
 
 			var minAtk = true;
@@ -3609,7 +3609,7 @@
 				if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
 				if (!baseFormat) baseFormat = 'ou';
 				if (this.curTeam && this.curTeam.format) {
-					if (baseFormat.substr(0, 9) === 'champions' || baseFormat.substr(0, 10) === 'battlespot' ||
+					if (baseFormat.substr(0, 9) === 'champions' || baseFormat.substr(0, 12) === 'teststandard' || baseFormat.substr(0, 10) === 'battlespot' ||
 						baseFormat.substr(0, 3) === 'bss' || baseFormat.substr(0, 3) === 'vgc' ||
 						baseFormat.substr(0, 14) === 'battlefestival') set.level = 50;
 					if (baseFormat.startsWith('lc') || baseFormat.endsWith('lc')) set.level = 5;
@@ -3648,7 +3648,7 @@
 		// Stat calculator
 
 		getStat: function (stat, set, evOverride, natureOverride) {
-			var usesStatPoints = this.curTeam.format.includes('champions');
+			var usesStatPoints = (this.curTeam.format.includes('champions') || this.curTeam.format.includes('teststandard'));
 			var supportsEVs = !this.curTeam.format.includes('letsgo') && !usesStatPoints;
 			var supportsAVs = !supportsEVs;
 			if (!set) set = this.curSet;

@@ -423,6 +423,21 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				if (isNatDex || (isPreDLC && genNum === 9.41) || (isSVDLC1 && genNum === 9.411)) {
 					return species.natDexTier;
 				}
+				if (isChampions) {
+					// Testing Standard / champions-mod conventions:
+					//   1. Megas / Primal / Ultra-Burst formes inherit the base species's tier
+					//      (so Mega Charizard X uses Charizard's tier, not its own).
+					//   2. A species explicitly marked `isNonstandard: 'custom'` (lowercase)
+					//      goes under a dedicated "Custom" header. Lowercase to avoid
+					//      colliding with canon Showdown's `'Custom'` value (Pokestar mons,
+					//      Missingno, etc. — those stay Illegal).
+					if (species.isMega || species.isPrimal || species.forme === 'Ultra') {
+						return Dex.mod(gen).species.get(species.baseSpecies).tier;
+					}
+					if (species.isNonstandard === 'custom') {
+						return 'Custom';
+					}
+				}
 				return species.tier;
 			})();
 			overrideTier[species.id] = speciesTier;

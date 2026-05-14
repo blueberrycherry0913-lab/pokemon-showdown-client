@@ -653,8 +653,16 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		if (format.includes('champions') || format.includes('testingstandard')) {
 			this.formatType = 'champions';
 			this.dex = Dex.mod('champions' as ID);
-			format = format.includes('champions') ? format.slice(9) as ID : format.replace('testingstandard', '') as ID;
-			if (format !== 'ou') format = 'ubers' as ID;
+			if (format.includes('champions')) {
+				// Canon Champions formats: gen9championsou, gen9championsubers, etc.
+				// Slice off 'champions' prefix and route to the OU or Ubers tier slice.
+				format = format.slice(9) as ID;
+				if (format !== 'ou') format = 'ubers' as ID;
+			}
+			// Testing Standard: leave format as 'testingstandard' so none of the
+			// later tier-slice conditions in BattlePokemonSearch.getBaseResults
+			// match (no slice ⇒ full tier list rendered, including 'Generation 1'
+			// and 'Generation 1 NFE' headers at the top).
 		}
 		if (format.startsWith('vgc')) {
 			this.formatType = 'doubles';

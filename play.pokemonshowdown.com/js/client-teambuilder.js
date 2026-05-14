@@ -1420,7 +1420,7 @@
 					// final stats than canon Lv50; use a more lenient ceiling so
 					// typical mons land yellow-green/green instead of orange.
 					var isTestingStandard = baseFormat.includes('testingstandard');
-					highestStat = j === 'hp' ? (isTestingStandard ? 300 : 362) : (isTestingStandard ? 200 : 252);
+					highestStat = j === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
 					highestStat = j === 'hp' ? 45 : 29;
@@ -2107,7 +2107,7 @@
 				var highestStat = stat === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
 					var isTestingStandard = baseFormat.includes('testingstandard');
-					highestStat = stat === 'hp' ? (isTestingStandard ? 300 : 362) : (isTestingStandard ? 200 : 252);
+					highestStat = stat === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
 					highestStat = stat === 'hp' ? 45 : 29;
@@ -2137,7 +2137,7 @@
 				var highestStat = stat === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
 					var isTestingStandard = baseFormat.includes('testingstandard');
-					highestStat = stat === 'hp' ? (isTestingStandard ? 300 : 362) : (isTestingStandard ? 200 : 252);
+					highestStat = stat === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
 					highestStat = stat === 'hp' ? 45 : 29;
@@ -2406,7 +2406,7 @@
 				var highestStat = i === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
 					var isTestingStandard = baseFormat.includes('testingstandard');
-					highestStat = i === 'hp' ? (isTestingStandard ? 300 : 362) : (isTestingStandard ? 200 : 252);
+					highestStat = i === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
 					highestStat = i === 'hp' ? 45 : 29;

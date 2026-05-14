@@ -2456,7 +2456,7 @@ class StatForm extends preact.Component<{
 			// Testing Standard's SP system + 0-IV baseline produces lower final
 			// stats than canon Lv50, so use a more lenient ceiling for the gradient.
 			const isTestingStandard = editor.format.includes('testingstandard');
-			const maxStat = isTestingStandard ? (statID === 'hp' ? 300 : 200) : (statID === 'hp' ?
+			const maxStat = isTestingStandard ? (statID === 'hp' ? 320 : 220) : (statID === 'hp' ?
 				Math.floor(176 * editor.defaultLevel / 25) + 10 :
 				Math.floor(247 * editor.defaultLevel / 50) + 5);
 			const width = Math.min(stat * 75 / maxStat, 75);
@@ -2722,7 +2722,7 @@ class StatForm extends preact.Component<{
 	renderStatbar(stat: number, statID: StatName) {
 		const { editor } = this.props;
 		const isTestingStandard = editor.format.includes('testingstandard');
-		const maxStat = isTestingStandard ? (statID === 'hp' ? 300 : 200) : (statID === 'hp' ?
+		const maxStat = isTestingStandard ? (statID === 'hp' ? 320 : 220) : (statID === 'hp' ?
 			Math.floor(176 * editor.defaultLevel / 25) + 10 :
 			Math.floor(247 * editor.defaultLevel / 50) + 5);
 		const width = Math.min(stat * 180 / maxStat, 180);

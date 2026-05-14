@@ -2449,7 +2449,7 @@
 			}
 			buf += '</div>';
 
-			if (this.curTeam.gen > 2 && !usesStatPoints) {
+			if (!usesStatPoints && this.curTeam.gen > 2) {
 				buf += '<div class="col ivcol"><div><strong>IVs</strong></div>';
 				if (!set.ivs) set.ivs = {};
 				for (var i in stats) {
@@ -2569,7 +2569,7 @@
 					buf += '</select></div>';
 				}
 				buf += '</div>';
-			} else {
+			} else if (!usesStatPoints) {
 				buf += '<div class="col ivcol"><div><strong>DVs</strong></div>';
 				if (!set.ivs) set.ivs = {};
 				for (var i in stats) {

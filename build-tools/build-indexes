@@ -616,6 +616,13 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			if (isDoubles && genNum > 4) {
 				return ["DUber", "(DUber)", "DOU", "DBL", "(DOU)", "DUU", "(DUU)", "New", "NFE", "LC"];
 			}
+			if (isChampions) {
+				// Testing Standard / champions: surface 'Custom' and 'Past' tiers as
+				// real headers so wholly-custom Pokemon don't get bucketed as Illegal.
+				return [
+					"Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
+				];
+			}
 			return [
 				"CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
 			];
@@ -669,7 +676,12 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				continue;
 			}
 			if (item.isNonstandard && !isMetBattle) {
-				if (isNatDex) {
+				if (isChampions) {
+					// Testing Standard / champions: only filter out items the user
+					// explicitly gated. Everything else (Past / Custom / Future / etc.)
+					// stays in the item list.
+					if (item.isNonstandard === 'Unobtainable') continue;
+				} else if (isNatDex) {
 					let curItem = item;
 					let curGen = genNum;
 					while (curItem.isNonstandard && curGen >= 7) {

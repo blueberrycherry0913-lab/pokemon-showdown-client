@@ -363,15 +363,17 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				if (isChampions) {
 					// Testing Standard / champions-mod conventions:
 					//   1. Gen 1 lineage species (Bulbasaur-Mew + forward/backward
-					//      evolutions + Mega/Primal/Ultra/G-Max formes) → 'Generation 1'.
-					//      But species that can still evolve (species.nfe) go to a
-					//      separate 'Generation 1 NFE' bucket immediately below.
+					//      evolutions + Mega/Primal/Ultra/G-Max formes):
+					//        - Mega Evolutions      → 'Megas'
+					//        - Still-evolving (NFE) → 'NFE'
+					//        - Fully evolved        → 'Gen1'
 					//   2. `isNonstandard: 'custom'` (lowercase, distinct from canon
 					//      'Custom' used for Missingno / Pokestar mons) → 'Custom'.
 					//   3. Everything else returns 'Illegal' — matches the server's
 					//      'Gen 1 Only' validator clause.
 					if (isGen1Lineage(Dex.mod(gen), species)) {
-						return species.nfe ? 'Generation 1 NFE' : 'Generation 1';
+						if (species.isMega) return 'Megas';
+						return species.nfe ? 'NFE' : 'Gen1';
 					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
@@ -668,13 +670,12 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				return ["DUber", "(DUber)", "DOU", "DBL", "(DOU)", "DUU", "(DUU)", "New", "NFE", "LC"];
 			}
 			if (isChampions) {
-				// Testing Standard / champions: 'Generation 1' goes at the top
-				// (fully-evolved Gen 1 lineage), 'Generation 1 NFE' immediately
-				// below (Gen 1 lineage that can still evolve), then 'Custom' for
-				// wholly-custom mons. Rest of the canonical tiers retained so this
-				// still works if 'Gen 1 Only' gets removed later.
+				// Testing Standard / champions: 'Gen1' (fully-evolved Gen 1 lineage)
+				// at the top, then 'Megas' (Mega Evolutions), then 'NFE' (still-evolving
+				// Gen 1 lineage), then 'Custom' for wholly-custom mons. Rest of the
+				// canonical tiers retained for future use.
 				return [
-					"Generation 1", "Generation 1 NFE", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
+					"Gen1", "Megas", "NFE", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [
@@ -699,7 +700,10 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			} else if (tier.charAt(0) === '(') {
 				tiers.push(['header', tier.slice(1, -1) + " by technicality"]);
 			} else if (tier === "NFE") {
-				tiers.push(['header', "NFEs not in a higher tier"]);
+				// Champions tierOrder uses 'NFE' as a clean header label for the
+				// Gen 1 still-evolving bucket. Canon Showdown formats keep the
+				// longer 'NFEs not in a higher tier' label.
+				tiers.push(['header', isChampions ? "NFE" : "NFEs not in a higher tier"]);
 			} else {
 				tiers.push(['header', tier]);
 			}

@@ -2453,9 +2453,12 @@ class StatForm extends preact.Component<{
 
 			const stat = editor.getStat(statID, set, ivs[statID]);
 			let ev: number | string = set.evs ? (set.evs[statID] || 0) : defaultEV;
-			const maxStat = statID === 'hp' ?
+			// Testing Standard's SP system + 0-IV baseline produces lower final
+			// stats than canon Lv50, so use a more lenient ceiling for the gradient.
+			const isTestingStandard = editor.format.includes('testingstandard');
+			const maxStat = isTestingStandard ? (statID === 'hp' ? 300 : 200) : (statID === 'hp' ?
 				Math.floor(176 * editor.defaultLevel / 25) + 10 :
-				Math.floor(247 * editor.defaultLevel / 50) + 5;
+				Math.floor(247 * editor.defaultLevel / 50) + 5);
 			const width = Math.min(stat * 75 / maxStat, 75);
 			const hue = Math.min(Math.floor(stat * 180 / maxStat), 360);
 			const statName = editor.gen === 1 && statID === 'spa' ? 'Spc' : BattleStatNames[statID];
@@ -2718,9 +2721,10 @@ class StatForm extends preact.Component<{
 	minus: Dex.StatNameExceptHP | null = null;
 	renderStatbar(stat: number, statID: StatName) {
 		const { editor } = this.props;
-		const maxStat = statID === 'hp' ?
+		const isTestingStandard = editor.format.includes('testingstandard');
+		const maxStat = isTestingStandard ? (statID === 'hp' ? 300 : 200) : (statID === 'hp' ?
 			Math.floor(176 * editor.defaultLevel / 25) + 10 :
-			Math.floor(247 * editor.defaultLevel / 50) + 5;
+			Math.floor(247 * editor.defaultLevel / 50) + 5);
 		const width = Math.min(stat * 180 / maxStat, 180);
 		const hue = Math.min(Math.floor(stat * 180 / maxStat), 360);
 		return <span

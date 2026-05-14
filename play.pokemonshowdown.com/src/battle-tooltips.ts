@@ -2393,6 +2393,9 @@ export class BattleTooltips {
 		if (move.flags['bite']) {
 			value.abilityModify(1.5, "Strong Jaw");
 		}
+		if (move.flags['vine']) {
+			value.abilityModify(1.5, "Wild Vines");
+		}
 		if (value.value <= 60) {
 			value.abilityModify(1.5, "Technician");
 		}

@@ -33,6 +33,39 @@ function hasMod(name) {
 	try { Dex.mod(name); return true; } catch { return false; }
 }
 
+// Mirrors the server-side isGen1Lineage in data/mods/champions/rulesets.ts.
+// True if `species` descends from a Gen 1 species (num 1-151, Bulbasaur-Mew):
+// directly Gen 1, in a Gen 1 evolution family (Pichu, Munchlax, Magnezone,
+// Rhyperior, etc.), or a Mega/Primal/Ultra-Burst/G-Max forme of one.
+function isGen1Lineage(dex, species) {
+	if (!species || !species.exists) return false;
+	if (species.baseSpecies && species.baseSpecies !== species.name) {
+		const base = dex.species.get(species.baseSpecies);
+		if (base.exists && base.id !== species.id && isGen1Lineage(dex, base)) return true;
+	}
+	let root = species;
+	let safety = 20;
+	while (root.prevo && safety-- > 0) {
+		const prev = dex.species.get(root.prevo);
+		if (!prev.exists) break;
+		root = prev;
+	}
+	return familyHasGen1Member(dex, root, new Set());
+}
+function familyHasGen1Member(dex, species, seen) {
+	if (seen.has(species.id)) return false;
+	seen.add(species.id);
+	if (species.num >= 1 && species.num <= 151) return true;
+	if (species.gen === 1) return true;
+	if (species.evos) {
+		for (const evoName of species.evos) {
+			const evo = dex.species.get(evoName);
+			if (evo.exists && familyHasGen1Member(dex, evo, seen)) return true;
+		}
+	}
+	return false;
+}
+
 function es3stringify(obj) {
 	const buf = JSON.stringify(obj);
 	return buf.replace(/"([A-Za-z][A-Za-z0-9]*)":/g, (fullMatch, key) => (
@@ -327,6 +360,25 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			const baseSpecies = Dex.mod(gen).species.get(species.baseSpecies);
 			if (species.gen > genNum) continue;
 			const speciesTier = (() => {
+				if (isChampions) {
+					// Testing Standard / champions-mod conventions:
+					//   1. Gen 1 lineage Pokémon (Bulbasaur-Mew + their forward/backward
+					//      evolutions + Mega/Primal/Ultra/G-Max formes thereof) go under
+					//      the dedicated 'Gen 1' header at the top of the dex search.
+					//      Everyone else returns 'Illegal' so they're greyed out — matches
+					//      the server's 'Gen 1 Only' validator clause.
+					//   2. `isNonstandard: 'custom'` (lowercase, intentionally distinct
+					//      from canon 'Custom' used for Missingno / Pokestar mons) still
+					//      tags wholly-custom mons for the 'Custom' header, but only
+					//      meaningful if/when the Gen 1 Only restriction is lifted.
+					if (isGen1Lineage(Dex.mod(gen), species)) {
+						return 'Gen 1';
+					}
+					if (species.isNonstandard === 'custom') {
+						return 'Custom';
+					}
+					return 'Illegal';
+				}
 				if (isMetBattle) {
 					let tier = species.tier;
 					if (species.isNonstandard) {
@@ -422,21 +474,6 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				}
 				if (isNatDex || (isPreDLC && genNum === 9.41) || (isSVDLC1 && genNum === 9.411)) {
 					return species.natDexTier;
-				}
-				if (isChampions) {
-					// Testing Standard / champions-mod conventions:
-					//   1. Megas / Primal / Ultra-Burst formes inherit the base species's tier
-					//      (so Mega Charizard X uses Charizard's tier, not its own).
-					//   2. A species explicitly marked `isNonstandard: 'custom'` (lowercase)
-					//      goes under a dedicated "Custom" header. Lowercase to avoid
-					//      colliding with canon Showdown's `'Custom'` value (Pokestar mons,
-					//      Missingno, etc. — those stay Illegal).
-					if (species.isMega || species.isPrimal || species.forme === 'Ultra') {
-						return Dex.mod(gen).species.get(species.baseSpecies).tier;
-					}
-					if (species.isNonstandard === 'custom') {
-						return 'Custom';
-					}
 				}
 				return species.tier;
 			})();
@@ -632,10 +669,13 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				return ["DUber", "(DUber)", "DOU", "DBL", "(DOU)", "DUU", "(DUU)", "New", "NFE", "LC"];
 			}
 			if (isChampions) {
-				// Testing Standard / champions: surface 'Custom' and 'Past' tiers as
-				// real headers so wholly-custom Pokemon don't get bucketed as Illegal.
+				// Testing Standard / champions: 'Gen 1' goes at the top (it's the
+				// only legal tier right now under Gen 1 Only). 'Custom' is below it
+				// for when wholly-custom mons get tagged with isNonstandard='custom'.
+				// Rest of the canonical tiers retained so this still works if
+				// 'Gen 1 Only' gets removed later.
 				return [
-					"Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
+					"Gen 1", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
 				];
 			}
 			return [

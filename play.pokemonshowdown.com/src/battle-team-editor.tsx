@@ -66,6 +66,8 @@ export class TeamEditorState extends PSModel {
 	isLetsGo = false;
 	isNatDex = false;
 	isBDSP = false;
+	/** True when the format uses Pokemon Champions' Stat Point system (32/stat, 66 total) instead of EVs. */
+	useStatPoints = false;
 	formeLegality: 'normal' | 'hackmons' | 'custom' = 'normal';
 	abilityLegality: 'normal' | 'hackmons' = 'normal';
 	defaultLevel = 100;
@@ -98,6 +100,7 @@ export class TeamEditorState extends PSModel {
 		this.isLetsGo = formatid.includes('letsgo');
 		this.isNatDex = formatid.includes('nationaldex') || formatid.includes('natdex');
 		this.isBDSP = formatid.includes('bdsp');
+		this.useStatPoints = formatid.includes('champions') || formatid.includes('teststandard');
 		if (formatid.includes('almostanyability') || formatid.includes('aaa')) {
 			this.abilityLegality = 'hackmons';
 		} else {
@@ -117,7 +120,7 @@ export class TeamEditorState extends PSModel {
 		if (
 			formatid.includes('vgc') || formatid.includes('bss') || formatid.includes('ultrasinnohclassic') ||
 			formatid.includes('battlespot') || formatid.includes('battlestadium') || formatid.includes('battlefestival') ||
-			formatid.includes('letsgo') || formatid.includes('champions')
+			formatid.includes('letsgo') || formatid.includes('champions') || formatid.includes('teststandard')
 		) {
 			this.defaultLevel = 50;
 		}
@@ -2748,7 +2751,9 @@ class StatForm extends preact.Component<{
 				let totalEv = 0;
 				for (const curEv of Object.values(set.evs || {})) totalEv += curEv;
 				if (totalEv > maxEv && totalEv - value <= maxEv) {
-					set.evs![statID] = maxEv - (totalEv - value) - (maxEv % 4);
+					// SP is stepped 1-by-1, so no `% 4` alignment offset.
+					const alignment = this.props.editor.useStatPoints ? 0 : (maxEv % 4);
+					set.evs![statID] = maxEv - (totalEv - value) - alignment;
 				}
 			}
 		} else {
@@ -2836,6 +2841,7 @@ class StatForm extends preact.Component<{
 	};
 	maxEVs() {
 		const editor = this.props.editor;
+		if (editor.useStatPoints) return 66;
 		const useEVs = !editor.isLetsGo && editor.gen >= 3;
 		return useEVs ? 510 : Infinity;
 	}
@@ -2847,11 +2853,13 @@ class StatForm extends preact.Component<{
 
 		const nature = BattleNatures[set.nature || 'Serious'];
 
-		const useEVs = !editor.isLetsGo;
+		const useStatPoints = editor.useStatPoints;
+		const useEVs = !editor.isLetsGo && !useStatPoints;
 		// const useAVs = !useEVs && team.format.endsWith('norestrictions');
-		const maxEV = useEVs ? 252 : 200;
-		const stepEV = useEVs ? 4 : 1;
+		const maxEV = useStatPoints ? 32 : useEVs ? 252 : 200;
+		const stepEV = useStatPoints ? 1 : useEVs ? 4 : 1;
 		const defaultEV = useEVs && editor.gen <= 2 && !set.evs ? maxEV : 0;
+		const statColumnHeader = useStatPoints ? 'SP' : useEVs ? 'EVs' : 'AVs';
 		const useIVs = editor.gen > 2;
 
 		// label column
@@ -2885,7 +2893,7 @@ class StatForm extends preact.Component<{
 		const defaultIVs = editor.defaultIVs(set);
 
 		return <div style="font-size:10pt" role="dialog" aria-label="Stats">
-			<div class="resultheader"><h3>EVs, IVs, and Nature</h3></div>
+			<div class="resultheader"><h3>{useStatPoints ? 'Stat Points' : 'EVs'}, IVs, and Nature</h3></div>
 			<div class="pad">
 				{this.renderSpreadGuesser()}
 				<table>
@@ -2893,7 +2901,7 @@ class StatForm extends preact.Component<{
 						<th>{/* Stat name */}</th>
 						<th>Base</th>
 						<th class="setstatbar">{/* Stat bar */}</th>
-						<th>{useEVs ? 'EVs' : 'AVs'}</th>
+						<th>{statColumnHeader}</th>
 						<th>{/* EV slider */}</th>
 						<th>{useIVs ? 'IVs' : 'DVs'}</th>
 						<th>{/* Final stat */}</th>

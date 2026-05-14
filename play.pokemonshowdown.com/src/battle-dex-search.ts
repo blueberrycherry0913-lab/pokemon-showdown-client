@@ -650,10 +650,10 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			format = format.slice(7) as ID;
 			if (!format) format = 'ou' as ID;
 		}
-		if (format.includes('champions')) {
+		if (format.includes('champions') || format.includes('teststandard')) {
 			this.formatType = 'champions';
 			this.dex = Dex.mod('champions' as ID);
-			format = format.slice(9) as ID;
+			format = format.includes('champions') ? format.slice(9) as ID : format.replace('teststandard', '') as ID;
 			if (format !== 'ou') format = 'ubers' as ID;
 		}
 		if (format.startsWith('vgc')) {

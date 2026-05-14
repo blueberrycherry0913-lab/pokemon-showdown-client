@@ -3426,15 +3426,18 @@ export class BattleStatGuesser {
 		if (typeof ev !== 'number') ev = (this.dex.gen > 2 ? 0 : 252);
 		if (evOverride !== undefined) ev = evOverride;
 
+		// Testing Standard inherits SP system but with a 0-IV baseline:
+		// +60 (HP) / +5 (non-HP) instead of canon champions' +75 / +20.
+		const force0IVs = this.formatid.includes('testingstandard');
 		if (stat === 'hp') {
 			if (baseStat === 1) return 1;
-			if (this.useStatPoints) return baseStat + ev + 75;
+			if (this.useStatPoints) return baseStat + ev + (force0IVs ? 60 : 75);
 			if (this.supportsAVs) return ~~(~~(2 * baseStat + iv + 100) * level / 100 + 10) + (ev || 0);
 			return ~~(~~(2 * baseStat + iv + ~~(ev / 4) + 100) * level / 100 + 10);
 		}
 		let val = ~~(~~(2 * baseStat + iv + ~~(ev / 4)) * level / 100 + 5);
 		if (this.useStatPoints) {
-			val = baseStat + ev + 20;
+			val = baseStat + ev + (force0IVs ? 5 : 20);
 		} else if (!this.supportsEVs) {
 			val = ~~(~~(2 * baseStat + iv) * level / 100 + 5);
 		}

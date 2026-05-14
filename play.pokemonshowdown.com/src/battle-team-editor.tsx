@@ -2893,7 +2893,7 @@ class StatForm extends preact.Component<{
 		const defaultIVs = editor.defaultIVs(set);
 
 		return <div style="font-size:10pt" role="dialog" aria-label="Stats">
-			<div class="resultheader"><h3>{useStatPoints ? 'Stat Points' : 'EVs'}, IVs, and Nature</h3></div>
+			<div class="resultheader"><h3>{useStatPoints ? 'Stat Points' : 'EVs'}{useStatPoints ? '' : ', IVs'}, and Nature</h3></div>
 			<div class="pad">
 				{this.renderSpreadGuesser()}
 				<table>
@@ -2903,7 +2903,7 @@ class StatForm extends preact.Component<{
 						<th class="setstatbar">{/* Stat bar */}</th>
 						<th>{statColumnHeader}</th>
 						<th>{/* EV slider */}</th>
-						<th>{useIVs ? 'IVs' : 'DVs'}</th>
+						{!useStatPoints && <th>{useIVs ? 'IVs' : 'DVs'}</th>}
 						<th>{/* Final stat */}</th>
 					</tr>
 					{stats.map(([statID, statName, stat]) => <tr>
@@ -2920,17 +2920,17 @@ class StatForm extends preact.Component<{
 							type="range" class="evslider" tabIndex={-1} aria-hidden
 							onInput={this.changeEV} onChange={this.changeEV}
 						/></td>
-						<td><input
+						{!useStatPoints && <td><input
 							name={`iv-${statID}`} min={0} max={useIVs ? 31 : 15} placeholder={`${defaultIVs[statID]}`} style="width:40px"
 							type="number" inputMode="numeric" class="textbox default-placeholder" onInput={this.changeIV} onChange={this.changeIV}
-						/></td>
+						/></td>}
 						<td style="text-align:right"><strong>{stat}</strong></td>
 					</tr>)}
 					<tr>
 						<td colSpan={2}></td>
 						<td class="setstatbar" style="text-align:right">{remaining !== null ? 'Remaining:' : ''}</td>
 						<td style="text-align:center">{remaining && remaining < 0 ? <b class="message-error">{remaining}</b> : remaining}</td>
-						<td colSpan={3} style="text-align:right">{this.renderIVMenu()}</td>
+						<td colSpan={useStatPoints ? 2 : 3} style="text-align:right">{useStatPoints ? null : this.renderIVMenu()}</td>
 					</tr>
 				</table>
 				{editor.gen >= 3 && <p>

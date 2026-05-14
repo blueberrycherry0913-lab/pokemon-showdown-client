@@ -2449,13 +2449,13 @@
 			}
 			buf += '</div>';
 
-			if (this.curTeam.gen > 2) {
+			if (this.curTeam.gen > 2 && !usesStatPoints) {
 				buf += '<div class="col ivcol"><div><strong>IVs</strong></div>';
 				if (!set.ivs) set.ivs = {};
 				for (var i in stats) {
 					if (set.ivs[i] === undefined || isNaN(set.ivs[i])) set.ivs[i] = 31;
 					var val = '' + (set.ivs[i]);
-					buf += '<div><input type="number" name="iv-' + i + '" value="' + BattleLog.escapeHTML(val) + '" class="textbox inputform numform" min="' + (usesStatPoints ? 31 : 0) + '" max="31" step="1"' + (usesStatPoints ? ' disabled' : '') + ' /></div>';
+					buf += '<div><input type="number" name="iv-' + i + '" value="' + BattleLog.escapeHTML(val) + '" class="textbox inputform numform" min="0" max="31" step="1" /></div>';
 				}
 				var hpType = '';
 				if (set.moves) {
@@ -3679,15 +3679,18 @@
 			if (evOverride !== undefined) ev = evOverride;
 			if (ev === undefined) ev = (this.curTeam.gen > 2 ? 0 : 252);
 
+			// Testing Standard inherits SP system but with a 0-IV baseline:
+			// +60 (HP) / +5 (non-HP) instead of canon champions' +75 / +20.
+			var force0IVs = this.curTeam.format.includes('testingstandard');
 			if (stat === 'hp') {
 				if (baseStat === 1) return 1;
-				if (usesStatPoints) return baseStat + ev + 75;
+				if (usesStatPoints) return baseStat + ev + (force0IVs ? 60 : 75);
 				if (!supportsEVs) return Math.floor(Math.floor(2 * baseStat + iv + 100) * set.level / 100 + 10) + (supportsAVs ? ev : 0);
 				return Math.floor(Math.floor(2 * baseStat + iv + Math.floor(ev / 4) + 100) * set.level / 100 + 10);
 			}
 			var val = Math.floor(Math.floor(2 * baseStat + iv + Math.floor(ev / 4)) * set.level / 100 + 5);
 			if (usesStatPoints) {
-				val = baseStat + ev + 20;
+				val = baseStat + ev + (force0IVs ? 5 : 20);
 			} else if (!supportsEVs) {
 				val = Math.floor(Math.floor(2 * baseStat + iv) * set.level / 100 + 5);
 			}

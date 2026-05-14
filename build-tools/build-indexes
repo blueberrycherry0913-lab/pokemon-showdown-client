@@ -362,17 +362,16 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			const speciesTier = (() => {
 				if (isChampions) {
 					// Testing Standard / champions-mod conventions:
-					//   1. Gen 1 lineage Pokémon (Bulbasaur-Mew + their forward/backward
-					//      evolutions + Mega/Primal/Ultra/G-Max formes thereof) go under
-					//      the dedicated 'Gen 1' header at the top of the dex search.
-					//      Everyone else returns 'Illegal' so they're greyed out — matches
-					//      the server's 'Gen 1 Only' validator clause.
-					//   2. `isNonstandard: 'custom'` (lowercase, intentionally distinct
-					//      from canon 'Custom' used for Missingno / Pokestar mons) still
-					//      tags wholly-custom mons for the 'Custom' header, but only
-					//      meaningful if/when the Gen 1 Only restriction is lifted.
+					//   1. Gen 1 lineage species (Bulbasaur-Mew + forward/backward
+					//      evolutions + Mega/Primal/Ultra/G-Max formes) → 'Generation 1'.
+					//      But species that can still evolve (species.nfe) go to a
+					//      separate 'Generation 1 NFE' bucket immediately below.
+					//   2. `isNonstandard: 'custom'` (lowercase, distinct from canon
+					//      'Custom' used for Missingno / Pokestar mons) → 'Custom'.
+					//   3. Everything else returns 'Illegal' — matches the server's
+					//      'Gen 1 Only' validator clause.
 					if (isGen1Lineage(Dex.mod(gen), species)) {
-						return 'Gen 1';
+						return species.nfe ? 'Generation 1 NFE' : 'Generation 1';
 					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
@@ -669,13 +668,13 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				return ["DUber", "(DUber)", "DOU", "DBL", "(DOU)", "DUU", "(DUU)", "New", "NFE", "LC"];
 			}
 			if (isChampions) {
-				// Testing Standard / champions: 'Gen 1' goes at the top (it's the
-				// only legal tier right now under Gen 1 Only). 'Custom' is below it
-				// for when wholly-custom mons get tagged with isNonstandard='custom'.
-				// Rest of the canonical tiers retained so this still works if
-				// 'Gen 1 Only' gets removed later.
+				// Testing Standard / champions: 'Generation 1' goes at the top
+				// (fully-evolved Gen 1 lineage), 'Generation 1 NFE' immediately
+				// below (Gen 1 lineage that can still evolve), then 'Custom' for
+				// wholly-custom mons. Rest of the canonical tiers retained so this
+				// still works if 'Gen 1 Only' gets removed later.
 				return [
-					"Gen 1", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
+					"Generation 1", "Generation 1 NFE", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "NFE", "LC", "Unreleased",
 				];
 			}
 			return [

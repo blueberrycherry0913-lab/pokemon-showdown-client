@@ -284,7 +284,7 @@ export const Dex = new class implements ModdedDex {
 		if (dex.gen === 9 && formatid.includes('legends')) {
 			dex = Dex.mod('gen9legendsou' as ID);
 		}
-		if (dex.gen === 9 && (formatid.includes('champions') || formatid.includes('teststandard'))) {
+		if (dex.gen === 9 && (formatid.includes('champions') || formatid.includes('testingstandard'))) {
 			dex = Dex.mod('champions' as ID);
 		}
 		return dex;

@@ -744,6 +744,13 @@ export const Dex = new class implements ModdedDex {
 		if (!animatedSprite) {
 			// There is no entry or enough data in pokedex-mini.js
 			// Handle these in case-by-case basis; either using BW sprites or matching the played gen.
+
+			// GMax forms have no gen5 pixel sprites; their art lives in home-centered.
+			if (name === 'venusaurgmax') {
+				spriteData.url = `${Dex.resourcePrefix}sprites/home-centered/${name}.png`;
+				return spriteData;
+			}
+
 			dir = (baseDir || 'gen5') + dir;
 
 			// Gender differences don't exist prior to Gen 4,
@@ -856,8 +863,8 @@ export const Dex = new class implements ModdedDex {
 				spriteid = species.spriteid || id;
 			}
 		}
-		if (spriteid === 'venusaurmegax') { spriteid = 'venusaurgmax'; species = Dex.species.get('venusaurgmax'); }
-		else if (spriteid === 'venusaurmegay') { spriteid = 'venusaurmega'; species = Dex.species.get('venusaurmega'); }
+		if (spriteid === 'venusaurmegax') spriteid = 'venusaurgmax';
+		else if (spriteid === 'venusaurmegay') spriteid = 'venusaurmega';
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

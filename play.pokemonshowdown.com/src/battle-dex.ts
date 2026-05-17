@@ -613,6 +613,8 @@ export const Dex = new class implements ModdedDex {
 			shiny: options.shiny,
 		};
 		let name = species.spriteid;
+		if (name === 'venusaurmegax') name = 'venusaurgmax';
+		else if (name === 'venusaurmegay') name = 'venusaurmega';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -643,6 +645,8 @@ export const Dex = new class implements ModdedDex {
 
 		let miscData = null;
 		let speciesid = species.id;
+		if (speciesid === 'venusaurmegax') speciesid = 'venusaurgmax';
+		else if (speciesid === 'venusaurmegay') speciesid = 'venusaurmega';
 		if (species.isTotem) speciesid = toID(name);
 		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
 		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
@@ -780,6 +784,8 @@ export const Dex = new class implements ModdedDex {
 	}
 
 	getPokemonIconNum(id: ID, isFemale?: boolean, facingLeft?: boolean) {
+		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
+		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -850,6 +856,8 @@ export const Dex = new class implements ModdedDex {
 				spriteid = species.spriteid || id;
 			}
 		}
+		if (spriteid === 'venusaurmegax') { spriteid = 'venusaurgmax'; species = Dex.species.get('venusaurgmax'); }
+		else if (spriteid === 'venusaurmegay') { spriteid = 'venusaurmega'; species = Dex.species.get('venusaurmega'); }
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

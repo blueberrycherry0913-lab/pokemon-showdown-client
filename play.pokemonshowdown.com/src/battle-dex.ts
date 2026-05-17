@@ -613,8 +613,8 @@ export const Dex = new class implements ModdedDex {
 			shiny: options.shiny,
 		};
 		let name = species.spriteid;
-		if (name === 'venusaurmegax') name = 'venusaurgmax';
-		else if (name === 'venusaurmegay') name = 'venusaurmega';
+		if (name === 'venusaur-megax') name = 'venusaur-gmax';
+		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -746,7 +746,7 @@ export const Dex = new class implements ModdedDex {
 			// Handle these in case-by-case basis; either using BW sprites or matching the played gen.
 
 			// GMax forms have no gen5 pixel sprites; their art lives in home-centered.
-			if (name === 'venusaurgmax') {
+			if (name === 'venusaur-gmax') {
 				spriteData.url = `${Dex.resourcePrefix}sprites/home-centered/${name}.png`;
 				return spriteData;
 			}
@@ -863,8 +863,8 @@ export const Dex = new class implements ModdedDex {
 				spriteid = species.spriteid || id;
 			}
 		}
-		if (spriteid === 'venusaurmegax') spriteid = 'venusaurgmax';
-		else if (spriteid === 'venusaurmegay') spriteid = 'venusaurmega';
+		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
+		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

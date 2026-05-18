@@ -666,6 +666,16 @@ export class BattleTooltips {
 			let activeTarget = foeActive[0] || foeActive[1] || foeActive[2];
 			value = this.getMoveBasePower(move, moveType, value, activeTarget);
 			text += `<p>Base power: ${value}</p>`;
+			const pokemonTypes = pokemon.getTypeList(serverPokemon);
+			if (pokemonTypes.includes(moveType) && value.value > 0) {
+				const stabMult = ability === 'adaptability' ? 2 : 1.5;
+				const stabLabel = ability === 'adaptability' ? 'x2 Adaptability' : 'x1.5';
+				const stabMin = Math.round(value.value * stabMult);
+				const stabText = value.maxValue
+					? `${stabMin} to ${Math.round(value.maxValue * stabMult)}`
+					: `${stabMin}`;
+				text += `<p>STAB Power (${stabLabel}): ${stabText}</p>`;
+			}
 		}
 
 		let accuracy = this.getMoveAccuracy(move, value);

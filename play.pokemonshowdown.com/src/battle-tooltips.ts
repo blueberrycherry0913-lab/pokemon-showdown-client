@@ -99,7 +99,19 @@ export class ModifiableValue {
 	abilityModify(factor: number, abilityName: string) {
 		if (!this.tryAbility(abilityName)) return false;
 		this.abilityMods.push({label: abilityName, factor});
-		return this.modify(factor, abilityName);
+		// Apply the factor but suppress the comment — ability multipliers are
+		// shown only in the Alt True Power chain, not the default display.
+		// Mirrors modify() logic; Technician's maxValue guard is preserved explicitly.
+		if (factor === 0) {
+			this.value = 0;
+			this.maxValue = 0;
+		} else {
+			this.value *= factor;
+			if (!(abilityName === 'Technician' && this.maxValue > 60)) {
+				this.maxValue *= factor;
+			}
+		}
+		return true;
 	}
 	weatherModify(factor: number, weatherName?: string, name?: string) {
 		if (!weatherName) weatherName = this.weatherName;
@@ -690,10 +702,19 @@ export class BattleTooltips {
 				text += `<p>Base power: ${value}</p>`;
 			} else {
 				// Alt held: show True Power chain (base × STAB × ability mods = total)
-				const pokemonTypes = pokemon.getTypeList(serverPokemon);
-				const hasStab = pokemonTypes.includes(moveType) && value.value > 0;
-				const stabMult = ability === 'adaptability' ? 2 : 1.5;
-				const stabLabel = ability === 'adaptability' ? 'Adaptability (×2)' : 'STAB (×1.5)';
+				const [mainTypes] = pokemon.getTypes(serverPokemon);
+				const hasStab = mainTypes.includes(moveType) && value.value > 0;
+				let stabMult: number;
+				let stabLabel: string;
+				if (ability === 'adaptability') {
+					stabMult = 2; stabLabel = 'Adaptability (×2)';
+				} else if (mainTypes.length === 1) {
+					stabMult = 1.6; stabLabel = 'STAB (×1.6 pure)';
+				} else if (mainTypes[0] === moveType) {
+					stabMult = 1.5; stabLabel = 'STAB (×1.5)';
+				} else {
+					stabMult = 1.4; stabLabel = 'STAB (×1.4)';
+				}
 
 				// Back-calculate raw BP before ability mods were applied
 				const abilityModProduct = value.abilityMods.reduce((p, m) => p * m.factor, 1);

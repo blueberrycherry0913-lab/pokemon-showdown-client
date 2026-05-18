@@ -709,11 +709,11 @@ export class BattleTooltips {
 				if (ability === 'adaptability') {
 					stabMult = 2; stabLabel = 'Adaptability (×2)';
 				} else if (mainTypes.length === 1) {
-					stabMult = 1.6; stabLabel = 'STAB (×1.6 pure)';
+					stabMult = 1.6; stabLabel = 'Pure STAB (×1.6)';
 				} else if (mainTypes[0] === moveType) {
-					stabMult = 1.5; stabLabel = 'STAB (×1.5)';
+					stabMult = 1.5; stabLabel = 'Primary STAB (×1.5)';
 				} else {
-					stabMult = 1.4; stabLabel = 'STAB (×1.4)';
+					stabMult = 1.4; stabLabel = 'Secondary STAB (×1.4)';
 				}
 
 				// Back-calculate raw BP before ability mods were applied

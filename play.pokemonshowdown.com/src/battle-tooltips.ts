@@ -19,6 +19,7 @@ export class ModifiableValue {
 	value = 0;
 	maxValue = 0;
 	comment: string[];
+	abilityMods: {label: string, factor: number}[];
 	battle: Battle;
 	pokemon: Pokemon;
 	serverPokemon: ServerPokemon;
@@ -28,6 +29,7 @@ export class ModifiableValue {
 	isAccuracy = false;
 	constructor(battle: Battle, pokemon: Pokemon, serverPokemon: ServerPokemon) {
 		this.comment = [];
+		this.abilityMods = [];
 		this.battle = battle;
 		this.pokemon = pokemon;
 		this.serverPokemon = serverPokemon;
@@ -43,6 +45,7 @@ export class ModifiableValue {
 		this.maxValue = 0;
 		this.isAccuracy = !!isAccuracy;
 		this.comment = [];
+		this.abilityMods = [];
 	}
 	tryItem(itemName: string) {
 		if (itemName !== this.itemName) return false;
@@ -95,6 +98,7 @@ export class ModifiableValue {
 	}
 	abilityModify(factor: number, abilityName: string) {
 		if (!this.tryAbility(abilityName)) return false;
+		this.abilityMods.push({label: abilityName, factor});
 		return this.modify(factor, abilityName);
 	}
 	weatherModify(factor: number, weatherName?: string, name?: string) {
@@ -163,6 +167,7 @@ export class BattleTooltips {
 	static parentElem: HTMLElement | null = null;
 	static isLocked = false;
 	static isPressed = false;
+	static altHeld = false;
 
 	static hideTooltip() {
 		BattleTooltips.cancelLongTap();
@@ -209,6 +214,22 @@ export class BattleTooltips {
 		$elem.on('mousedown', '.has-tooltip', this.holdLockTooltipEvent);
 		$elem.on('blur', '.has-tooltip', BattleTooltips.unshowTooltip);
 		$elem.on('mouseup', '.has-tooltip', BattleTooltips.unshowTooltip);
+
+		// Alt key toggles the True Power chain display in move tooltips.
+		// Use a namespaced event so re-attaching on new battles replaces the old handler.
+		$(document).off('keydown.alttooltip keyup.alttooltip').on('keydown.alttooltip keyup.alttooltip', (e: JQuery.TriggeredEvent) => {
+			if (e.key !== 'Alt') return;
+			e.preventDefault(); // stop Windows from focusing the menu bar
+			const nowHeld = e.type === 'keydown';
+			if (BattleTooltips.altHeld === nowHeld) return;
+			BattleTooltips.altHeld = nowHeld;
+			// Re-render the tooltip if one is currently open and not locked
+			const parent = BattleTooltips.parentElem;
+			if (parent && !BattleTooltips.isLocked) {
+				BattleTooltips.hideTooltip();
+				this.showTooltip(parent);
+			}
+		});
 
 		$elem.on('touchstart', '.has-tooltip', e => {
 			e.preventDefault();
@@ -665,16 +686,39 @@ export class BattleTooltips {
 		if (!showingMultipleBasePowers && category !== 'Status') {
 			let activeTarget = foeActive[0] || foeActive[1] || foeActive[2];
 			value = this.getMoveBasePower(move, moveType, value, activeTarget);
-			text += `<p>Base power: ${value}</p>`;
-			const pokemonTypes = pokemon.getTypeList(serverPokemon);
-			if (pokemonTypes.includes(moveType) && value.value > 0) {
+			if (!BattleTooltips.altHeld) {
+				text += `<p>Base power: ${value}</p>`;
+			} else {
+				// Alt held: show True Power chain (base × STAB × ability mods = total)
+				const pokemonTypes = pokemon.getTypeList(serverPokemon);
+				const hasStab = pokemonTypes.includes(moveType) && value.value > 0;
 				const stabMult = ability === 'adaptability' ? 2 : 1.5;
-				const stabLabel = ability === 'adaptability' ? 'x2 Adaptability' : 'x1.5';
-				const stabMin = Math.round(value.value * stabMult);
-				const stabText = value.maxValue
-					? `${stabMin} to ${Math.round(value.maxValue * stabMult)}`
-					: `${stabMin}`;
-				text += `<p>STAB Power (${stabLabel}): ${stabText}</p>`;
+				const stabLabel = ability === 'adaptability' ? 'Adaptability (×2)' : 'STAB (×1.5)';
+
+				// Back-calculate raw BP before ability mods were applied
+				const abilityModProduct = value.abilityMods.reduce((p, m) => p * m.factor, 1);
+				const rawBP = Math.round(value.value / abilityModProduct);
+				const rawBPMax = value.maxValue ? Math.round(value.maxValue / abilityModProduct) : 0;
+
+				// Build multiplier chain: STAB first, then ability mods
+				const parts: string[] = [];
+				let totalFactor = 1;
+				if (hasStab) { parts.push(stabLabel); totalFactor *= stabMult; }
+				for (const mod of value.abilityMods) {
+					parts.push(`${mod.label} (×${mod.factor})`);
+					totalFactor *= mod.factor;
+				}
+
+				if (parts.length === 0) {
+					// No multipliers — show same info as default but labelled True Power
+					text += `<p>True Power: ${value}</p>`;
+				} else {
+					const finalMin = Math.round(rawBP * totalFactor);
+					const chain = rawBPMax
+						? `${rawBP}~${rawBPMax} × ${parts.join(' × ')} = ${finalMin}~${Math.round(rawBPMax * totalFactor)}`
+						: `${rawBP} × ${parts.join(' × ')} = ${finalMin}`;
+					text += `<p>True Power: ${chain}</p>`;
+				}
 			}
 		}
 

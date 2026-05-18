@@ -615,6 +615,8 @@ export const Dex = new class implements ModdedDex {
 		let name = species.spriteid;
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
+		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
+		else if (name === 'blastoise-megay') name = 'blastoise-mega';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -647,6 +649,8 @@ export const Dex = new class implements ModdedDex {
 		let speciesid = species.id;
 		if (speciesid === 'venusaurmegax') speciesid = 'venusaurgmax';
 		else if (speciesid === 'venusaurmegay') speciesid = 'venusaurmega';
+		else if (speciesid === 'blastoisemegax') speciesid = 'blastoisegmax';
+		else if (speciesid === 'blastoisemegay') speciesid = 'blastoisemega';
 		if (species.isTotem) speciesid = toID(name);
 		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
 		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
@@ -746,7 +750,7 @@ export const Dex = new class implements ModdedDex {
 			// Handle these in case-by-case basis; either using BW sprites or matching the played gen.
 
 			// GMax forms have no gen5 pixel sprites; their art lives in home-centered.
-			if (name === 'venusaur-gmax') {
+			if (name === 'venusaur-gmax' || name === 'blastoise-gmax') {
 				spriteData.url = `${Dex.resourcePrefix}sprites/home-centered/${name}.png`;
 				return spriteData;
 			}
@@ -793,6 +797,8 @@ export const Dex = new class implements ModdedDex {
 	getPokemonIconNum(id: ID, isFemale?: boolean, facingLeft?: boolean) {
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
+		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;
+		else if (id === 'blastoisemegay') id = 'blastoisemega' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -865,6 +871,8 @@ export const Dex = new class implements ModdedDex {
 		}
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
+		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };
+		if (spriteid === 'blastoise-megay') return { spriteDir: 'sprites/dex', spriteid: 'blastoise-mega', x: -2, y: -3 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

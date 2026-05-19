@@ -2459,6 +2459,12 @@ p.or:after {
 	padding-top: 13px;
 	position: relative;
 }
+.setcell-ability-champions > label {
+	position: absolute;
+	top: -26px;
+	right: 3px;
+	width: 108px;
+}
 .setcell-ability-champions .awakenedability-display {
 	position: absolute;
 	top: -13px;

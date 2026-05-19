@@ -1393,6 +1393,7 @@
 				buf += '<div class="setcell ' + (isChampions ? 'setcell-ability-champions' : 'setcell-ability') + '">';
 				if (isChampions) {
 					var awakenedAbility = species.abilities['H'];
+					buf += '<label>Abilities</label>';
 					buf += '<div class="awakenedability-display">' + (awakenedAbility ? BattleLog.escapeHTML(awakenedAbility) : '&mdash;') + '</div>';
 				} else {
 					buf += '<label>Ability</label>';

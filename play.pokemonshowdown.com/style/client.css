@@ -2454,6 +2454,10 @@ p.or:after {
 .setcell-ability {
 	float: right;
 }
+.setcell-ability-champions {
+	float: right;
+	padding-top: 13px;
+}
 .setcol-details .itemicon {
 	display: block;
 	width: 24px;

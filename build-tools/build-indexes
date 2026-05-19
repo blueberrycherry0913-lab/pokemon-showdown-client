@@ -1141,6 +1141,21 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			BattleTeambuilderTable['champions'].learnsets[id][moveid] = '9a';
 		}
 	}
+	// Pokémon without a champions-mod learnset override fall back to the global
+	// learnset. Without this, any species absent from ChampionsLearnsets shows
+	// 0 moves in the teambuilder because the move search only looks in the
+	// champions table when formatType === 'champions'.
+	for (const id in BattleTeambuilderTable.learnsets) {
+		if (BattleTeambuilderTable['champions'].learnsets[id]) continue; // already has override
+		const globalEntry = BattleTeambuilderTable.learnsets[id];
+		const champEntry = {};
+		for (const moveid in globalEntry) {
+			if (globalEntry[moveid].includes('9')) champEntry[moveid] = '9a';
+		}
+		if (Object.keys(champEntry).length > 0) {
+			BattleTeambuilderTable['champions'].learnsets[id] = champEntry;
+		}
+	}
 	const SSDLC1Learnsets = hasMod('gen8dlc1') ? Dex.mod('gen8dlc1').data.Learnsets : {};
 	for (const id in SSDLC1Learnsets) {
 		const learnset = SSDLC1Learnsets[id].learnset;

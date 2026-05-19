@@ -2410,14 +2410,14 @@ p.or:after {
 	background: #DAE5F0 no-repeat scroll 10px 5px none;
 	border-radius: 5px;
 	padding: 2px 0 0 3px;
-	height: 127px;
+	min-height: 127px;
 	width: 626px;
 	margin-top: 8px;
 
 	box-shadow: inset 1px 1px 0 rgba(255,255,255,.6);
 }
 .setcol {
-	height: 127px;
+	min-height: 127px;
 	width: 112px;
 	float: left;
 }
@@ -2426,13 +2426,6 @@ p.or:after {
 }
 .setcol-details {
 	width: 234px;
-	position: relative;
-}
-.setcell-awakened-aside {
-	position: absolute;
-	right: 3px;
-	top: 44px;
-	width: 108px;
 }
 .awakenedability-display {
 	display: block;
@@ -2440,6 +2433,7 @@ p.or:after {
 	border: 1px solid #AAAAAA;
 	border-radius: 3px;
 	padding: 1px 3px;
+	margin: 2px 3px 1px 0px;
 	width: 108px;
 	height: 24px;
 	font-size: 9pt;

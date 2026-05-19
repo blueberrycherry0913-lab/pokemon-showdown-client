@@ -1395,7 +1395,6 @@
 				var awakenedAbility = species.abilities['H'] || '&mdash;';
 				buf += '<div class="setcell-awakened-aside">';
 				buf += '<div class="awakenedability-display">' + BattleLog.escapeHTML(awakenedAbility) + '</div>';
-				buf += '<label>Awakened Ability</label>';
 				buf += '</div>';
 			}
 			buf += '</div>';

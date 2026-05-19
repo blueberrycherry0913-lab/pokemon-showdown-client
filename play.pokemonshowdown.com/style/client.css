@@ -2430,8 +2430,8 @@ p.or:after {
 }
 .setcell-awakened-aside {
 	position: absolute;
-	right: 0;
-	top: 35px;
+	right: 3px;
+	top: 37px;
 	width: 104px;
 }
 .awakenedability-display {
@@ -2448,10 +2448,6 @@ p.or:after {
 	color: #555555;
 	overflow: hidden;
 	white-space: nowrap;
-	text-align: center;
-}
-.setcell-awakened-aside label {
-	padding-left: 0;
 	text-align: center;
 }
 .setcell {

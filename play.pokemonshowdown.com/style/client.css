@@ -2431,8 +2431,8 @@ p.or:after {
 .setcell-awakened-aside {
 	position: absolute;
 	right: 3px;
-	top: 37px;
-	width: 104px;
+	top: 39px;
+	width: 108px;
 }
 .awakenedability-display {
 	display: block;
@@ -2440,10 +2440,10 @@ p.or:after {
 	border: 1px solid #AAAAAA;
 	border-radius: 3px;
 	padding: 1px 3px;
-	width: 104px;
-	height: 20px;
+	width: 108px;
+	height: 24px;
 	font-size: 9pt;
-	line-height: 16px;
+	line-height: 20px;
 	background: #EEEEEE;
 	color: #555555;
 	overflow: hidden;

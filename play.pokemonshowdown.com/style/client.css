@@ -2462,6 +2462,10 @@ p.or:after {
 	justify-content: space-evenly;
 	align-items: center;
 }
+.setcell-typeicons-inline img {
+	width: 40px;
+	height: 18px;
+}
 .setcell-sprite {
 	height: 82px;
 	padding: 1px;

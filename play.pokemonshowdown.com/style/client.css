@@ -2462,7 +2462,13 @@ p.or:after {
 	opacity: 0.8;
 }
 .setrow-icons {
-	height: 24px;
+	min-height: 24px;
+}
+.setcell-awakened-inline {
+	float: right;
+}
+.ability-label-spacer {
+	visibility: hidden;
 }
 .setcell-typeicons {
 	margin-top: 4px;

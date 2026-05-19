@@ -1385,18 +1385,19 @@
 			}
 			buf += itemicon;
 			buf += '</div>';
+			if (isChampions && this.curTeam.gen > 2 && !isLetsGo) {
+				var awakenedAbility = species.abilities['H'];
+				buf += '<div class="setcell setcell-awakened-inline">';
+				buf += '<div class="awakenedability-display">' + (awakenedAbility ? BattleLog.escapeHTML(awakenedAbility) : '&mdash;') + '</div>';
+				buf += '</div>';
+			}
 			buf += '</div>';
 
 			buf += '<div class="setrow">';
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';
 			if (this.curTeam.gen > 2 && !isLetsGo) {
 				buf += '<div class="setcell setcell-ability">';
-				if (isChampions) {
-					var awakenedAbility = species.abilities['H'];
-					buf += '<div class="awakenedability-display">' + (awakenedAbility ? BattleLog.escapeHTML(awakenedAbility) : '&mdash;') + '</div>';
-				} else {
-					buf += '<label>Ability</label>';
-				}
+				buf += isChampions ? '<label class="ability-label-spacer">Ability</label>' : '<label>Ability</label>';
 				buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" /></div>';
 			}
 			buf += '</div>';

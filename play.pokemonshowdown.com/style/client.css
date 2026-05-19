@@ -2433,7 +2433,7 @@ p.or:after {
 	border: 1px solid #AAAAAA;
 	border-radius: 3px;
 	padding: 1px 3px;
-	margin: 2px 3px 1px 0px;
+	margin: 0 3px 0 0;
 	width: 108px;
 	height: 24px;
 	font-size: 9pt;
@@ -2462,13 +2462,10 @@ p.or:after {
 	opacity: 0.8;
 }
 .setrow-icons {
-	min-height: 24px;
+	height: 24px;
 }
 .setcell-awakened-inline {
 	float: right;
-}
-.ability-label-spacer {
-	visibility: hidden;
 }
 .setcell-typeicons {
 	margin-top: 4px;

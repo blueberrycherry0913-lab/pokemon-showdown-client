@@ -1397,7 +1397,7 @@
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';
 			if (this.curTeam.gen > 2 && !isLetsGo) {
 				buf += '<div class="setcell setcell-ability">';
-				buf += isChampions ? '<label class="ability-label-spacer">Ability</label>' : '<label>Ability</label>';
+				if (!isChampions) buf += '<label>Ability</label>';
 				buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" /></div>';
 			}
 			buf += '</div>';

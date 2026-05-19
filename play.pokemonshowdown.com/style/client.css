@@ -2426,6 +2426,33 @@ p.or:after {
 }
 .setcol-details {
 	width: 234px;
+	position: relative;
+}
+.setcell-awakened-aside {
+	position: absolute;
+	right: 0;
+	top: 35px;
+	width: 104px;
+}
+.awakenedability-display {
+	display: block;
+	box-sizing: border-box;
+	border: 1px solid #AAAAAA;
+	border-radius: 3px;
+	padding: 1px 3px;
+	width: 104px;
+	height: 20px;
+	font-size: 9pt;
+	line-height: 16px;
+	background: #EEEEEE;
+	color: #555555;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+}
+.setcell-awakened-aside label {
+	padding-left: 0;
+	text-align: center;
 }
 .setcell {
 	float: left;

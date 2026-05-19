@@ -2457,6 +2457,13 @@ p.or:after {
 .setcell-ability-champions {
 	float: right;
 	padding-top: 13px;
+	position: relative;
+}
+.setcell-ability-champions .awakenedability-display {
+	position: absolute;
+	top: -13px;
+	right: 3px;
+	margin: 0;
 }
 .setcol-details .itemicon {
 	display: block;
@@ -2467,9 +2474,6 @@ p.or:after {
 }
 .setrow-icons {
 	height: 24px;
-}
-.setcell-awakened-inline {
-	float: right;
 }
 .setcell-typeicons {
 	margin-top: 4px;

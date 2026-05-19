@@ -2432,6 +2432,7 @@ p.or:after {
 }
 .setcell-details {
 	float: none;
+	overflow: hidden;
 }
 .setcell-ability {
 	float: right;
@@ -2453,6 +2454,13 @@ p.or:after {
 }
 .setcell-typeicons img {
 	margin-left: 1px;
+}
+.setcell-typeicons-inline {
+	overflow: hidden;
+	height: 34px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
 }
 .setcell-sprite {
 	height: 82px;
@@ -2524,6 +2532,7 @@ p.or:after {
 	outline: 0 none;
 }
 .setdetails {
+	float: left;
 	width: 115px;
 	height: 34px;
 }

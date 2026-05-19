@@ -1366,9 +1366,16 @@
 					buf += '<span class="detailcell"><label>Tera Type</label>' + (set.teraType || species.requiredTeraType || species.types[0]) + '</span>';
 				}
 			}
-			buf += '</button></div></div>';
+			buf += '</button>';
+			var types = species.types;
+			buf += '<div class="setcell-typeicons-inline">';
+			if (types) {
+				for (var i = 0; i < types.length; i++) buf += Dex.getTypeIcon(types[i]);
+			}
+			buf += '</div>';
+			buf += '</div></div>';
 
-			// item/type icons
+			// item icon
 			buf += '<div class="setrow setrow-icons">';
 			buf += '<div class="setcell">';
 			var itemicon = '<span class="itemicon"></span>';
@@ -1378,12 +1385,7 @@
 			}
 			buf += itemicon;
 			buf += '</div>';
-			buf += '<div class="setcell setcell-typeicons">';
-			var types = species.types;
-			if (types) {
-				for (var i = 0; i < types.length; i++) buf += Dex.getTypeIcon(types[i]);
-			}
-			buf += '</div></div>';
+			buf += '</div>';
 
 			buf += '<div class="setrow">';
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';

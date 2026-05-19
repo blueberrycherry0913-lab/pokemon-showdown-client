@@ -2524,11 +2524,11 @@ p.or:after {
 	outline: 0 none;
 }
 .setdetails {
-	width: 230px;
+	width: 115px;
 	height: 34px;
 }
 .setdetails:focus,.setdetails:active {
-	width: 232px;
+	width: 117px;
 	height: 36px;
 }
 .setdetails .detailcell {

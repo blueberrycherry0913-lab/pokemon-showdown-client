@@ -1348,7 +1348,7 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 		if (species.abilities['1']) {
 			abilitySet.push(['ability', toID(species.abilities['1'])]);
 		}
-		if (species.abilities['H']) {
+		if (species.abilities['H'] && !format.includes('testingstandard') && !format.includes('champions')) {
 			abilitySet.push(['header', "Hidden Ability"]);
 			abilitySet.push(['ability', toID(species.abilities['H'])]);
 		}

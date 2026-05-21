@@ -771,7 +771,34 @@ export class BattleTooltips {
 			text += `Calls ${Dex.getTypeIcon(this.getMoveType(calledMove, value)[0])} ${calledMove.name}`;
 		}
 
-		text += `<p>Accuracy: ${accuracy}</p>`;
+		// When Alt is held and the move has numeric accuracy, show domain accuracy boost breakdown.
+		// e.g. "Accuracy: 85% × Fire Domain (×1.1) = 93.5%"
+		if (BattleTooltips.altHeld && accuracy.value > 0) {
+			const domainAccEntries: [string, string][] = [
+				['Normal Domain', 'Normal'], ['Fire Domain', 'Fire'], ['Water Domain', 'Water'],
+				['Electric Domain', 'Electric'], ['Grass Domain', 'Grass'], ['Ice Domain', 'Ice'],
+				['Fighting Domain', 'Fighting'], ['Poison Domain', 'Poison'], ['Ground Domain', 'Ground'],
+				['Flying Domain', 'Flying'], ['Psychic Domain', 'Psychic'], ['Bug Domain', 'Bug'],
+				['Rock Domain', 'Rock'], ['Ghost Domain', 'Ghost'], ['Dragon Domain', 'Dragon'],
+				['Dark Domain', 'Dark'], ['Steel Domain', 'Steel'], ['Fairy Domain', 'Fairy'],
+				['Cosmic Domain', 'Cosmic'],
+			];
+			let domainAccPart = '';
+			for (const [domainName, typeName] of domainAccEntries) {
+				if (typeName === moveType && this.battle.hasPseudoWeather(domainName)) {
+					const boosted = Math.round(accuracy.value * 1.1 * 10) / 10;
+					domainAccPart = ` × ${domainName} (×1.1) = ${boosted}%`;
+					break;
+				}
+			}
+			if (domainAccPart) {
+				text += `<p>Accuracy: ${accuracy.value}%${domainAccPart}</p>`;
+			} else {
+				text += `<p>Accuracy: ${accuracy}</p>`;
+			}
+		} else {
+			text += `<p>Accuracy: ${accuracy}</p>`;
+		}
 		if (zEffect) text += `<p>Z-Effect: ${zEffect}</p>`;
 
 		if (this.battle.hardcoreMode) {
@@ -1518,6 +1545,27 @@ export class BattleTooltips {
 				stats.spe = Math.floor(stats.spe * 0.5);
 			} else {
 				stats.spe = Math.floor(stats.spe * 0.25);
+			}
+		}
+
+		// Domain stat boosts: +25% Atk/Def/SpA/SpD for Pokémon of the matching type.
+		// Domains are pseudoWeather tracked by name (e.g. "Fire Domain").
+		// No grounding requirement — affects all Pokémon on the field.
+		const domainTypeEntries: [string, string][] = [
+			['Normal Domain', 'Normal'], ['Fire Domain', 'Fire'], ['Water Domain', 'Water'],
+			['Electric Domain', 'Electric'], ['Grass Domain', 'Grass'], ['Ice Domain', 'Ice'],
+			['Fighting Domain', 'Fighting'], ['Poison Domain', 'Poison'], ['Ground Domain', 'Ground'],
+			['Flying Domain', 'Flying'], ['Psychic Domain', 'Psychic'], ['Bug Domain', 'Bug'],
+			['Rock Domain', 'Rock'], ['Ghost Domain', 'Ghost'], ['Dragon Domain', 'Dragon'],
+			['Dark Domain', 'Dark'], ['Steel Domain', 'Steel'], ['Fairy Domain', 'Fairy'],
+			['Cosmic Domain', 'Cosmic'],
+		];
+		for (const [domainName, typeName] of domainTypeEntries) {
+			if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName)) {
+				stats.atk = Math.floor(stats.atk * 1.25);
+				stats.def = Math.floor(stats.def * 1.25);
+				stats.spa = Math.floor(stats.spa * 1.25);
+				stats.spd = Math.floor(stats.spd * 1.25);
 			}
 		}
 

@@ -1348,8 +1348,9 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 		if (species.abilities['1']) {
 			abilitySet.push(['ability', toID(species.abilities['1'])]);
 		}
-		if (species.abilities['H'] && !format.includes('testingstandard') && !format.includes('champions')) {
-			abilitySet.push(['header', "Hidden Ability"]);
+		if (species.abilities['H']) {
+			const isChampions = format.includes('testingstandard') || format.includes('champions');
+			abilitySet.push(['header', isChampions ? "Awakened Ability" : "Hidden Ability"]);
 			abilitySet.push(['ability', toID(species.abilities['H'])]);
 		}
 		if (species.abilities['S']) {

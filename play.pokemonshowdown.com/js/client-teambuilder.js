@@ -70,7 +70,6 @@
 			'input .evslider': 'statSlide',
 
 			// teambuilder events
-			'change select[name=awakenedability]': 'awakenedAbilityChange',
 			'click .utilichart a': 'chartClick',
 			'keydown .chartinput': 'chartKeydown',
 			'keyup .chartinput': 'chartKeyup',
@@ -1394,12 +1393,8 @@
 				buf += '<div class="setcell ' + (isChampions ? 'setcell-ability-champions' : 'setcell-ability') + '">';
 				if (isChampions) {
 					var awakenedAbility = species.abilities['H'];
-					var awakenedAbilityVal = (set.awakenedAbility !== undefined) ? set.awakenedAbility : (awakenedAbility || '');
 					buf += '<label>Abilities</label>';
-					buf += '<select name="awakenedability" class="awakenedability-display">';
-					buf += '<option value="">—</option>';
-					if (awakenedAbility) buf += '<option value="' + BattleLog.escapeHTML(awakenedAbility) + '"' + (awakenedAbilityVal === awakenedAbility ? ' selected' : '') + '>' + BattleLog.escapeHTML(awakenedAbility) + '</option>';
-					buf += '</select>';
+					buf += '<div class="awakenedability-display">' + (awakenedAbility ? BattleLog.escapeHTML(awakenedAbility) : '&mdash;') + '</div>';
 				} else {
 					buf += '<label>Ability</label>';
 				}
@@ -1669,11 +1664,6 @@
 			var set = this.curSetList[i];
 			var name = $.trim(e.currentTarget.value).replace(/\|/g, '');
 			e.currentTarget.value = set.name = name;
-			this.save();
-		},
-		awakenedAbilityChange: function (e) {
-			if (!this.curSet) return;
-			this.curSet.awakenedAbility = e.currentTarget.value;
 			this.save();
 		},
 

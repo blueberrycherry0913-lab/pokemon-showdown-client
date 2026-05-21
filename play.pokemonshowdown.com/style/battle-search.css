@@ -277,12 +277,9 @@
 .dexlist .itemdesccol,
 .dexlist .abilitydesccol,
 .dexlist .movedesccol {
-	white-space: nowrap;
 	padding-top: 8px;
 	font-size: 8pt;
 	width: 488px;
-	height: 21px;
-	overflow: hidden;
 	color: #777777;
 }
 .dexlist .movedesccol {

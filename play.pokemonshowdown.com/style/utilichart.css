@@ -281,7 +281,11 @@
 .utilichart .itemdesccol,
 .utilichart .abilitydesccol,
 .utilichart .movedesccol {
-	padding-top: 8px;
+	display: flex;
+	align-items: center;
+	height: auto;
+	min-height: 22px;
+	padding-top: 0;
 	font-size: 8pt;
 	width: 488px;
 	color: #777777;

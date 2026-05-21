@@ -279,8 +279,7 @@
 .dexlist .movedesccol {
 	display: flex;
 	align-items: center;
-	height: auto;
-	min-height: 22px;
+	min-height: 30px;
 	padding-top: 0;
 	font-size: 8pt;
 	width: 488px;

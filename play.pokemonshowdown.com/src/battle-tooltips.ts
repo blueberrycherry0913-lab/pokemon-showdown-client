@@ -151,7 +151,7 @@ export class ModifiableValue {
 	toString() {
 		let valueString;
 		if (this.isAccuracy) {
-			valueString = this.value ? `${this.round(this.value)}%` : `can't miss`;
+			valueString = this.value ? `${this.round(this.value)}%` : `Cannot Miss`;
 		} else {
 			valueString = this.value ? `${this.round(this.value)}` : ``;
 		}

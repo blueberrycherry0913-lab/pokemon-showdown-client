@@ -554,6 +554,25 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 			{!props.noHPBar && pokemon.status && <span class={`status ${pokemon.status}`}></span>}
 		</button>;
 	}
+	renderControlledMoveMenu(request: BattleMoveRequest, choices: BattleChoiceBuilder) {
+		const controlledActive = request.controlledActive!;
+		const controlledIndex = choices.controlledChoices.length;
+		const active = controlledActive[controlledIndex];
+		const dex = this.props.room.battle.dex;
+		return <div class="movemenu">
+			{active.moves.map((moveData, i) => {
+				const move = dex.moves.get(moveData.name);
+				return this.renderMoveButton(moveData.disabled ? null : {
+					name: move.name,
+					cmd: `controlled move ${i + 1}`,
+					type: move.type as Dex.TypeName,
+					tags: '',
+					tooltip: `move|${moveData.name}|0`,
+					moveData,
+				});
+			})}
+		</div>;
+	}
 	renderMoveMenu(choices: BattleChoiceBuilder) {
 		const moveRequest = choices.currentMoveRequest()!;
 
@@ -915,6 +934,21 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		}
 		switch (request.requestType) {
 		case 'move': {
+			// Own choices done — show controlled Pokémon section if still needed (Mind Controlled)
+			if (choices.choices.length >= (request.active?.filter(Boolean).length ?? 0) && !choices.isControlledDone()) {
+				const controlledPokemonName = this.props.room.battle.farSide.active[0]?.name ?? "the controlled Pokémon";
+				return <div class="controls">
+					<div class="whatdo">
+						{this.renderOldChoices(request, choices)}
+						Choose a move for your opponent's <strong>{controlledPokemonName}</strong>!
+					</div>
+					<div class="movecontrols">
+						<h3 class="moveselect">Control</h3>
+						{this.renderControlledMoveMenu(request, choices)}
+					</div>
+				</div>;
+			}
+
 			const index = choices.index();
 			const pokemon = request.side.pokemon[index];
 

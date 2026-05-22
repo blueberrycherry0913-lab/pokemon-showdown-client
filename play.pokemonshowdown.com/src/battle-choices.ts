@@ -69,6 +69,10 @@ export interface BattleMoveRequest {
 	active: (BattleRequestActivePokemon | null)[];
 	noCancel?: boolean;
 	targetable?: boolean;
+	/** Move data for Mind Controlled opponent Pokémon — this player chooses for them */
+	controlledActive?: BattleRequestActivePokemon[];
+	/** The side info of the opponent whose Pokémon are being controlled */
+	controlledSide?: BattleRequestSideInfo;
 }
 export interface BattleSwitchRequest {
 	requestType: 'switch';
@@ -154,6 +158,8 @@ export class BattleChoiceBuilder {
 	alreadyMax = false;
 	alreadyZ = false;
 	alreadyTera = false;
+	/** Completed choices for Mind Controlled opponent Pokémon */
+	controlledChoices: string[] = [];
 
 	constructor(request: BattleRequest) {
 		this.request = request;
@@ -164,11 +170,25 @@ export class BattleChoiceBuilder {
 	toString() {
 		let choices = this.choices;
 		if (this.current.move) choices = choices.concat(this.stringChoice(this.current));
-		return choices.join(', ').replace(/, team /g, ', ');
+		const allChoices = [...choices, ...this.controlledChoices];
+		return allChoices.join(', ').replace(/, team /g, ', ');
 	}
 
 	isDone() {
-		return this.choices.length >= this.requestLength();
+		if (this.choices.length < this.requestLength()) return false;
+		// Also wait for controlled Pokémon choices (Mind Controlled mechanic)
+		const controlledActive = (this.request as BattleMoveRequest).controlledActive;
+		if (controlledActive?.length) {
+			return this.controlledChoices.length >= controlledActive.length;
+		}
+		return true;
+	}
+
+	/** Returns true once all controlled Pokémon choices have been made. */
+	isControlledDone() {
+		const controlledActive = (this.request as BattleMoveRequest).controlledActive;
+		if (!controlledActive?.length) return true;
+		return this.controlledChoices.length >= controlledActive.length;
 	}
 	isEmpty() {
 		for (const choice of this.choices) {
@@ -212,6 +232,17 @@ export class BattleChoiceBuilder {
 	}
 
 	addChoice(choiceString: string) {
+		// Handle controlled Pokémon choices (Mind Controlled mechanic)
+		if (choiceString.startsWith('controlled ')) {
+			const controlledActive = (this.request as BattleMoveRequest).controlledActive;
+			if (!controlledActive?.length) return "No Mind Controlled Pokémon to control";
+			if (this.controlledChoices.length >= controlledActive.length) {
+				return "Already chose for all controlled Pokémon";
+			}
+			this.controlledChoices.push(choiceString);
+			return null;
+		}
+
 		let choice: BattleChoice | null;
 		try {
 			choice = this.parseChoice(choiceString);

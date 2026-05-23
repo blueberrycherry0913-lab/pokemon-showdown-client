@@ -564,7 +564,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				const move = dex.moves.get(moveData.name);
 				return this.renderMoveButton(moveData.disabled ? null : {
 					name: move.name,
-					cmd: `controlled move ${i + 1}`,
+					cmd: `/controlled move ${i + 1}`,
 					type: move.type as Dex.TypeName,
 					tags: '',
 					tooltip: `move|${moveData.name}|0`,

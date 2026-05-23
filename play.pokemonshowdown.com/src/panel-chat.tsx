@@ -572,7 +572,7 @@ export class ChatRoom extends PSRoom {
 			room.choices = new BattleChoiceBuilder(room.request);
 			this.update(null);
 		},
-		'move,switch,team,pass,shift,choose'(target, cmd) {
+		'move,switch,team,pass,shift,choose,controlled'(target, cmd) {
 			if (!this.battle) return this.add('|error|You are not in a battle');
 			const room = this as any as BattleRoom;
 			if (!room.choices) {

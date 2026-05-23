@@ -431,6 +431,10 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 
 		room.request = request;
 		room.choices = new BattleChoiceBuilder(request);
+		// DEBUG: log controlledActive to confirm server is sending it
+		if ((request as any).controlledActive) {
+			console.log('[MindControl] Request has controlledActive:', (request as any).controlledActive);
+		}
 		this.notifyRequest();
 		room.update(null);
 	}

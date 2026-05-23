@@ -589,9 +589,6 @@ export class ChatRoom extends PSRoom {
 				this.errorReply(possibleError);
 				return;
 			}
-			// DEBUG: log choice state
-			const req = room.choices.request as any;
-			console.log('[MindControl] addChoice:', target, '| isDone:', room.choices.isDone(), '| controlledActive:', req?.controlledActive?.length ?? 'none', '| controlledChoices:', room.choices.controlledChoices.length);
 			if (room.choices.isDone()) this.sendDirect(`/choose ${room.choices.toString()}`);
 			this.update(null);
 		},

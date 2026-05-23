@@ -431,10 +431,6 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 
 		room.request = request;
 		room.choices = new BattleChoiceBuilder(request);
-		// DEBUG: log controlledActive to confirm server is sending it
-		if ((request as any).controlledActive) {
-			console.log('[MindControl] Request has controlledActive:', (request as any).controlledActive);
-		}
 		this.notifyRequest();
 		room.update(null);
 	}
@@ -563,6 +559,12 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		const controlledIndex = choices.controlledChoices.length;
 		const active = controlledActive[controlledIndex];
 		const dex = this.props.room.battle.dex;
+
+		// Force Switch is available only when the MC'd Pokémon isn't trapped
+		// and has at least one non-fainted benched Pokémon to switch to.
+		const canSwitch = !active.trapped &&
+			!!request.controlledSide?.pokemon.some(p => !p.active && !p.fainted && p.hp > 0);
+
 		return <div class="movemenu">
 			{active.moves.map((moveData, i) => {
 				const move = dex.moves.get(moveData.name);
@@ -575,6 +577,18 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 					moveData,
 				});
 			})}
+			<div style="margin-top:4px;border-top:1px solid #ccc;padding-top:4px">
+				<button
+					class="movebutton"
+					style="background:#c0392b;color:white"
+					data-cmd="/controlled selfdamage"
+				>Self-Hit<br /><small class="type" style="color:#ffdddd">Physical · 40 BP</small>&nbsp;</button>
+				{canSwitch && <button
+					class="movebutton"
+					style="background:#2980b9;color:white"
+					data-cmd="/controlled switch"
+				>Force Switch<br /><small class="type" style="color:#ddeeff">Random</small>&nbsp;</button>}
+			</div>
 		</div>;
 	}
 	renderMoveMenu(choices: BattleChoiceBuilder) {

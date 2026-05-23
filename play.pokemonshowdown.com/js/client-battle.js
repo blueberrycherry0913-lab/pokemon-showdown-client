@@ -575,11 +575,27 @@
 					movebuttons += name + '<br /><small class="type">' + (move.type ? Dex.types.get(move.type).name : 'Unknown') + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
 				}
 
+				// Special Mind Control options
+				var specialButtons = '<div style="margin-top:4px;border-top:1px solid #ccc;padding-top:4px;">';
+				// Self-Hit: always available
+				specialButtons += '<button class="movebutton" name="chooseControlledMove" value="selfdamage" style="background:#c0392b;color:white;">Self-Hit<br /><small class="type" style="color:#ffdddd;">Physical &bull; 40 BP</small>&nbsp;</button> ';
+				// Force Switch: only if not trapped and has benched Pokémon
+				var canForceSwitch = !controlledData.trapped;
+				if (canForceSwitch && controlledSide && controlledSide.pokemon) {
+					canForceSwitch = controlledSide.pokemon.some(function (p) {
+						return !p.active && p.condition && p.condition !== '0 fnt';
+					});
+				}
+				if (canForceSwitch) {
+					specialButtons += '<button class="movebutton" name="chooseControlledMove" value="switch" style="background:#2980b9;color:white;">Force Switch<br /><small class="type" style="color:#ddeeff;">Random</small>&nbsp;</button> ';
+				}
+				specialButtons += '</div>';
+
 				this.$controls.html(
 					'<div class="controls">' +
-					'<div class="whatdo">Mind Control: Choose a move for <strong>' + BattleLog.escapeHTML(controlledName) + '</strong>! ' + this.getTimerHTML() + '</div>' +
+					'<div class="whatdo">Mind Control: Choose for <strong>' + BattleLog.escapeHTML(controlledName) + '</strong>! ' + this.getTimerHTML() + '</div>' +
 					'<div class="movecontrols">' +
-					'<div class="movemenu">' + movebuttons + '</div>' +
+					'<div class="movemenu">' + movebuttons + specialButtons + '</div>' +
 					'</div>' +
 					'</div>'
 				);
@@ -1352,12 +1368,14 @@
 			this.chooseMove();
 		},
 		chooseControlledMove: function (pos) {
-			// Mind Control: record the player's move choice for the opponent's MC'd Pokémon
+			// Mind Control: record the player's choice for the opponent's MC'd Pokémon.
+			// pos is either a move slot number (1-4) or a special string: 'selfdamage', 'switch'.
 			if (!this.choice) return;
 			this.tooltips.hideTooltip();
 
 			if (!this.choice.controlledChoices) this.choice.controlledChoices = [];
-			this.choice.controlledChoices.push('controlled move ' + pos);
+			var isSlot = /^\d+$/.test(String(pos));
+			this.choice.controlledChoices.push(isSlot ? 'controlled move ' + pos : 'controlled ' + pos);
 
 			// If more controlled choices are needed (doubles/triples), show the next one
 			var controlledActive = this.request.controlledActive;

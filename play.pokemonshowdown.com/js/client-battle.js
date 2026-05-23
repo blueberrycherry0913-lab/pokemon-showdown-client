@@ -393,6 +393,7 @@
 				if (!this.choice) {
 					this.choice = {
 						choices: [],
+						controlledChoices: [],
 						switchFlags: {},
 						switchOutFlags: {}
 					};
@@ -546,6 +547,45 @@
 			app.addPopup(TimerPopup, { room: this });
 		},
 		updateMoveControls: function (type) {
+			// Mind Control: render a move-picker for the opponent's MC'd Pokémon
+			if (type === 'controlledmove') {
+				var controlledActive = this.request.controlledActive;
+				var controlledSide = this.request.controlledSide;
+				if (!controlledActive || !controlledActive.length) return;
+				var controlledChoiceIndex = (this.choice.controlledChoices || []).length;
+				var controlledData = controlledActive[controlledChoiceIndex];
+				if (!controlledData) return;
+				// Find the active opponent Pokémon to display the name
+				var controlledPokemon = controlledSide && controlledSide.pokemon &&
+					controlledSide.pokemon.find(function (p) { return p.active; });
+				var controlledName = controlledPokemon ? controlledPokemon.ident.substr(4) : 'Opponent Pokémon';
+
+				var movebuttons = '';
+				for (var i = 0; i < controlledData.moves.length; i++) {
+					var moveData = controlledData.moves[i];
+					var move = this.battle.dex.moves.get(moveData.move);
+					var name = move.name;
+					var pp = moveData.pp + '/' + moveData.maxpp;
+					if (!moveData.maxpp) pp = '&ndash;';
+					if (moveData.disabled) {
+						movebuttons += '<button disabled class="movebutton">';
+					} else {
+						movebuttons += '<button class="movebutton type-' + move.type + '" name="chooseControlledMove" value="' + (i + 1) + '">';
+					}
+					movebuttons += name + '<br /><small class="type">' + (move.type ? Dex.types.get(move.type).name : 'Unknown') + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
+				}
+
+				this.$controls.html(
+					'<div class="controls">' +
+					'<div class="whatdo">Mind Control: Choose a move for <strong>' + BattleLog.escapeHTML(controlledName) + '</strong>! ' + this.getTimerHTML() + '</div>' +
+					'<div class="movecontrols">' +
+					'<div class="movemenu">' + movebuttons + '</div>' +
+					'</div>' +
+					'</div>'
+				);
+				return;
+			}
+
 			var switchables = this.request && this.request.side ? this.battle.myPokemon : [];
 
 			if (type !== 'movetarget') {
@@ -1311,6 +1351,23 @@
 			this.choice.choices[this.choice.choices.length - 1] += ' ' + posString;
 			this.chooseMove();
 		},
+		chooseControlledMove: function (pos) {
+			// Mind Control: record the player's move choice for the opponent's MC'd Pokémon
+			if (!this.choice) return;
+			this.tooltips.hideTooltip();
+
+			if (!this.choice.controlledChoices) this.choice.controlledChoices = [];
+			this.choice.controlledChoices.push('controlled move ' + pos);
+
+			// If more controlled choices are needed (doubles/triples), show the next one
+			var controlledActive = this.request.controlledActive;
+			if (controlledActive && this.choice.controlledChoices.length < controlledActive.length) {
+				this.choice.type = 'controlledmove';
+				this.updateControlsForPlayer();
+			} else {
+				this.endTurn();
+			}
+		},
 		chooseFight: function () {
 			if (!this.choice) return;
 			this.tooltips.hideTooltip();
@@ -1450,6 +1507,17 @@
 					this.updateControlsForPlayer();
 					return true;
 				}
+
+				// Mind Control: after own choices done, check if controlled Pokémon choices needed
+				var controlledActive = this.request.controlledActive;
+				if (controlledActive && controlledActive.length > 0) {
+					var controlledChoices = this.choice.controlledChoices;
+					if (!controlledChoices || controlledChoices.length < controlledActive.length) {
+						this.choice.type = 'controlledmove';
+						this.updateControlsForPlayer();
+						return true;
+					}
+				}
 			}
 
 			return false;
@@ -1472,7 +1540,12 @@
 				}
 
 				if (this.choice.choices.length >= (this.choice.count || this.battle.pokemonControlled || this.request.active.length)) {
-					this.sendDecision(this.choice.choices);
+					// Include Mind Control choices for the opponent's MC'd Pokémon (if any)
+					var controlledChoices = this.choice.controlledChoices;
+					var allChoices = (controlledChoices && controlledChoices.length)
+						? this.choice.choices.concat(controlledChoices)
+						: this.choice.choices;
+					this.sendDecision(allChoices);
 				}
 
 				if (!this.finalDecision) {

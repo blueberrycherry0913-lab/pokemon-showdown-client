@@ -957,6 +957,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				const controlledPokemonName = this.props.room.battle.farSide.active[0]?.name ?? "the controlled Pokémon";
 				return <div class="controls">
 					<div class="whatdo">
+						<button data-cmd="/cancel" class="button"><i class="fa fa-chevron-left" aria-hidden></i> Back</button> {}
 						{this.renderOldChoices(request, choices)}
 						Choose a move for your opponent's <strong>{controlledPokemonName}</strong>!
 					</div>

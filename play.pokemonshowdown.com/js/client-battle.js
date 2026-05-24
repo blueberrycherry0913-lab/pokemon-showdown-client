@@ -593,7 +593,7 @@
 
 				this.$controls.html(
 					'<div class="controls">' +
-					'<div class="whatdo">Mind Control: Choose for <strong>' + BattleLog.escapeHTML(controlledName) + '</strong>! ' + this.getTimerHTML() + '</div>' +
+					'<div class="whatdo"><button name="clearChoice">Back</button> Mind Control: Choose for <strong>' + BattleLog.escapeHTML(controlledName) + '</strong>! <span style="float:right">' + this.getTimerHTML() + '</span></div>' +
 					'<div class="movecontrols">' +
 					'<div class="movemenu">' + movebuttons + specialButtons + '</div>' +
 					'</div>' +

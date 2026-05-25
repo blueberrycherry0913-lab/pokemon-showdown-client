@@ -1585,9 +1585,10 @@ export class BattleTooltips {
 			// +10% damage taken while asleep — shown as ×10/11 Def/SpD reduction for tooltip purposes
 			stats.def = Math.floor(stats.def * 10 / 11);
 			stats.spd = Math.floor(stats.spd * 10 / 11);
-		} else if (status === 'stun' || status === 'par') {
-			// -33% Speed (Stunned) or -50% Speed (Paralyzed)
-			stats.spe = Math.floor(stats.spe * (status === 'stun' ? 2 / 3 : 1 / 2));
+		} else if (status === 'stun') {
+			// -33% Speed (Stunned) — custom champions status.
+			// Note: 'par' is handled by the canonical block above (lines 1543-1549) at ×0.5.
+			stats.spe = Math.floor(stats.spe * 2 / 3);
 		} else if (status === 'frb' || status === 'frz') {
 			// -33% SpA (Frostbitten) or -50% SpA (Frozen Phase 2, the sustained state)
 			stats.spa = Math.floor(stats.spa * (status === 'frb' ? 2 / 3 : 1 / 2));

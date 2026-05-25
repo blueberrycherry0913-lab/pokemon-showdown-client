@@ -1572,7 +1572,9 @@ export class BattleTooltips {
 		// Custom status stat reductions. Applied after domain boosts so the debuff
 		// shows against the already-boosted value (matching server onModifyAtk/Def/SpD priority -101).
 		// Guts bypasses the burn/scorched Attack penalty (same guard as the server handler).
-		const status = serverPokemon.status;
+		// Use pokemon.status (clientPokemon when available) — serverPokemon.status only gets
+		// populated via parseHealth HP strings, which may lag behind the live -status events.
+		const status = (pokemon.status || serverPokemon.status) as string;
 		if ((status === 'brn' || status === 'scr') && ability !== 'guts') {
 			stats.atk = Math.floor(stats.atk * (status === 'brn' ? 2 / 3 : 1 / 2));
 		} else if (status === 'psn' || status === 'tox') {

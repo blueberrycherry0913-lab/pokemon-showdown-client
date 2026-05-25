@@ -3352,8 +3352,9 @@ export class Battle {
 		// status parse
 		if (!status) {
 			output.status = '';
-		} else if (status === 'par' || status === 'brn' || status === 'slp' || status === 'frz' || status === 'tox') {
-			output.status = status;
+		} else if (status === 'par' || status === 'brn' || status === 'slp' || status === 'frz' || status === 'tox' ||
+				status === 'scr' || status === 'cor' || status === 'mlt') {
+			output.status = status as any;
 		} else if (status === 'psn' && output.status !== 'tox') {
 			output.status = status;
 		} else if (status === 'fnt') {

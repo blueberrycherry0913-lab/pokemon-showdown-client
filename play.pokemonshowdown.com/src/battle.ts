@@ -2124,6 +2124,12 @@ export class Battle {
 			case 'mlt':
 				this.scene.resultAnim(poke, 'Already corroded', 'neutral');
 				break;
+			case 'stun':
+				this.scene.resultAnim(poke, 'Already stunned', 'neutral');
+				break;
+			case 'frb':
+				this.scene.resultAnim(poke, 'Already frostbitten', 'neutral');
+				break;
 			case 'slp':
 				if (fromeffect.id === 'uproar') {
 					this.scene.resultAnim(poke, 'Failed', 'neutral');
@@ -2260,6 +2266,14 @@ export class Battle {
 			case 'mlt':
 				this.scene.resultAnim(poke, 'Melting', 'psn');
 				this.scene.runStatusAnim('psn' as ID, [poke]);
+				break;
+			case 'stun':
+				this.scene.resultAnim(poke, 'Stunned', 'par');
+				this.scene.runStatusAnim('par' as ID, [poke]);
+				break;
+			case 'frb':
+				this.scene.resultAnim(poke, 'Frostbitten', 'frz');
+				this.scene.runStatusAnim('frz' as ID, [poke]);
 				break;
 			default:
 				this.scene.updateStatbar(poke);

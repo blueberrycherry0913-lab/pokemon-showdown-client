@@ -2842,6 +2842,10 @@ export class PokemonSprite extends Sprite {
 			status += '<span class="psn">COR</span> ';
 		} else if ((pokemon.status as string) === 'mlt') {
 			status += '<span class="psn">MLT</span> ';
+		} else if ((pokemon.status as string) === 'stun') {
+			status += '<span class="par">STN</span> ';
+		} else if ((pokemon.status as string) === 'frb') {
+			status += '<span class="frz">FRB</span> ';
 		}
 		if (pokemon.terastallized) {
 			status += `<img src="${Dex.resourcePrefix}sprites/types/${encodeURIComponent(pokemon.terastallized)}.png" alt="${pokemon.terastallized}" class="pixelated" /> `;

@@ -1585,6 +1585,9 @@ export class BattleTooltips {
 			// +10% damage taken while asleep — shown as ×10/11 Def/SpD reduction for tooltip purposes
 			stats.def = Math.floor(stats.def * 10 / 11);
 			stats.spd = Math.floor(stats.spd * 10 / 11);
+		} else if (status === 'stun' || status === 'par') {
+			// -33% Speed (Stunned) or -50% Speed (Paralyzed)
+			stats.spe = Math.floor(stats.spe * (status === 'stun' ? 2 / 3 : 1 / 2));
 		}
 
 		return stats;

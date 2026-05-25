@@ -1588,6 +1588,9 @@ export class BattleTooltips {
 		} else if (status === 'stun' || status === 'par') {
 			// -33% Speed (Stunned) or -50% Speed (Paralyzed)
 			stats.spe = Math.floor(stats.spe * (status === 'stun' ? 2 / 3 : 1 / 2));
+		} else if (status === 'frb' || status === 'frz') {
+			// -33% SpA (Frostbitten) or -50% SpA (Frozen Phase 2, the sustained state)
+			stats.spa = Math.floor(stats.spa * (status === 'frb' ? 2 / 3 : 1 / 2));
 		}
 
 		return stats;

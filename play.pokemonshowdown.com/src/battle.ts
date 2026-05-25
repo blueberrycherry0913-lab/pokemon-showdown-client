@@ -99,7 +99,7 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 	teraType = '';
 
 	boosts: { [stat: string]: number } = {};
-	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | 'stun' | '' | '???' = '';
+	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | 'stun' | 'frb' | '' | '???' = '';
 	statusStage = 0;
 	volatiles: { [effectid: string]: EffectState } = {};
 	turnstatuses: { [effectid: string]: EffectState } = {};
@@ -1025,7 +1025,7 @@ export interface PokemonHealth {
 	hp: number;
 	maxhp: number;
 	hpcolor: HPColor | '';
-	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | 'stun' | '' | '???';
+	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | 'stun' | 'frb' | '' | '???';
 	fainted?: boolean;
 }
 export interface ServerPokemon extends PokemonDetails, PokemonHealth {
@@ -3353,7 +3353,7 @@ export class Battle {
 		if (!status) {
 			output.status = '';
 		} else if (status === 'par' || status === 'brn' || status === 'slp' || status === 'frz' || status === 'tox' ||
-				status === 'scr' || status === 'cor' || status === 'mlt' || status === 'stun') {
+				status === 'scr' || status === 'cor' || status === 'mlt' || status === 'stun' || status === 'frb') {
 			output.status = status as any;
 		} else if (status === 'psn' && output.status !== 'tox') {
 			output.status = status;

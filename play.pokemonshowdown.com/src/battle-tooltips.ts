@@ -1581,6 +1581,10 @@ export class BattleTooltips {
 			stats.spd = Math.floor(stats.spd * (status === 'psn' ? 2 / 3 : 1 / 2));
 		} else if (status === 'cor' || status === 'mlt') {
 			stats.def = Math.floor(stats.def * (status === 'cor' ? 2 / 3 : 1 / 2));
+		} else if (status === 'slp') {
+			// +10% damage taken while asleep — shown as ×10/11 Def/SpD reduction for tooltip purposes
+			stats.def = Math.floor(stats.def * 10 / 11);
+			stats.spd = Math.floor(stats.spd * 10 / 11);
 		}
 
 		return stats;

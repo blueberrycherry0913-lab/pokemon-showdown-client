@@ -99,7 +99,7 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 	teraType = '';
 
 	boosts: { [stat: string]: number } = {};
-	status: Dex.StatusName | 'tox' | '' | '???' = '';
+	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | '' | '???' = '';
 	statusStage = 0;
 	volatiles: { [effectid: string]: EffectState } = {};
 	turnstatuses: { [effectid: string]: EffectState } = {};
@@ -1025,7 +1025,7 @@ export interface PokemonHealth {
 	hp: number;
 	maxhp: number;
 	hpcolor: HPColor | '';
-	status: Dex.StatusName | 'tox' | '' | '???';
+	status: Dex.StatusName | 'tox' | 'scr' | 'cor' | 'mlt' | '' | '???';
 	fainted?: boolean;
 }
 export interface ServerPokemon extends PokemonDetails, PokemonHealth {
@@ -2113,9 +2113,16 @@ export class Battle {
 			case 'brn':
 				this.scene.resultAnim(poke, 'Already burned', 'neutral');
 				break;
+			case 'scr':
+				this.scene.resultAnim(poke, 'Already scorched', 'neutral');
+				break;
 			case 'tox':
 			case 'psn':
 				this.scene.resultAnim(poke, 'Already poisoned', 'neutral');
+				break;
+			case 'cor':
+			case 'mlt':
+				this.scene.resultAnim(poke, 'Already corroded', 'neutral');
 				break;
 			case 'slp':
 				if (fromeffect.id === 'uproar') {
@@ -2241,6 +2248,18 @@ export class Battle {
 			case 'frz':
 				this.scene.resultAnim(poke, 'Frozen', 'frz');
 				this.scene.runStatusAnim('frz' as ID, [poke]);
+				break;
+			case 'scr':
+				this.scene.resultAnim(poke, 'Scorched', 'brn');
+				this.scene.runStatusAnim('brn' as ID, [poke]);
+				break;
+			case 'cor':
+				this.scene.resultAnim(poke, 'Corroded', 'psn');
+				this.scene.runStatusAnim('psn' as ID, [poke]);
+				break;
+			case 'mlt':
+				this.scene.resultAnim(poke, 'Melting', 'psn');
+				this.scene.runStatusAnim('psn' as ID, [poke]);
 				break;
 			default:
 				this.scene.updateStatbar(poke);

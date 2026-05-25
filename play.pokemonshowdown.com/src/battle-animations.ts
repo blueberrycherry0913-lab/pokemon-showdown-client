@@ -2836,6 +2836,12 @@ export class PokemonSprite extends Sprite {
 			status += '<span class="par">PAR</span> ';
 		} else if (pokemon.status === 'frz') {
 			status += '<span class="frz">FRZ</span> ';
+		} else if ((pokemon.status as string) === 'scr') {
+			status += '<span class="brn">SCR</span> ';
+		} else if ((pokemon.status as string) === 'cor') {
+			status += '<span class="psn">COR</span> ';
+		} else if ((pokemon.status as string) === 'mlt') {
+			status += '<span class="psn">MLT</span> ';
 		}
 		if (pokemon.terastallized) {
 			status += `<img src="${Dex.resourcePrefix}sprites/types/${encodeURIComponent(pokemon.terastallized)}.png" alt="${pokemon.terastallized}" class="pixelated" /> `;

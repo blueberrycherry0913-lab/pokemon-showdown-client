@@ -1569,6 +1569,18 @@ export class BattleTooltips {
 			}
 		}
 
+		// Custom status stat reductions. Applied after domain boosts so the debuff
+		// shows against the already-boosted value (matching server onModifyAtk/Def/SpD priority -101).
+		// Guts bypasses the burn/scorched Attack penalty (same guard as the server handler).
+		const status = serverPokemon.status;
+		if ((status === 'brn' || status === 'scr') && ability !== 'guts') {
+			stats.atk = Math.floor(stats.atk * (status === 'brn' ? 2 / 3 : 1 / 2));
+		} else if (status === 'psn' || status === 'tox') {
+			stats.spd = Math.floor(stats.spd * (status === 'psn' ? 2 / 3 : 1 / 2));
+		} else if (status === 'cor' || status === 'mlt') {
+			stats.def = Math.floor(stats.def * (status === 'cor' ? 2 / 3 : 1 / 2));
+		}
+
 		return stats;
 	}
 
@@ -2657,11 +2669,6 @@ export class BattleTooltips {
 			)
 		) {
 			value.set(60, 'Tera type BP minimum');
-		}
-
-		// Burn isn't really a base power modifier, so it needs to be applied after the Tera BP floor
-		if (this.battle.gen > 2 && serverPokemon.status === 'brn' && move.id !== 'facade' && move.category === 'Physical') {
-			if (!value.tryAbility("Guts")) value.modify(0.5, 'Burn');
 		}
 
 		if (

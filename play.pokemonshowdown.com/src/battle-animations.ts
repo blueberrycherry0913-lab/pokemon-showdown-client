@@ -3271,6 +3271,28 @@ const BattleBackdrops = [
 ];
 
 export const BattleOtherAnims: AnimTable = {
+	// Speed-tie §7: both Pokémon rush toward the midpoint and collide
+	speedtiecontact: {
+		anim(scene, [attacker, defender]) {
+			const midX = (attacker.x + defender.x) / 2;
+			const midZ = (attacker.z + defender.z) / 2;
+			const midY = (attacker.y + defender.y) / 2;
+			// Clash burst at the midpoint, timed to when they arrive
+			scene.showEffect('wisp', {
+				x: midX, y: midY + 10, z: midZ,
+				scale: 0, opacity: 1,
+				time: 250,
+			}, {
+				scale: 2.5, opacity: 0,
+				time: 500,
+			}, 'linear');
+			// Attacker slides to center
+			attacker.anim({ x: midX, y: midY, z: midZ, time: 250 }, 'decelerate');
+			// Bounce back to home
+			attacker.anim({ x: attacker.x, y: attacker.y, z: attacker.z, time: 350 }, 'ballistic2Back');
+			scene.wait(250);
+		},
+	},
 	hitmark: {
 		anim(scene, [attacker]) {
 			scene.showEffect('hitmark', {

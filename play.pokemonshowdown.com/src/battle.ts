@@ -1069,6 +1069,8 @@ export class Battle {
 	waitForAnimations: true | false | 'simult' = true;
 	/** the index of `stepQueue` currently being animated */
 	currentStep = 0;
+	/** True when the next |move| event is the second of a speed-tied pair (§7) */
+	speedTieAnimPending = false;
 	/** null = not seeking, 0 = seek start, Infinity = seek end, otherwise: seek turn number */
 	seeking: number | null = null;
 
@@ -3857,11 +3859,20 @@ export class Battle {
 			let poke2 = this.getPokemon(args[3]);
 			this.scene.beforeMove(poke);
 			this.useMove(poke, move, poke2, kwArgs);
-			this.animateMove(poke, move, poke2, kwArgs);
+			// Speed-tie §7: replace normal lunge with a center-clash animation for both
+			if ((kwArgs.simult || this.speedTieAnimPending) && poke2 && !this.seeking) {
+				this.scene.runOtherAnim('speedtiecontact' as ID, [poke, poke2]);
+			} else {
+				this.animateMove(poke, move, poke2, kwArgs);
+			}
 			this.scene.afterMove(poke);
 			this.log(args, kwArgs);
-			// Speed-tie §7: [simult] kwarg makes this move's animation overlap with the next
-			if (kwArgs.simult) this.waitForAnimations = 'simult';
+			if (kwArgs.simult) {
+				this.waitForAnimations = 'simult';
+				this.speedTieAnimPending = true;
+			} else {
+				this.speedTieAnimPending = false;
+			}
 			break;
 		}
 		case 'cant': {

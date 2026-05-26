@@ -1656,6 +1656,10 @@ process.stdout.write("Building `data/moves,items,abilities,typechart,learnsets.j
 	for (const id in textData.Abilities) assignData(id, textData.Abilities[id]);
 	for (const id in textData.Items) assignData(id, textData.Items[id]);
 
+	// Custom status text entries not in the server text data
+	Text['stun'] = {start: "  [POKEMON] became stunned!", alreadyStarted: "  [POKEMON] is already stunned!", end: "  [POKEMON] snapped out of its stun!", cant: "[POKEMON] is stunned! It can’t move!"};
+	Text['frb'] = {start: "  [POKEMON] was frostbitten!", alreadyStarted: "  [POKEMON] is already frostbitten!", end: "  [POKEMON]’s frostbite was healed!", damage: "  [POKEMON] was hurt by frostbite!"};
+
 	const buf = 'exports.BattleText = ' + es3stringify(Text) + ';';
 	fs.writeFileSync('play.pokemonshowdown.com/data/text.js', buf);
 }

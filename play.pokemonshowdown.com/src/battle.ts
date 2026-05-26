@@ -3285,6 +3285,23 @@ export class Battle {
 				break;
 			}
 			this.log(args, kwArgs);
+			// Domain activation chip: shown in the action log when a Domain pseudoWeather starts.
+			if (effect.name.endsWith(' Domain')) {
+				const typeName = effect.name.slice(0, -7); // strip ' Domain'
+				const typeColors: {[type: string]: string} = {
+					'Normal': '#9099A1', 'Fire': '#FF6633', 'Water': '#3399FF',
+					'Electric': '#FFCC33', 'Grass': '#66BB55', 'Ice': '#66CCFF',
+					'Fighting': '#BB5544', 'Poison': '#AA5599', 'Ground': '#DDBB55',
+					'Flying': '#8899FF', 'Psychic': '#FF5599', 'Bug': '#AABB22',
+					'Rock': '#BBAA66', 'Ghost': '#6655BB', 'Dragon': '#7766EE',
+					'Dark': '#775544', 'Steel': '#AAAABB', 'Fairy': '#EE99EE',
+					'Cosmic': '#9955BB',
+				};
+				const color = typeColors[typeName] || '#888888';
+				this.scene.log.addDiv('battle-history',
+					`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${typeName} Domain</b> — 5 turns • ${typeName}-type Pokémon: +20% all stats, +10% move power &amp; accuracy</div>`
+				);
+			}
 			break;
 		}
 		case '-fieldend': {

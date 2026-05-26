@@ -2737,6 +2737,15 @@ export class Battle {
 					this.scene.resultAnim(poke, 'Confused', 'bad');
 				}
 				break;
+			case 'interlocked':
+				this.scene.resultAnim(poke, 'Interlocked', 'bad');
+				break;
+			case 'movemarked':
+				this.scene.resultAnim(poke, 'Marked', 'bad');
+				break;
+			case 'movemindcontrolled':
+				this.scene.resultAnim(poke, 'Mind Controlled', 'bad');
+				break;
 			case 'leechseed':
 				this.scene.updateStatbar(poke);
 				break;
@@ -2861,6 +2870,23 @@ export class Battle {
 			}
 			this.scene.updateStatbar(poke);
 			this.log(args, kwArgs);
+			// Volatile description box: shown in the action log when a custom volatile is applied.
+			// Keyed by args[2] (the raw protocol string) since effect.id derivation varies.
+			if (!kwArgs.already) {
+				const volatileInfoMap: {[key: string]: [string, string, string]} = {
+					'confusion':             ['#AA4477', 'Confused',        '2 turns • Uses a random move instead of chosen'],
+					'interlocked':           ['#5566AA', 'Interlocked',     '3 turns • Both Pokémon trapped • Must target each other'],
+					'move: Marked':          ['#BB6622', 'Marked',          'Hunter deals ×1.5 damage and cannot miss this Pokémon'],
+					'move: Mind Controlled': ['#9944BB', 'Mind Controlled', 'Opponent picks this Pokémon\'s moves for 2 actions'],
+				};
+				const volatileInfo = volatileInfoMap[args[2] as string];
+				if (volatileInfo) {
+					const [color, name, desc] = volatileInfo;
+					this.scene.log.addDiv('battle-history',
+						`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${name}</b> — ${desc}</div>`
+					);
+				}
+			}
 			break;
 		}
 		case '-end': {

@@ -3860,6 +3860,8 @@ export class Battle {
 			this.animateMove(poke, move, poke2, kwArgs);
 			this.scene.afterMove(poke);
 			this.log(args, kwArgs);
+			// Speed-tie §7: [simult] kwarg makes this move's animation overlap with the next
+			if (kwArgs.simult) this.waitForAnimations = 'simult';
 			break;
 		}
 		case 'cant': {

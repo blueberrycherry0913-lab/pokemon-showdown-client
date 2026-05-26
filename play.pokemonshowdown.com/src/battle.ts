@@ -1676,6 +1676,10 @@ export class Battle {
 		case 'par':
 			this.scene.resultAnim(pokemon, 'Paralyzed', 'par');
 			break;
+		case 'stun':
+			this.scene.runStatusAnim('par' as ID, [pokemon]);
+			this.scene.resultAnim(pokemon, 'Stunned', 'par');
+			break;
 		case 'frz':
 			this.scene.resultAnim(pokemon, 'Frozen', 'frz');
 			break;

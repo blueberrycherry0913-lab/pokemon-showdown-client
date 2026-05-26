@@ -1548,9 +1548,10 @@ export class BattleTooltips {
 			}
 		}
 
-		// Domain stat boosts: +25% Atk/Def/SpA/SpD for Pokémon of the matching type.
+		// Domain stat boosts: +20% to all five stats (Atk/SpA/Def/SpD/Spe) for same-type Pokémon.
 		// Domains are pseudoWeather tracked by name (e.g. "Fire Domain").
 		// No grounding requirement — affects all Pokémon on the field.
+		// stats.spe must be applied directly here — speedModifiers[] is already consumed at line ~1540.
 		const domainTypeEntries: [string, string][] = [
 			['Normal Domain', 'Normal'], ['Fire Domain', 'Fire'], ['Water Domain', 'Water'],
 			['Electric Domain', 'Electric'], ['Grass Domain', 'Grass'], ['Ice Domain', 'Ice'],
@@ -1562,10 +1563,11 @@ export class BattleTooltips {
 		];
 		for (const [domainName, typeName] of domainTypeEntries) {
 			if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName)) {
-				stats.atk = Math.floor(stats.atk * 1.25);
-				stats.def = Math.floor(stats.def * 1.25);
-				stats.spa = Math.floor(stats.spa * 1.25);
-				stats.spd = Math.floor(stats.spd * 1.25);
+				stats.atk = Math.floor(stats.atk * 1.2);
+				stats.def = Math.floor(stats.def * 1.2);
+				stats.spa = Math.floor(stats.spa * 1.2);
+				stats.spd = Math.floor(stats.spd * 1.2);
+				stats.spe = Math.floor(stats.spe * 1.2);
 			}
 		}
 

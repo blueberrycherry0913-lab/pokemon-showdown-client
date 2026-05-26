@@ -3935,7 +3935,9 @@ export class Battle {
 		if (!str) return;
 		const { args, kwArgs } = BattleTextParser.parseBattleLine(str);
 
-		if (this.scene.maybeCloseMessagebar(args, kwArgs)) {
+		// Speed-tie §7: don't interrupt between the two paired moves to close the message bar.
+		// Both "X used Y!" lines appear together in the bar, and it closes after both.
+		if (!this.speedTieAnimPending && this.scene.maybeCloseMessagebar(args, kwArgs)) {
 			this.currentStep--;
 			this.activeMoveIsSpread = null;
 			return;

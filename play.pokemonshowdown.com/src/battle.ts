@@ -2280,6 +2280,28 @@ export class Battle {
 				break;
 			}
 			this.log(args, kwArgs);
+			// Status description box: shown in the action log when a status is first applied.
+			// Colors match the stat-bar badge colors defined in battle.css (.statbar span.*).
+			const statusInfoMap: {[id: string]: [string, string, string]} = {
+				'brn':  ['#EE5533', 'Burned',      '1/16 HP/turn • −33% Atk'],
+				'scr':  ['#EE5533', 'Scorched',    '1/8 HP/turn • −50% Atk'],
+				'psn':  ['#A4009A', 'Poisoned',    '1/16 HP/turn • −33% SpD'],
+				'tox':  ['#A4009A', 'Toxic',       'Escalating HP loss/turn • −50% SpD'],
+				'cor':  ['#A4009A', 'Corroded',    '1/16 HP/turn • −33% Def'],
+				'mlt':  ['#A4009A', 'Melting',     '1/8 HP/turn • −50% Def'],
+				'slp':  ['#AA77AA', 'Asleep',      '2-turn lockout • +1/10 HP healed/turn • +10% dmg taken'],
+				'stun': ['#9AA400', 'Stunned',     'First action skipped • −33% Spe • Pivot moves blocked'],
+				'par':  ['#9AA400', 'Paralyzed',   'First action skipped • −50% Spe • Priority −1'],
+				'frb':  ['#009AA4', 'Frostbitten', '1/16 HP/turn • −33% SpA'],
+				'frz':  ['#009AA4', 'Frozen',      'Phase 1: skip action, −50% dmg in • Phase 2: −50% SpA, 1/8 HP/turn'],
+			};
+			const statusInfo = statusInfoMap[args[2] as string];
+			if (statusInfo) {
+				const [color, name, desc] = statusInfo;
+				this.scene.log.addDiv('battle-history',
+					`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${name}</b> — ${desc}</div>`
+				);
+			}
 			break;
 		}
 		case '-curestatus': {

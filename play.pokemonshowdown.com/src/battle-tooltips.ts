@@ -1571,6 +1571,28 @@ export class BattleTooltips {
 			}
 		}
 
+		// Harder They Fall: flat stat boost (up to +50 per stat) when the active foe has
+		// a higher BST than the holder. Boost = min(floor((foeBST - userBST) * 0.4), 50).
+		if (ability === 'hardertheyfall' && clientPokemon) {
+			const foe = clientPokemon.side?.foe?.active?.[0] ?? null;
+			if (foe) {
+				const foeSpecies = Dex.species.get(foe.speciesForme || foe.name);
+				const userSpecies = Dex.species.get(clientPokemon.speciesForme || serverPokemon.name || '');
+				if (foeSpecies.exists && userSpecies.exists) {
+					const foeBST = (Object.values(foeSpecies.baseStats) as number[]).reduce((a, b) => a + b, 0);
+					const userBST = (Object.values(userSpecies.baseStats) as number[]).reduce((a, b) => a + b, 0);
+					const htfBoost = Math.min(Math.floor(Math.max(0, foeBST - userBST) * 0.4), 50);
+					if (htfBoost > 0) {
+						stats.atk += htfBoost;
+						stats.def += htfBoost;
+						stats.spa += htfBoost;
+						stats.spd += htfBoost;
+						stats.spe += htfBoost;
+					}
+				}
+			}
+		}
+
 		// Custom status stat reductions. Applied after domain boosts so the debuff
 		// shows against the already-boosted value (matching server onModifyAtk/Def/SpD priority -101).
 		// Guts bypasses the burn/scorched Attack penalty (same guard as the server handler).

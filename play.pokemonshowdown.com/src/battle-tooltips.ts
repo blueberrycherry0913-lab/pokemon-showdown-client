@@ -1593,6 +1593,19 @@ export class BattleTooltips {
 			}
 		}
 
+		// Burning Soul: Atk and SpA scale with remaining HP — ×(hp% + 0.5).
+		// ×1.5 at full HP, ×1.0 at 50%, ~×0.51 at 1% HP. Matches the server
+		// onModifyAtk/onModifySpA chainModify(pokemon.hp / pokemon.maxhp + 0.5).
+		if (ability === 'burningsoul') {
+			const curHP = clientPokemon?.hp ?? serverPokemon.hp;
+			const maxHP = clientPokemon?.maxhp ?? serverPokemon.maxhp;
+			if (maxHP > 0) {
+				const bsMult = curHP / maxHP + 0.5;
+				stats.atk = Math.floor(stats.atk * bsMult);
+				stats.spa = Math.floor(stats.spa * bsMult);
+			}
+		}
+
 		// Custom status stat reductions. Applied after domain boosts so the debuff
 		// shows against the already-boosted value (matching server onModifyAtk/Def/SpD priority -101).
 		// Guts bypasses the burn/scorched Attack penalty (same guard as the server handler).

@@ -1199,6 +1199,21 @@ export class BattleTooltips {
 			clientPokemon?.effectiveAbility(serverPokemon) ?? (serverPokemon.ability || serverPokemon.baseAbility)
 		);
 
+		// Dual-ability system (champions/testingstandard): the awakened (H-slot) ability
+		// is active alongside the basic ability. The client only tracks the basic ability
+		// in `ability`, so derive the awakened ability from the species H slot here so
+		// awakened-ability stat modifiers (Burning Soul, Harder They Fall) display.
+		const isChampionsFormat = toID(this.battle.tier).includes('testingstandard') ||
+			toID(this.battle.tier).includes('champions');
+		let awakenedAbility = '' as ID;
+		if (isChampionsFormat) {
+			const species = this.battle.dex.species.get(
+				clientPokemon?.speciesForme || serverPokemon.speciesForme || serverPokemon.name || ''
+			);
+			if (species?.abilities?.['H']) awakenedAbility = toID(species.abilities['H']);
+		}
+		const hasAbil = (id: string) => ability === id || awakenedAbility === id;
+
 		// check for burn, paralysis, guts, quick feet
 		if (pokemon.status) {
 			if (this.battle.gen > 2 && ability === 'guts') {
@@ -1573,7 +1588,7 @@ export class BattleTooltips {
 
 		// Harder They Fall: flat stat boost (up to +50 per stat) when the active foe has
 		// a higher BST than the holder. Boost = min(floor((foeBST - userBST) * 0.4), 50).
-		if (ability === 'hardertheyfall' && clientPokemon) {
+		if (hasAbil('hardertheyfall') && clientPokemon) {
 			const foe = clientPokemon.side?.foe?.active?.[0] ?? null;
 			if (foe) {
 				const foeSpecies = Dex.species.get(foe.speciesForme || foe.name);
@@ -1596,7 +1611,7 @@ export class BattleTooltips {
 		// Burning Soul: Atk and SpA scale with remaining HP — ×(hp% + 0.5).
 		// ×1.5 at full HP, ×1.0 at 50%, ~×0.51 at 1% HP. Matches the server
 		// onModifyAtk/onModifySpA chainModify(pokemon.hp / pokemon.maxhp + 0.5).
-		if (ability === 'burningsoul') {
+		if (hasAbil('burningsoul')) {
 			const curHP = clientPokemon?.hp ?? serverPokemon.hp;
 			const maxHP = clientPokemon?.maxhp ?? serverPokemon.maxhp;
 			if (maxHP > 0) {
@@ -3012,6 +3027,19 @@ export class BattleTooltips {
 			!(tier.includes('Almost Any Ability') || tier.includes('Hackmons') ||
 				tier.includes('Inheritance') || tier.includes('Metronome'))) {
 			text = '<small>Possible abilities:</small> ' + abilityData.possibilities.join(', ');
+		}
+		// Dual-ability system (champions/testingstandard): show the awakened (H-slot)
+		// ability as a second line. Derived from species data since the client only
+		// tracks the basic ability slot.
+		if (toID(this.battle.tier).includes('testingstandard') || toID(this.battle.tier).includes('champions')) {
+			const species = this.battle.dex.species.get(
+				clientPokemon?.speciesForme || serverPokemon?.speciesForme || serverPokemon?.name || ''
+			);
+			const awakened = species?.abilities?.['H'];
+			if (awakened) {
+				if (text) text += '</p><p>';
+				text += '<small>Awakened Ability:</small> ' + this.battle.dex.abilities.get(awakened).name;
+			}
 		}
 		return text;
 	}

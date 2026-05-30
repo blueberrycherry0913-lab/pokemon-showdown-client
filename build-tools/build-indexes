@@ -499,6 +499,12 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				return species.tier;
 			})();
 			overrideTier[species.id] = speciesTier;
+			// For renamed species the server Dex sets species.id = toID(name)
+			// (e.g. golemalola -> 'magolem', exeggutor -> 'cocommander'), but the
+			// client looks up overrideTier by the canonical data key. Emit both so
+			// either id resolves; otherwise getTier() misses and falls back to the
+			// base species' tier (e.g. Magolem -> Golem -> 'Illegal').
+			if (id !== species.id) overrideTier[id] = speciesTier;
 			if (species.forme) {
 				if (
 					[

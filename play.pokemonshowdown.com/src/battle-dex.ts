@@ -804,8 +804,10 @@ export const Dex = new class implements ModdedDex {
 		// Custom-renamed species reuse a canonical form's icon:
 		//   Magolem      → Golem-Alola      (golemalola)
 		//   Cocommander  → Exeggutor-Alola  (exeggutoralola)
+		//   Electronut   → Electrode-Hisui  (electrodehisui)
 		if (id === 'magolem') id = 'golemalola' as ID;
 		else if (id === 'cocommander') id = 'exeggutoralola' as ID;
+		else if (id === 'electronut') id = 'electrodehisui' as ID;
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;

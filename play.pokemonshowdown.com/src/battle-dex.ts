@@ -613,6 +613,9 @@ export const Dex = new class implements ModdedDex {
 			shiny: options.shiny,
 		};
 		let name = species.spriteid;
+		// Custom-renamed species reuse a canonical form's sprite.
+		if (name === 'cocommander') name = 'exeggutor-alola';
+		else if (name === 'magolem') name = 'golem-alola';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -647,6 +650,9 @@ export const Dex = new class implements ModdedDex {
 
 		let miscData = null;
 		let speciesid = species.id;
+		// Custom-renamed species reuse a canonical form's animation data.
+		if (speciesid === 'exeggutor' && species.spriteid === 'cocommander') speciesid = 'exeggutoralola';
+		else if (speciesid === 'magolem' || speciesid === 'golemalola') speciesid = 'golemalola';
 		if (speciesid === 'venusaurmegax') speciesid = 'venusaurgmax';
 		else if (speciesid === 'venusaurmegay') speciesid = 'venusaurmega';
 		else if (speciesid === 'blastoisemegax') speciesid = 'blastoisegmax';
@@ -795,6 +801,11 @@ export const Dex = new class implements ModdedDex {
 	}
 
 	getPokemonIconNum(id: ID, isFemale?: boolean, facingLeft?: boolean) {
+		// Custom-renamed species reuse a canonical form's icon:
+		//   Magolem      → Golem-Alola      (golemalola)
+		//   Cocommander  → Exeggutor-Alola  (exeggutoralola)
+		if (id === 'magolem') id = 'golemalola' as ID;
+		else if (id === 'cocommander') id = 'exeggutoralola' as ID;
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;
@@ -868,6 +879,17 @@ export const Dex = new class implements ModdedDex {
 			if (pokemon.species && !spriteid) {
 				spriteid = species.spriteid || id;
 			}
+		}
+		// Custom-renamed species reuse a canonical form's full sprite. Re-resolve
+		// to the real species + spriteid so the directory logic below runs exactly
+		// as it would for the original form.
+		//   Magolem      → Golem-Alola      Cocommander → Exeggutor-Alola
+		if (id === 'magolem' || spriteid === 'magolem' || spriteid === 'golem-alola') {
+			species = Dex.species.get('golemalola');
+			spriteid = 'golem-alola';
+		} else if (id === 'cocommander' || spriteid === 'cocommander') {
+			species = Dex.species.get('exeggutoralola');
+			spriteid = 'exeggutor-alola';
 		}
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };

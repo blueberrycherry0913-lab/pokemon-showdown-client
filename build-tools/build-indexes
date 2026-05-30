@@ -386,6 +386,13 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 								'Spiky-eared', 'Starter',
 							].includes(species.forme)) return 'Other';
 						}
+						// Custom species (user-invented) bucket under 'Custom' regardless of tier.
+						if (species.isNonstandard === 'custom') return 'Custom';
+						// Honor an explicit Illegal tag even for Gen 1 lineage — lets the user
+						// gate specific regional/alt formes (Alola/Galar/Hisui/Paldea, Golem,
+						// Tauros, etc.) out of the teambuilder. Megas/Other/Custom already
+						// returned above, so this only affects would-be Gen1/NFE entries.
+						if (species.natDexTier === 'Illegal') return 'Illegal';
 						return species.nfe ? 'NFE' : 'Gen1';
 					}
 					if (species.isNonstandard === 'custom') {

@@ -3023,23 +3023,34 @@ export class BattleTooltips {
 			}
 		}
 		const tier = this.battle.tier;
-		if (!text && abilityData.possibilities.length && !hidePossible &&
-			!(tier.includes('Almost Any Ability') || tier.includes('Hackmons') ||
-				tier.includes('Inheritance') || tier.includes('Metronome'))) {
-			text = '<small>Possible abilities:</small> ' + abilityData.possibilities.join(', ');
-		}
-		// Dual-ability system (champions/testingstandard): show the awakened (H-slot)
-		// ability as a second line. Derived from species data since the client only
-		// tracks the basic ability slot.
-		if (toID(this.battle.tier).includes('testingstandard') || toID(this.battle.tier).includes('champions')) {
+		const isChampions = toID(tier).includes('testingstandard') || toID(tier).includes('champions');
+		// Dual-ability system (champions/testingstandard): derive awakened (H-slot) ability
+		// from species data. It's always known (same for every Pokémon of that species) and
+		// must NOT appear in the "Possible abilities" list for the basic ability slot.
+		let awakenedAbilityName = '';
+		if (isChampions) {
 			const species = this.battle.dex.species.get(
 				clientPokemon?.speciesForme || serverPokemon?.speciesForme || serverPokemon?.name || ''
 			);
-			const awakened = species?.abilities?.['H'];
-			if (awakened) {
-				if (text) text += '</p><p>';
-				text += '<small>Awakened Ability:</small> ' + this.battle.dex.abilities.get(awakened).name;
+			const awakenedId = species?.abilities?.['H'];
+			if (awakenedId) awakenedAbilityName = this.battle.dex.abilities.get(awakenedId).name;
+		}
+		if (!text && abilityData.possibilities.length && !hidePossible &&
+			!(tier.includes('Almost Any Ability') || tier.includes('Hackmons') ||
+				tier.includes('Inheritance') || tier.includes('Metronome'))) {
+			// In champions format, filter the awakened ability out — it's confirmed separately,
+			// so only the two regular ability slots appear as possible basic abilities.
+			let possibilities = abilityData.possibilities;
+			if (isChampions && awakenedAbilityName) {
+				possibilities = possibilities.filter(p => p !== awakenedAbilityName);
 			}
+			if (possibilities.length) {
+				text = '<small>Possible abilities:</small> ' + possibilities.join(', ');
+			}
+		}
+		if (isChampions && awakenedAbilityName) {
+			if (text) text += '</p><p>';
+			text += '<small>Awakened Ability:</small> ' + awakenedAbilityName;
 		}
 		return text;
 	}

@@ -687,7 +687,7 @@ export class BattleTooltips {
 				basePower = `${value}`;
 				if (prevBasePower === null) prevBasePower = basePower;
 				if (prevBasePower !== basePower) difference = true;
-				basePowers.push(`Base power vs ${active.name}: ${basePower}`);
+				basePowers.push(`Base Power vs ${active.name}: ${basePower}`);
 			}
 			if (difference) {
 				text += '<p>' + basePowers.join('<br />') + '</p>';

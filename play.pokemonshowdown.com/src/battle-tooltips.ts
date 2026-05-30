@@ -699,7 +699,7 @@ export class BattleTooltips {
 			let activeTarget = foeActive[0] || foeActive[1] || foeActive[2];
 			value = this.getMoveBasePower(move, moveType, value, activeTarget);
 			if (!BattleTooltips.altHeld) {
-				text += `<p>Base power: ${value}</p>`;
+				text += `<p>Base Power: ${value}</p>`;
 			} else {
 				// Alt held: show True Power chain (base × STAB × ability mods = total)
 				const [mainTypes] = pokemon.getTypes(serverPokemon);
@@ -724,7 +724,12 @@ export class BattleTooltips {
 				// Build multiplier chain: STAB first, then ability mods
 				const parts: string[] = [];
 				let totalFactor = 1;
-				if (hasStab) { parts.push(stabLabel); totalFactor *= stabMult; }
+				if (hasStab) {
+					parts.push(stabLabel); totalFactor *= stabMult;
+				} else if (mainTypes.includes('Normal') && value.value > 0) {
+					// §1.5 Normal Inverse-STAB: ×1.1 on non-STAB moves (mutually exclusive with STAB)
+					parts.push('Inverse STAB (×1.1)'); totalFactor *= 1.1;
+				}
 				for (const mod of value.abilityMods) {
 					parts.push(`${mod.label} (×${mod.factor})`);
 					totalFactor *= mod.factor;

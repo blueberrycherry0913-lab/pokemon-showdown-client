@@ -396,6 +396,19 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 	}
 	rememberAbility(ability: string, isNotBase?: boolean) {
 		ability = Dex.abilities.get(ability).name;
+		// §8 Dual-ability system: the awakened (H-slot) ability is ALWAYS known and does not
+		// disambiguate which basic ability the Pokémon has. Base Showdown confirms any revealed
+		// ability as the Pokémon's ability — but in champions/testingstandard, an awakened
+		// ability triggering (e.g. Justified on a Dark hit) must NOT confirm it as THE ability,
+		// or the still-unknown basic ability would be wrongly hidden. `this.ability`/`baseAbility`
+		// represent the BASIC ability here (the tooltip derives the awakened from the species H
+		// slot separately), so we skip confirmation when the revealed ability is the awakened one.
+		// The activation animation still fires (activateAbility runs before this).
+		const battle = this.side.battle;
+		if (toID(battle.tier).includes('testingstandard') || toID(battle.tier).includes('champions')) {
+			const awakened = battle.dex.species.get(this.speciesForme).abilities?.['H'];
+			if (awakened && toID(awakened) === toID(ability)) return;
+		}
 		this.ability = ability;
 		if (!this.baseAbility && !isNotBase) {
 			this.baseAbility = ability;

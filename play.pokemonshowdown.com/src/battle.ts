@@ -3271,6 +3271,29 @@ export class Battle {
 			}
 			this.changeWeather(effect.name, poke, !!kwArgs.upkeep, ability);
 			this.log(args, kwArgs);
+			// Weather description box: shown in the action log when a weather is first set
+			// (not on upkeep, not on clear). Mirrors the status/domain info chips. Keyed by
+			// the weather ID and reflects the §2 reworked/new weather mechanics.
+			if (!kwArgs.upkeep && effect.id && effect.id !== 'none') {
+				const weatherInfoMap: {[id: string]: [string, string, string]} = {
+					'sunnyday':   ['#F0A020', 'Harsh Sun',   'Self-stat-drop moves drop −1 extra stage (Fire/Grass exempt) • Frostbite can\'t be inflicted'],
+					'raindance':  ['#6890F0', 'Heavy Rain',  'Non-Water Pokémon spend +1 PP per move • Burn can\'t be inflicted'],
+					'snowscape':  ['#48A0C0', 'Snowstorm',   '1/16 max HP/turn to all non-Ice/Steel Pokémon'],
+					'sandstorm':  ['#B8A038', 'Sandstorm',   '1/16 max HP/turn to all non-Rock/Ground/Steel Pokémon'],
+					'rainbow':    ['#C040A0', 'Rainbow',     'Damaging moves’ secondary-effect rates ×1.25 (stacks with Serene Grace)'],
+					'fullmoon':   ['#8060C0', 'Full Moon',   'Blocks moves with priority +1 or higher (protection &amp; priority-0/negative moves unaffected)'],
+					'newmoon':    ['#555577', 'New Moon',    'Blocks all HP healing (Leftovers, Pain Split &amp; Regenerator exempt)'],
+					'fog':        ['#888888', 'Fog',         'All moves’ accuracy ×0.8'],
+					'clearskies': ['#78C0F0', 'Clear Skies', 'Neutral skies — no mechanical effects'],
+				};
+				const weatherInfo = weatherInfoMap[effect.id];
+				if (weatherInfo) {
+					const [color, name, desc] = weatherInfo;
+					this.scene.log.addDiv('battle-history',
+						`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${name}</b> — ${desc}</div>`
+					);
+				}
+			}
 			break;
 		}
 		case '-fieldstart': {

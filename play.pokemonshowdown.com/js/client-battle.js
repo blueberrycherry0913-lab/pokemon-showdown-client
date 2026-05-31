@@ -808,7 +808,7 @@
 					checkboxes.push('<label class="megaevo"><input type="checkbox" name="dynamax" />&nbsp;Dynamax</label>');
 				}
 				if (canTerastallize) {
-					// §11 Terra Crystal: a "Terastallize" toggle that reveals a grid of type icons.
+					// §11 Tera Crystal: a "Terastallize" toggle that reveals a grid of type icons.
 					// The in-battle-chosen type lives in this.choice.teraType (reset per request);
 					// engaging without picking a type falls back to the preset (canTerastallize).
 					var teraEngaged = !!(this.choice && this.choice.tera);
@@ -1366,7 +1366,7 @@
 				var isZMove = !!(this.$('input[name=zmove]')[0] || '').checked;
 				var isUltraBurst = !!(this.$('input[name=ultraburst]')[0] || '').checked;
 				var isDynamax = !!(this.$('input[name=dynamax]')[0] || '').checked;
-				// §11 Terra Crystal: engage state + chosen type live on this.choice (set by the
+				// §11 Tera Crystal: engage state + chosen type live on this.choice (set by the
 				// chooseTera / chooseTeraType handlers). No type picked = bare 'terastallize' (preset).
 				var teraSuffix = (this.choice && this.choice.tera) ?
 					(this.choice.teraType ? ' terastallize ' + toID(this.choice.teraType) : ' terastallize') : '';
@@ -1390,7 +1390,7 @@
 			this.choice.choices[this.choice.choices.length - 1] += ' ' + posString;
 			this.chooseMove();
 		},
-		// §11 Terra Crystal: toggle Terastallization on/off. Engaging reveals the type-icon
+		// §11 Tera Crystal: toggle Terastallization on/off. Engaging reveals the type-icon
 		// grid (rendered in updateMoveControls); the chosen type defaults to the preset until
 		// the player picks one. State lives on this.choice so it resets each request.
 		chooseTera: function () {
@@ -1398,7 +1398,7 @@
 			this.choice.tera = !this.choice.tera;
 			this.updateControlsForPlayer();
 		},
-		// §11 Terra Crystal: pick the Tera type from the grid (engages Tera if not already).
+		// §11 Tera Crystal: pick the Tera type from the grid (engages Tera if not already).
 		chooseTeraType: function (type) {
 			if (!this.choice) return;
 			this.choice.tera = true;

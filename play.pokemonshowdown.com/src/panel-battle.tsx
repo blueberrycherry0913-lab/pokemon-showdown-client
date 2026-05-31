@@ -344,7 +344,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		}
 		this.props.room.update(null);
 	};
-	// §11 Terra Crystal: pick the Tera type from the in-battle grid (engages Tera).
+	// §11 Tera Crystal: pick the Tera type from the in-battle grid (engages Tera).
 	chooseTeraType = (type: string) => {
 		const choices = this.props.room.choices;
 		if (!choices) return;
@@ -652,7 +652,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 					<input type="checkbox" name="tera" checked={choices.current.tera} onChange={this.toggleBoostedMove} /> {}
 					Terastallize
 				</label>}
-				{/* §11 Terra Crystal: in-battle type picker — a grid of type icons shown when engaged. */}
+				{/* §11 Tera Crystal: in-battle type picker — a grid of type icons shown when engaged. */}
 				{canTerastallize && choices.current.tera && <div class="teratype-grid" style="white-space:normal;max-width:252px">
 					{Dex.types.names().map(tn => {
 						const sel = (choices.current.teraType || canTerastallize) === tn;

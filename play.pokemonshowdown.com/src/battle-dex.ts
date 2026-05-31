@@ -981,7 +981,7 @@ export const Dex = new class implements ModdedDex {
 		type = this.types.get(type).name;
 		if (!type) type = '???';
 		let sanitizedType = type.replace(/\?/g, '%3f');
-		const typePrefix = sanitizedType === 'Cosmic' ? '/sprites/types/' : `${Dex.resourcePrefix}sprites/types/`;
+		const typePrefix = sanitizedType === 'Cosmic' ? '/play.pokemonshowdown.com/sprites/types/' : `${Dex.resourcePrefix}sprites/types/`;
 		return `<img src="${typePrefix}${sanitizedType}.png" alt="${type}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
 	}
 

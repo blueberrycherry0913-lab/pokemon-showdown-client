@@ -702,18 +702,33 @@ export class BattleTooltips {
 				text += `<p>Base Power: ${value}</p>`;
 			} else {
 				// Alt held: show True Power chain (base × STAB × ability mods = total)
-				const [mainTypes] = pokemon.getTypes(serverPokemon);
-				const hasStab = mainTypes.includes(moveType) && value.value > 0;
+				// §6 + §11: STAB is additive — 1.0 + original-typing bonus + Tera bonus.
+				// Use PRE-Tera types for the original bonus (so Tera never grants the Pure
+				// bonus) and add +0.5 when the move type matches the chosen Tera type. Mirrors
+				// config/formats.ts onModifySTAB.
+				const mainTypes = pokemon.getTypes(serverPokemon, true)[0]; // pre-terastallized typing
+				const teraType = pokemon.terastallized;
+				const teraBonus = (teraType && teraType === moveType) ? 0.5 : 0;
+				const hasOrigStab = mainTypes.includes(moveType);
+				const hasStab = (hasOrigStab || teraBonus > 0) && value.value > 0;
 				let stabMult: number;
 				let stabLabel: string;
-				if (ability === 'adaptability') {
-					stabMult = 2; stabLabel = 'Adaptability (×2)';
-				} else if (mainTypes.length === 1) {
-					stabMult = 1.6; stabLabel = 'Pure STAB (×1.6)';
-				} else if (mainTypes[0] === moveType) {
-					stabMult = 1.5; stabLabel = 'Primary STAB (×1.5)';
+				if (ability === 'adaptability' && (hasOrigStab || teraBonus > 0)) {
+					stabMult = 2 + teraBonus;
+					stabLabel = teraBonus ? `Adaptability +Tera (×${stabMult})` : 'Adaptability (×2)';
 				} else {
-					stabMult = 1.4; stabLabel = 'Secondary STAB (×1.4)';
+					let origBonus = 0;
+					let origLabel = '';
+					if (hasOrigStab) {
+						if (mainTypes.length === 1) { origBonus = 0.6; origLabel = 'Pure STAB'; }
+						else if (mainTypes[0] === moveType) { origBonus = 0.5; origLabel = 'Primary STAB'; }
+						else { origBonus = 0.4; origLabel = 'Secondary STAB'; }
+						if (ability === 'specialist') { origBonus += 0.75; origLabel += ' +Specialist'; }
+					}
+					stabMult = 1 + origBonus + teraBonus;
+					if (origBonus && teraBonus) stabLabel = `${origLabel} +Tera (×${stabMult})`;
+					else if (teraBonus) stabLabel = `Tera STAB (×${stabMult})`;
+					else stabLabel = `${origLabel} (×${stabMult})`;
 				}
 
 				// Back-calculate raw BP before ability mods were applied

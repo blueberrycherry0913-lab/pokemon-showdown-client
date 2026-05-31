@@ -344,6 +344,14 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		}
 		this.props.room.update(null);
 	};
+	// §11 Terra Crystal: pick the Tera type from the in-battle grid (engages Tera).
+	chooseTeraType = (type: string) => {
+		const choices = this.props.room.choices;
+		if (!choices) return;
+		choices.current.tera = true;
+		choices.current.teraType = type;
+		this.props.room.update(null);
+	};
 	override componentDidMount() {
 		const room = this.props.room;
 		const $elem = $(this.base!);
@@ -642,8 +650,19 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				</label>}
 				{canTerastallize && <label class={`megaevo${choices.current.tera ? ' cur' : ''}`}>
 					<input type="checkbox" name="tera" checked={choices.current.tera} onChange={this.toggleBoostedMove} /> {}
-					Terastallize<br /><span dangerouslySetInnerHTML={{ __html: Dex.getTypeIcon(canTerastallize) }} />
+					Terastallize
 				</label>}
+				{/* §11 Terra Crystal: in-battle type picker — a grid of type icons shown when engaged. */}
+				{canTerastallize && choices.current.tera && <div class="teratype-grid" style="white-space:normal;max-width:252px">
+					{Dex.types.names().map(tn => {
+						const sel = (choices.current.teraType || canTerastallize) === tn;
+						return <button
+							style={`display:inline-block;padding:1px;margin:1px;line-height:0;border:2px solid ${sel ? '#222' : 'transparent'};border-radius:4px;background:${sel ? '#ffe' : 'transparent'};cursor:pointer`}
+							onClick={() => this.chooseTeraType(tn)}
+							dangerouslySetInnerHTML={{ __html: Dex.getTypeIcon(tn) }}
+						/>;
+					})}
+				</div>}
 			</div>
 		</div>;
 	}

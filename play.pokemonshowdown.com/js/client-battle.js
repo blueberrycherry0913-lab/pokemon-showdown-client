@@ -808,7 +808,27 @@
 					checkboxes.push('<label class="megaevo"><input type="checkbox" name="dynamax" />&nbsp;Dynamax</label>');
 				}
 				if (canTerastallize) {
-					checkboxes.push('<label class="megaevo"><input type="checkbox" name="terastallize" />&nbsp;Terastallize<br />' + Dex.getTypeIcon(canTerastallize) + '</label>');
+					// §11 Terra Crystal: a "Terastallize" toggle that reveals a grid of type icons.
+					// The in-battle-chosen type lives in this.choice.teraType (reset per request);
+					// engaging without picking a type falls back to the preset (canTerastallize).
+					var teraEngaged = !!(this.choice && this.choice.tera);
+					var teraSelected = (this.choice && this.choice.teraType) || canTerastallize;
+					var teraControl = '<div class="megaevo" style="white-space:normal;max-width:252px">' +
+						'<button class="button" name="chooseTera" style="margin-bottom:2px">' +
+						(teraEngaged ? '&#10003; Terastallizing: ' + Dex.getTypeIcon(teraSelected) : '&#9670; Terastallize') +
+						'</button>';
+					if (teraEngaged) {
+						var teraNames = Dex.types.names(); // all real types incl. Cosmic; excludes Stellar
+						teraControl += '<div class="teratype-grid">';
+						for (var ti = 0; ti < teraNames.length; ti++) {
+							var tn = teraNames[ti];
+							var sel = (tn === teraSelected);
+							teraControl += '<button name="chooseTeraType" value="' + tn + '" title="' + tn + '" style="display:inline-block;padding:1px;margin:1px;line-height:0;border:2px solid ' + (sel ? '#222' : 'transparent') + ';border-radius:4px;background:' + (sel ? '#ffe' : 'transparent') + ';cursor:pointer">' + Dex.getTypeIcon(tn) + '</button>';
+						}
+						teraControl += '</div>';
+					}
+					teraControl += '</div>';
+					checkboxes.push(teraControl);
 				}
 				if (checkboxes.length) {
 					moveMenu += '<div class="megaevo-box">' + checkboxes.join('') + '</div>';
@@ -1346,13 +1366,16 @@
 				var isZMove = !!(this.$('input[name=zmove]')[0] || '').checked;
 				var isUltraBurst = !!(this.$('input[name=ultraburst]')[0] || '').checked;
 				var isDynamax = !!(this.$('input[name=dynamax]')[0] || '').checked;
-				var isTerastal = !!(this.$('input[name=terastallize]')[0] || '').checked;
+				// §11 Terra Crystal: engage state + chosen type live on this.choice (set by the
+				// chooseTera / chooseTeraType handlers). No type picked = bare 'terastallize' (preset).
+				var teraSuffix = (this.choice && this.choice.tera) ?
+					(this.choice.teraType ? ' terastallize ' + toID(this.choice.teraType) : ' terastallize') : '';
 
 				var target = e.getAttribute('data-target');
 				var choosableTargets = { normal: 1, any: 1, adjacentAlly: 1, adjacentAllyOrSelf: 1, adjacentFoe: 1 };
 				if (this.battle.gameType === 'freeforall') delete choosableTargets['adjacentAllyOrSelf'];
 
-				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + (isTerastal ? ' terastallize' : ''));
+				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix);
 				if (nearActive.length > 1 && target in choosableTargets) {
 					this.choice.type = 'movetarget';
 					this.choice.moveTarget = target;
@@ -1366,6 +1389,21 @@
 		chooseMoveTarget: function (posString) {
 			this.choice.choices[this.choice.choices.length - 1] += ' ' + posString;
 			this.chooseMove();
+		},
+		// §11 Terra Crystal: toggle Terastallization on/off. Engaging reveals the type-icon
+		// grid (rendered in updateMoveControls); the chosen type defaults to the preset until
+		// the player picks one. State lives on this.choice so it resets each request.
+		chooseTera: function () {
+			if (!this.choice) return;
+			this.choice.tera = !this.choice.tera;
+			this.updateControlsForPlayer();
+		},
+		// §11 Terra Crystal: pick the Tera type from the grid (engages Tera if not already).
+		chooseTeraType: function (type) {
+			if (!this.choice) return;
+			this.choice.tera = true;
+			this.choice.teraType = type;
+			this.updateControlsForPlayer();
 		},
 		chooseControlledMove: function (pos) {
 			// Mind Control: record the player's choice for the opponent's MC'd Pokémon.

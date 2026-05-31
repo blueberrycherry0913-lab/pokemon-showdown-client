@@ -117,6 +117,8 @@ interface BattleMoveChoice {
 	max: boolean;
 	// gen 9
 	tera: boolean;
+	/** §11 Terra Crystal: the in-battle-chosen Tera type (canonical Name, e.g. "Fire"). */
+	teraType?: string;
 }
 interface BattleSwitchChoice {
 	choiceType: 'switch' | 'team';
@@ -422,6 +424,12 @@ export class BattleChoiceBuilder {
 				} else if (choice.endsWith(' max')) {
 					current.max = true;
 					choice = choice.slice(0, -4);
+				} else if (/ terastal(?:lize)? \S+$/i.test(choice)) {
+					// §11 Terra Crystal: "<move> terastallize <type>" — capture the chosen type.
+					const teraMatch = / (?:terastallize|terastal) (\S+)$/i.exec(choice)!;
+					current.tera = true;
+					current.teraType = teraMatch[1];
+					choice = choice.slice(0, teraMatch.index);
 				} else if (choice.endsWith(' terastallize')) {
 					current.tera = true;
 					choice = choice.slice(0, -13);
@@ -570,7 +578,8 @@ export class BattleChoiceBuilder {
 			(choice.megay ? ' megay' : '') +
 			(choice.ultra ? ' ultra' : '') +
 			(choice.z ? ' zmove' : '') +
-			(choice.tera ? ' terastallize' : '');
+			// §11 Terra Crystal: emit the chosen type (lowercased ID) when one was picked.
+			(choice.tera ? (choice.teraType ? ' terastallize ' + toID(choice.teraType) : ' terastallize') : '');
 	}
 
 	/**

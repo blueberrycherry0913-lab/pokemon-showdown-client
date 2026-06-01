@@ -128,6 +128,13 @@
 		<script>
 			window.onload = () => {
 				window.app = new App();
+				// Permanent analytics leaderboard tab — opens in background after prefs load
+				Storage.whenPrefsLoaded(function () {
+					var room = app._addRoom('view-analytics', null, true, 'Leaderboard');
+					app.updateSideRoom();
+					app.updateLayout();
+					room.join(); // queued until socket opens; server returns |pagehtml|
+				});
 			}
 		</script>
 

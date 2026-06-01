@@ -515,12 +515,15 @@ export const Dex = new class implements ModdedDex {
 		namesCache: null as Dex.TypeName[] | null,
 		get: (type: any): Type => {
 			if (!type || typeof type === 'string') {
-				const id = toID(type) as string;
-				const name = id.substr(0, 1).toUpperCase() + id.substr(1);
+				let id = toID(type) as string;
+				// "Air" is the display name for the internal Flying type. Alias the display
+				// name back to the flying chart so reverse lookups by name still resolve.
+				if (id === 'air') id = 'flying';
+				const name = id === 'flying' ? 'Air' : id.substr(0, 1).toUpperCase() + id.substr(1);
 				type = window.BattleTypeChart?.[id] || {};
 				if (type.damageTaken) type.exists = true;
 				if (!type.id) type.id = id;
-				if (!type.name) type.name = name;
+				if (!type.name || id === 'flying') type.name = name;
 				if (!type.effectType) {
 					type.effectType = 'Type';
 				}
@@ -977,12 +980,19 @@ export const Dex = new class implements ModdedDex {
 		return `background:transparent url(${Dex.resourcePrefix}sprites/itemicons-sheet.png?v1) no-repeat scroll -${left}px -${top}px`;
 	}
 
+	getTypeIconSrc(type: string | null) {
+		let name = this.types.get(type).name;
+		if (!name) name = '???';
+		const sanitizedType = name.replace(/\?/g, '%3f');
+		// Cosmic and Air are custom type icons that live in the local sprites folder, not the CDN.
+		const typePrefix = (sanitizedType === 'Cosmic' || sanitizedType === 'Air') ?
+			'/play.pokemonshowdown.com/sprites/types/' : `${Dex.resourcePrefix}sprites/types/`;
+		return `${typePrefix}${sanitizedType}.png`;
+	}
 	getTypeIcon(type: string | null, b?: boolean) { // b is just for utilichart.js
-		type = this.types.get(type).name;
-		if (!type) type = '???';
-		let sanitizedType = type.replace(/\?/g, '%3f');
-		const typePrefix = sanitizedType === 'Cosmic' ? '/play.pokemonshowdown.com/sprites/types/' : `${Dex.resourcePrefix}sprites/types/`;
-		return `<img src="${typePrefix}${sanitizedType}.png" alt="${type}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
+		let name = this.types.get(type).name;
+		if (!name) name = '???';
+		return `<img src="${this.getTypeIconSrc(type)}" alt="${name}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
 	}
 
 	getCategoryIcon(category: string | null) {

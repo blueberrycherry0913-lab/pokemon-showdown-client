@@ -100,7 +100,7 @@ export class PSSearchResults extends preact.Component<{
 
 				<span class="col typecol">
 					{pokemon.types.map(type =>
-						<img src={`${Dex.resourcePrefix}sprites/types/${type}.png`} alt={type} height="14" width="32" class="pixelated" />
+						<img src={Dex.getTypeIconSrc(type)} alt={Dex.types.get(type).name} height="14" width="32" class="pixelated" />
 					)}
 				</span>
 
@@ -254,8 +254,8 @@ export class PSSearchResults extends preact.Component<{
 
 			<span class="col typecol">
 				<img
-					src={`${Dex.resourcePrefix}sprites/types/${encodeURIComponent(move.type)}.png`}
-					alt={move.type} height="14" width="32" class="pixelated"
+					src={Dex.getTypeIconSrc(move.type)}
+					alt={Dex.types.get(move.type).name} height="14" width="32" class="pixelated"
 				/>
 				<img
 					src={`${Dex.resourcePrefix}sprites/categories/${move.category}.png`}
@@ -279,15 +279,18 @@ export class PSSearchResults extends preact.Component<{
 	}
 
 	renderTypeRow(id: ID, matchStart: number, matchEnd: number, errorMessage?: preact.ComponentChildren) {
+		// `name` stays the canonical type (e.g. 'Flying') for href/filter data; `displayName`
+		// is the cosmetic label (e.g. 'Air') shown to the user.
 		const name = id.charAt(0).toUpperCase() + id.slice(1);
+		const displayName = Dex.types.get(id).name;
 
 		return <li class="result"><a href={`${this.URL_ROOT}types/${id}`} data-target="push" data-entry={`type|${name}`}>
-			<span class="col namecol">{this.renderName(name, matchStart, matchEnd)}</span>
+			<span class="col namecol">{this.renderName(displayName, matchStart, matchEnd)}</span>
 
 			<span class="col typecol">
 				<img
-					src={`${Dex.resourcePrefix}sprites/types/${encodeURIComponent(name)}.png`}
-					alt={name} height="14" width="32" class="pixelated"
+					src={Dex.getTypeIconSrc(id)}
+					alt={displayName} height="14" width="32" class="pixelated"
 				/>
 			</span>
 

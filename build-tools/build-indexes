@@ -199,6 +199,9 @@ function requireNoCache(pathSpec) {
 		index.push(`${ubCode} pokemon ${id} 0`);
 	}
 
+	// custom alias: "air" surfaces the Flying type (the Flying type is displayed as "Air")
+	index.push('air type flying 0');
+
 	index.sort();
 
 	// manually rearrange

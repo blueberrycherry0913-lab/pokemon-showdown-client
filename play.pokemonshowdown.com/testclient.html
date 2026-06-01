@@ -130,40 +130,46 @@
 				window.app = new App();
 
 				// --- Permanent analytics/leaderboard tab ---
+				var ANALYTICS_ID = 'view-analytics';
 
-				// Create the tab shell early so it appears in the tab strip immediately.
+				// Create the tab shell (background, not focused) if it doesn't exist,
+				// and (re)fetch its page content from the server.
+				function ensureAnalyticsTab(doJoin) {
+					var room = app.rooms[ANALYTICS_ID];
+					if (!room) {
+						room = app._addRoom(ANALYTICS_ID, null, true, 'Leaderboard');
+						app.updateSideRoom();
+						app.updateLayout();
+					}
+					// room.join() sends "/join view-analytics"; app.send() queues the
+					// message if the socket isn't open yet and flushes it on connect.
+					if (doJoin && room && room.join) room.join();
+					return room;
+				}
+
+				// 1. Create the tab as early as prefs allow.
 				Storage.whenPrefsLoaded(function () {
-					if (!app.rooms['view-analytics']) {
-						app._addRoom('view-analytics', null, true, 'Leaderboard');
-						app.updateSideRoom();
-						app.updateLayout();
-					}
+					ensureAnalyticsTab(true);
 				});
 
-				// Fetch page content once the socket is actually open.
-				// init:socketopened is a Backbone event triggered on app (client.js:850).
+				// 2. (Re)fetch whenever a socket connection is (re)established.
 				app.on('init:socketopened', function () {
-					if (!app.rooms['view-analytics']) {
-						app._addRoom('view-analytics', null, true, 'Leaderboard');
-						app.updateSideRoom();
-						app.updateLayout();
-					}
-					app.rooms['view-analytics'].join();
+					ensureAnalyticsTab(true);
 				});
 
-				// Re-add the tab immediately if the user closes it.
-				var _origUnjoin = app.unjoinRoom.bind(app);
-				app.unjoinRoom = function (id, reason) {
-					_origUnjoin(id, reason);
-					if (id === 'view-analytics') {
-						setTimeout(function () {
-							if (!app.rooms['view-analytics']) {
-								app._addRoom('view-analytics', null, false, 'Leaderboard');
-								app.updateSideRoom();
-								app.updateLayout();
-								app.rooms['view-analytics'].join();
-							}
-						}, 50);
+				// 3. If the socket is already open by the time we get here, fetch now.
+				if (app.socket && app.socket.readyState === 1 /* OPEN */) {
+					ensureAnalyticsTab(true);
+				}
+
+				// Keep the tab permanent: re-add it shortly after it is closed.
+				// Closing a tab calls closeRoom -> app.leaveRoom -> app.removeRoom,
+				// so removeRoom is the correct function to wrap (NOT unjoinRoom).
+				var _origRemoveRoom = app.removeRoom.bind(app);
+				app.removeRoom = function (id, alreadyLeft) {
+					_origRemoveRoom(id, alreadyLeft);
+					if (id === ANALYTICS_ID) {
+						setTimeout(function () { ensureAnalyticsTab(true); }, 100);
 					}
 				};
 			}

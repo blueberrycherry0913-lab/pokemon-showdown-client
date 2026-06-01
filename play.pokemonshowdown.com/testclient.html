@@ -128,13 +128,44 @@
 		<script>
 			window.onload = () => {
 				window.app = new App();
-				// Permanent analytics leaderboard tab — opens in background after prefs load
+
+				// --- Permanent analytics/leaderboard tab ---
+
+				// Create the tab shell early so it appears in the tab strip immediately.
 				Storage.whenPrefsLoaded(function () {
-					var room = app._addRoom('view-analytics', null, true, 'Leaderboard');
-					app.updateSideRoom();
-					app.updateLayout();
-					room.join(); // queued until socket opens; server returns |pagehtml|
+					if (!app.rooms['view-analytics']) {
+						app._addRoom('view-analytics', null, true, 'Leaderboard');
+						app.updateSideRoom();
+						app.updateLayout();
+					}
 				});
+
+				// Fetch page content once the socket is actually open.
+				// init:socketopened is a Backbone event triggered on app (client.js:850).
+				app.on('init:socketopened', function () {
+					if (!app.rooms['view-analytics']) {
+						app._addRoom('view-analytics', null, true, 'Leaderboard');
+						app.updateSideRoom();
+						app.updateLayout();
+					}
+					app.rooms['view-analytics'].join();
+				});
+
+				// Re-add the tab immediately if the user closes it.
+				var _origUnjoin = app.unjoinRoom.bind(app);
+				app.unjoinRoom = function (id, reason) {
+					_origUnjoin(id, reason);
+					if (id === 'view-analytics') {
+						setTimeout(function () {
+							if (!app.rooms['view-analytics']) {
+								app._addRoom('view-analytics', null, false, 'Leaderboard');
+								app.updateSideRoom();
+								app.updateLayout();
+								app.rooms['view-analytics'].join();
+							}
+						}, 50);
+					}
+				};
 			}
 		</script>
 

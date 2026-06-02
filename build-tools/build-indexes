@@ -1601,6 +1601,16 @@ process.stdout.write("Building `data/moves,items,abilities,typechart,learnsets.j
 		if (ability.desc) Abilities[id].desc = ability.desc;
 		if (ability.shortDesc) Abilities[id].shortDesc = ability.shortDesc;
 	}
+	// Alias renamed abilities: when toID(ability.name) != dex key, the client's
+	// Dex.abilities.get(name) lookup misses. Add a second entry under the name ID.
+	for (const id in Abilities) {
+		if (Abilities[id].name) {
+			const nameId = toID(Abilities[id].name);
+			if (nameId !== id && !Abilities[nameId]) {
+				Abilities[nameId] = Abilities[id];
+			}
+		}
+	}
 	const buf = 'exports.BattleAbilities = ' + es3stringify(Abilities) + ';';
 	fs.writeFileSync('play.pokemonshowdown.com/data/abilities.js', buf);
 }

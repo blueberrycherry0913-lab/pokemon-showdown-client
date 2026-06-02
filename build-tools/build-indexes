@@ -1538,6 +1538,17 @@ process.stdout.write("Building `data/pokedex.js`... ");
 			if (formatsEntry.unreleasedHidden) entry.unreleasedHidden = formatsEntry.unreleasedHidden;
 		}
 	}
+	// Alias custom-named formes: when toID(species.name) != dex key, the client's
+	// Dex.species.get(name) lookup would miss. Add a second entry under the name ID.
+	for (const id in Pokedex) {
+		const entry = Pokedex[id];
+		if (entry.name) {
+			const nameId = toID(entry.name);
+			if (nameId !== id && !Pokedex[nameId]) {
+				Pokedex[nameId] = entry;
+			}
+		}
+	}
 	const buf = 'exports.BattlePokedex = ' + es3stringify(Pokedex) + ';';
 	fs.writeFileSync('play.pokemonshowdown.com/data/pokedex.js', buf);
 	fs.writeFileSync('play.pokemonshowdown.com/data/pokedex.json', JSON.stringify(Pokedex));

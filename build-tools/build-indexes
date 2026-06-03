@@ -129,7 +129,7 @@ function requireNoCache(pathSpec) {
 		if (type === 'pokemon' && !compoundTable.has(id)) {
 			const species = Dex.species.get(id);
 			const baseid = toID(species.baseSpecies);
-			if (baseid !== id) {
+			if (baseid !== id && name.startsWith(species.baseSpecies + '-')) {
 				name = (compoundTable.get(baseid) || species.baseSpecies) + ' ' + species.forme;
 			}
 		}
@@ -147,6 +147,8 @@ function requireNoCache(pathSpec) {
 		} else if (name.endsWith(' Hisui')) {
 			index.push('hisuian' + toID(name.slice(0, -6)) + ' ' + type + ' ' + id + ' 0');
 		}
+		// For species/abilities/items with custom names, index by the custom name so players can search it
+		if (toID(name) !== id) index.push(toID(name) + ' ' + type + ' ' + id + ' 0');
 		const fullSplit = name.split(/ |-/).map(toID);
 		if (fullSplit.length < 2) return;
 		const fullAcronym = fullSplit.map(x => x.charAt(0)).join('') + fullSplit.at(-1).slice(1);

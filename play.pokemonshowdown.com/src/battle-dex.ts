@@ -619,6 +619,7 @@ export const Dex = new class implements ModdedDex {
 		// Custom-renamed species reuse a canonical form's sprite.
 		if (name === 'cocommander') name = 'exeggutor-alola';
 		else if (name === 'magolem') name = 'golem-alola';
+		else if (name === 'galvenut') name = 'electrode-hisui';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -807,10 +808,10 @@ export const Dex = new class implements ModdedDex {
 		// Custom-renamed species reuse a canonical form's icon:
 		//   Magolem      → Golem-Alola      (golemalola)
 		//   Cocommander  → Exeggutor-Alola  (exeggutoralola)
-		//   Electronut   → Electrode-Hisui  (electrodehisui)
+		//   Galvenut     → Electrode-Hisui  (electrodehisui)
 		if (id === 'magolem') id = 'golemalola' as ID;
 		else if (id === 'cocommander') id = 'exeggutoralola' as ID;
-		else if (id === 'electronut') id = 'electrodehisui' as ID;
+		else if (id === 'galvenut') id = 'electrodehisui' as ID;
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;
@@ -892,6 +893,9 @@ export const Dex = new class implements ModdedDex {
 		if (id === 'magolem' || spriteid === 'magolem' || spriteid === 'golem-alola') {
 			species = Dex.species.get('golemalola');
 			spriteid = 'golem-alola';
+		} else if (id === 'galvenut' || spriteid === 'galvenut' || spriteid === 'electrode-hisui') {
+			species = Dex.species.get('electrodehisui');
+			spriteid = 'electrode-hisui';
 		} else if (id === 'cocommander' || spriteid === 'cocommander') {
 			species = Dex.species.get('exeggutoralola');
 			spriteid = 'exeggutor-alola';

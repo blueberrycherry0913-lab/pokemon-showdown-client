@@ -398,7 +398,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						// Tauros, etc.) out of the teambuilder. Megas/Other/Custom already
 						// returned above, so this only affects would-be Gen1/NFE entries.
 						if (species.natDexTier === 'Illegal') return 'Illegal';
-						return species.nfe ? 'NFE' : 'Gen1';
+						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen1';
 					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';

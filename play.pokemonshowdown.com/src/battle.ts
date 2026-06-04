@@ -3323,6 +3323,12 @@ export class Battle {
 				}
 				if (this.gen > 6) maxTimeLeft = 8;
 			}
+			// Server-supplied duration (e.g. Domains have variable duration based on team
+			// composition). If [timetoleft] is present use it; otherwise keep the default 5.
+			if (kwArgs.timetoleft) {
+				const serverDuration = parseInt(kwArgs.timetoleft as string, 10);
+				if (!isNaN(serverDuration)) minTimeLeft = serverDuration;
+			}
 			if (kwArgs.persistent) minTimeLeft += 2;
 			this.addPseudoWeather(effect.name, minTimeLeft, maxTimeLeft);
 

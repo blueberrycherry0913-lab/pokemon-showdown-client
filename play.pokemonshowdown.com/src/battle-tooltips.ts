@@ -1327,11 +1327,12 @@ export class BattleTooltips {
 			stats.atk = Math.floor(stats.atk * 1.5);
 		}
 		if (weather) {
-			if (this.battle.gen >= 4 && this.pokemonHasType(pokemon, 'Rock') && weather === 'sandstorm') {
-				stats.spd = Math.floor(stats.spd * 1.5);
+			// §2: Sand boosts SpD ×1.3 for Rock AND Ground; Snow boosts Def ×1.3 for Ice.
+			if ((this.pokemonHasType(pokemon, 'Rock') || this.pokemonHasType(pokemon, 'Ground')) && weather === 'sandstorm') {
+				stats.spd = Math.floor(stats.spd * 1.3);
 			}
 			if (this.pokemonHasType(pokemon, 'Ice') && weather === 'snowscape') {
-				stats.def = Math.floor(stats.def * 1.5);
+				stats.def = Math.floor(stats.def * 1.3);
 			}
 			if (ability === 'sandrush' && weather === 'sandstorm') {
 				speedModifiers.push(2);

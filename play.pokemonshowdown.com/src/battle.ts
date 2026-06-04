@@ -3289,15 +3289,12 @@ export class Battle {
 			// the weather ID and reflects the §2 reworked/new weather mechanics.
 			if (!kwArgs.upkeep && effect.id && effect.id !== 'none') {
 				const weatherInfoMap: {[id: string]: [string, string, string]} = {
-					'sunnyday':   ['#F0A020', 'Harsh Sun',   'Self-stat-drop moves drop −1 extra stage (Fire/Grass exempt) • Frostbite can\'t be inflicted'],
-					'raindance':  ['#6890F0', 'Heavy Rain',  'Non-Water Pokémon spend +1 PP per move • Burn can\'t be inflicted'],
-					'snowscape':  ['#48A0C0', 'Snowstorm',   '1/16 max HP/turn to all non-Ice/Steel Pokémon'],
-					'sandstorm':  ['#B8A038', 'Sandstorm',   '1/16 max HP/turn to all non-Rock/Ground/Steel Pokémon'],
-					'rainbow':    ['#C040A0', 'Rainbow',     'Damaging moves’ secondary-effect rates ×1.25 (stacks with Serene Grace)'],
-					'fullmoon':   ['#8060C0', 'Full Moon',   'Blocks moves with priority +1 or higher (protection &amp; priority-0/negative moves unaffected)'],
-					'newmoon':    ['#555577', 'New Moon',    'Blocks all HP healing (Leftovers, Pain Split &amp; Regenerator exempt)'],
+					'sunnyday':   ['#F0A020', 'Harsh Sun',   'Fire moves ×1.3 • Water moves ×0.7 • Frostbite can\'t be inflicted'],
+					'raindance':  ['#6890F0', 'Heavy Rain',  'Water moves ×1.3 • Fire moves ×0.7 • Burn can\'t be inflicted'],
+					'snowscape':  ['#48A0C0', 'Snowstorm',   '1/16 max HP/turn to all non-Ice/Steel Pokémon • Ice-type Def ×1.3'],
+					'sandstorm':  ['#B8A038', 'Sandstorm',   '1/16 max HP/turn to all non-Rock/Ground/Steel Pokémon • Rock/Ground-type Sp. Def ×1.3'],
+					'rainbow':    ['#C040A0', 'Rainbow',     'Damaging moves’ secondary-effect rates ×1.5 (stacks with Serene Grace)'],
 					'fog':        ['#888888', 'Fog',         'All moves’ accuracy ×0.8'],
-					'clearskies': ['#78C0F0', 'Clear Skies', 'Neutral skies — no mechanical effects'],
 				};
 				const weatherInfo = weatherInfoMap[effect.id];
 				if (weatherInfo) {
@@ -3339,7 +3336,7 @@ export class Battle {
 			}
 			this.log(args, kwArgs);
 			// Domain activation chip: shown in the action log when a Domain pseudoWeather starts.
-			if (effect.name.endsWith(' Domain')) {
+			if (effect.name.endsWith(' Domain') && effect.name !== 'Anti-Domain') {
 				const typeName = effect.name.slice(0, -7); // strip ' Domain'
 				const typeColors: {[type: string]: string} = {
 					'Normal': '#9099A1', 'Fire': '#FF6633', 'Water': '#3399FF',
@@ -3352,7 +3349,19 @@ export class Battle {
 				};
 				const color = typeColors[typeName] || '#888888';
 				this.scene.log.addDiv('battle-history',
-					`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${typeName} Domain</b> — 5 turns • ${typeName}-type Pokémon: +20% all stats, +10% move power &amp; accuracy</div>`
+					`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${typeName} Domain</b> — duration scales with team (max 6) • ${typeName}-type Pokémon: +20% to all stats, +20% accuracy on ${typeName} moves</div>`
+				);
+			}
+			// Celestial Event chip (§2.5): Full Moon / New Moon are pseudoWeather, separate from
+			// weather — shown here rather than via the -weather handler.
+			const celestialInfoMap: {[name: string]: [string, string]} = {
+				'Full Moon': ['#8060C0', 'Blocks moves with priority +1 or higher (protection &amp; priority-0/negative moves unaffected)'],
+				'New Moon':  ['#555577', 'Blocks all HP healing (Leftovers, Pain Split &amp; Regenerator exempt)'],
+			};
+			if (celestialInfoMap[effect.name]) {
+				const [color, desc] = celestialInfoMap[effect.name];
+				this.scene.log.addDiv('battle-history',
+					`<div style="font-size:10px;padding:1px 0 1px 6px;border-left:3px solid ${color};margin:0 0 1px;color:#555"><b style="color:${color}">${effect.name}</b> — ${desc}</div>`
 				);
 			}
 			break;

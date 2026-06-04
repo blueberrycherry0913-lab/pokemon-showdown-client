@@ -791,8 +791,9 @@ export class BattleTooltips {
 			text += `Calls ${Dex.getTypeIcon(this.getMoveType(calledMove, value)[0])} ${calledMove.name}`;
 		}
 
-		// When Alt is held and the move has numeric accuracy, show domain accuracy boost breakdown.
-		// e.g. "Accuracy: 85% × Fire Domain (×1.1) = 93.5%"
+		// When Alt is held and the move has numeric accuracy, show the Domain accuracy boost.
+		// §3: a type-matched Pokémon using a type-matched move gets ×1.2 accuracy (suppressed by
+		// Anti-Domain). e.g. "Accuracy: 85% × Fire Domain (×1.2) = 102%"
 		if (BattleTooltips.altHeld && accuracy.value > 0) {
 			const domainAccEntries: [string, string][] = [
 				['Normal Domain', 'Normal'], ['Fire Domain', 'Fire'], ['Water Domain', 'Water'],
@@ -804,11 +805,14 @@ export class BattleTooltips {
 				['Cosmic Domain', 'Cosmic'],
 			];
 			let domainAccPart = '';
-			for (const [domainName, typeName] of domainAccEntries) {
-				if (typeName === moveType && this.battle.hasPseudoWeather(domainName)) {
-					const boosted = Math.round(accuracy.value * 1.1 * 10) / 10;
-					domainAccPart = ` × ${domainName} (×1.1) = ${boosted}%`;
-					break;
+			if (!this.battle.hasPseudoWeather('Anti-Domain')) {
+				for (const [domainName, typeName] of domainAccEntries) {
+					if (typeName === moveType && this.pokemonHasType(pokemon, typeName as Dex.TypeName) &&
+						this.battle.hasPseudoWeather(domainName)) {
+						const boosted = Math.round(accuracy.value * 1.2 * 10) / 10;
+						domainAccPart = ` × ${domainName} (×1.2) = ${boosted}%`;
+						break;
+					}
 				}
 			}
 			if (domainAccPart) {
@@ -1583,8 +1587,10 @@ export class BattleTooltips {
 			}
 		}
 
-		// Domain stat boosts: +20% to all five stats (Atk/SpA/Def/SpD/Spe) for same-type Pokémon.
-		// Domains are pseudoWeather tracked by name (e.g. "Fire Domain").
+		// Active-Domain stat boost (§3): ×1.2 to all five stats (Atk/SpA/Def/SpD/Spe) for a Pokémon
+		// in any active Domain matching one of its types. Applied ONCE even if a dual-type qualifies
+		// for two active Domains (×1.2, not ×1.44), and suppressed by Anti-Domain. Mirrors the shared
+		// handler in config/formats.ts. Domains are pseudoWeather tracked by name (e.g. "Fire Domain").
 		// No grounding requirement — affects all Pokémon on the field.
 		// stats.spe must be applied directly here — speedModifiers[] is already consumed at line ~1540.
 		const domainTypeEntries: [string, string][] = [
@@ -1596,13 +1602,16 @@ export class BattleTooltips {
 			['Dark Domain', 'Dark'], ['Steel Domain', 'Steel'], ['Fairy Domain', 'Fairy'],
 			['Cosmic Domain', 'Cosmic'],
 		];
-		for (const [domainName, typeName] of domainTypeEntries) {
-			if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName)) {
-				stats.atk = Math.floor(stats.atk * 1.2);
-				stats.def = Math.floor(stats.def * 1.2);
-				stats.spa = Math.floor(stats.spa * 1.2);
-				stats.spd = Math.floor(stats.spd * 1.2);
-				stats.spe = Math.floor(stats.spe * 1.2);
+		if (!this.battle.hasPseudoWeather('Anti-Domain')) {
+			for (const [domainName, typeName] of domainTypeEntries) {
+				if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName)) {
+					stats.atk = Math.floor(stats.atk * 1.2);
+					stats.def = Math.floor(stats.def * 1.2);
+					stats.spa = Math.floor(stats.spa * 1.2);
+					stats.spd = Math.floor(stats.spd * 1.2);
+					stats.spe = Math.floor(stats.spe * 1.2);
+					break; // one ×1.2 even if two Domains match a dual-type
+				}
 			}
 		}
 

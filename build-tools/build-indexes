@@ -1704,12 +1704,13 @@ process.stdout.write("Building `data/moves,items,abilities,typechart,learnsets.j
 
 	// §2 new weather log text. The renamed canon weathers (sunnyday/raindance/snowscape) keep
 	// their existing start/end/upkeep flavor; only the sidebar display name changes (client
-	// weatherNameTable). These new weathers have no server text, so add it here.
+	// weatherNameTable). Rainbow and Fog are weathers; Full Moon and New Moon are Celestial Events
+	// (§2.5) tracked as pseudoWeather — their start/end text is used by the -fieldstart/-fieldend
+	// handlers (templateId 'start'/'end'), so the entries stay here even though weatherName is unused.
 	Text['rainbow'] = {weatherName: "Rainbow", start: "  A vivid rainbow arced across the sky!", upkeep: "  (The rainbow shimmers overhead.)", end: "  The rainbow faded away."};
-	Text['fullmoon'] = {weatherName: "Full Moon", start: "  A full moon rose over the battlefield!", upkeep: "  (The full moon glows brightly.)", end: "  The full moon sank below the horizon."};
-	Text['newmoon'] = {weatherName: "New Moon", start: "  A new moon plunged the field into darkness!", upkeep: "  (The new moon shrouds the field.)", end: "  The new moon's darkness lifted."};
+	Text['fullmoon'] = {start: "  A full moon rose over the battlefield!", end: "  The full moon sank below the horizon."};
+	Text['newmoon'] = {start: "  A new moon plunged the field into darkness!", end: "  The new moon's darkness lifted."};
 	Text['fog'] = {weatherName: "Fog", start: "  A thick fog settled over the battlefield!", upkeep: "  (The fog is deep...)", end: "  The fog lifted."};
-	Text['clearskies'] = {weatherName: "Clear Skies", start: "  The skies cleared!", end: "  ", upkeep: "  "};
 
 	const buf = 'exports.BattleText = ' + es3stringify(Text) + ';';
 	fs.writeFileSync('play.pokemonshowdown.com/data/text.js', buf);

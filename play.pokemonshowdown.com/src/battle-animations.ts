@@ -981,12 +981,10 @@ export class BattleScene implements BattleSceneStub {
 				hail: 'Hail',
 				snowscape: 'Snowstorm',
 				deltastream: 'Strong Winds',
-				// §2 new weathers.
+				// §2 new weathers. (Full Moon / New Moon are Celestial Events — §2.5 — tracked as
+				// pseudoWeather, not weather, so they are not listed here.)
 				rainbow: 'Rainbow',
-				fullmoon: 'Full Moon',
-				newmoon: 'New Moon',
 				fog: 'Fog',
-				clearskies: 'Clear Skies',
 			};
 			weatherhtml = `${weatherNameTable[this.battle.weather] || this.battle.weather}`;
 			if (this.battle.weatherMinTimeLeft !== 0) {

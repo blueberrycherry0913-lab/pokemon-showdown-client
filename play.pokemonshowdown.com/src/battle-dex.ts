@@ -624,6 +624,12 @@ export const Dex = new class implements ModdedDex {
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
 		else if (name === 'blastoise-megay') name = 'blastoise-mega';
+		else if (name === 'muk') name = 'muk-alola';
+		else if (name === 'muk-kanto') name = 'muk';
+		else if (name === 'slowbro') name = 'slowbro-galar';
+		else if (name === 'slowbro-kanto') name = 'slowbro';
+		else if (name === 'slowking') name = 'slowking-galar';
+		else if (name === 'slowking-johto') name = 'slowking';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -661,6 +667,12 @@ export const Dex = new class implements ModdedDex {
 		else if (speciesid === 'venusaurmegay') speciesid = 'venusaurmega';
 		else if (speciesid === 'blastoisemegax') speciesid = 'blastoisegmax';
 		else if (speciesid === 'blastoisemegay') speciesid = 'blastoisemega';
+		else if (speciesid === 'muk') speciesid = 'mukalola';
+		else if (speciesid === 'mukkanto') speciesid = 'muk';
+		else if (speciesid === 'slowbro') speciesid = 'slowbrogalar';
+		else if (speciesid === 'slowbrokanto') speciesid = 'slowbro';
+		else if (speciesid === 'slowking') speciesid = 'slowkinggalar';
+		else if (speciesid === 'slowkingjohto') speciesid = 'slowking';
 		if (species.isTotem) speciesid = toID(name);
 		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
 		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
@@ -816,6 +828,12 @@ export const Dex = new class implements ModdedDex {
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;
 		else if (id === 'blastoisemegay') id = 'blastoisemega' as ID;
+		else if (id === 'muk') id = 'mukalola' as ID;
+		else if (id === 'mukkanto') id = 'muk' as ID;
+		else if (id === 'slowbro') id = 'slowbrogalar' as ID;
+		else if (id === 'slowbrokanto') id = 'slowbro' as ID;
+		else if (id === 'slowking') id = 'slowkinggalar' as ID;
+		else if (id === 'slowkingjohto') id = 'slowking' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -904,6 +922,12 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'blastoise-megay') return { spriteDir: 'sprites/dex', spriteid: 'blastoise-mega', x: -2, y: -3 };
+		if (spriteid === 'muk') return { spriteDir: 'sprites/home-centered', spriteid: 'muk-alola', x: 10, y: 5 };
+		if (spriteid === 'muk-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'muk', x: 10, y: 5 };
+		if (spriteid === 'slowbro') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro-galar', x: 10, y: 5 };
+		if (spriteid === 'slowbro-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro', x: 10, y: 5 };
+		if (spriteid === 'slowking') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking-galar', x: 10, y: 5 };
+		if (spriteid === 'slowking-johto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking', x: 10, y: 5 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

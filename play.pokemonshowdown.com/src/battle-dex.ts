@@ -630,6 +630,10 @@ export const Dex = new class implements ModdedDex {
 		else if (name === 'slowbro-kanto') name = 'slowbro';
 		else if (name === 'slowking') name = 'slowking-galar';
 		else if (name === 'slowking-johto') name = 'slowking';
+		else if (name === 'farfetchd') name = 'farfetchd-galar';
+		else if (name === 'farfetchd-kanto') name = 'farfetchd';
+		else if (name === 'petrifearow') name = 'fearow';
+		else if (name === 'paraspore') name = 'parasect';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -673,6 +677,10 @@ export const Dex = new class implements ModdedDex {
 		else if (speciesid === 'slowbrokanto') speciesid = 'slowbro';
 		else if (speciesid === 'slowking') speciesid = 'slowkinggalar';
 		else if (speciesid === 'slowkingjohto') speciesid = 'slowking';
+		else if (speciesid === 'farfetchd') speciesid = 'farfetchdgalar';
+		else if (speciesid === 'farfetchdkanto') speciesid = 'farfetchd';
+		else if (speciesid === 'petrifearow') speciesid = 'fearow';
+		else if (speciesid === 'paraspore') speciesid = 'parasect';
 		if (species.isTotem) speciesid = toID(name);
 		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
 		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
@@ -834,6 +842,10 @@ export const Dex = new class implements ModdedDex {
 		else if (id === 'slowbrokanto') id = 'slowbro' as ID;
 		else if (id === 'slowking') id = 'slowkinggalar' as ID;
 		else if (id === 'slowkingjohto') id = 'slowking' as ID;
+		else if (id === 'farfetchd') id = 'farfetchdgalar' as ID;
+		else if (id === 'farfetchdkanto') id = 'farfetchd' as ID;
+		else if (id === 'petrifearow') id = 'fearow' as ID;
+		else if (id === 'paraspore') id = 'parasect' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -928,6 +940,10 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'slowbro-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro', x: 10, y: 5 };
 		if (spriteid === 'slowking') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking-galar', x: 10, y: 5 };
 		if (spriteid === 'slowking-johto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking', x: 10, y: 5 };
+		if (spriteid === 'farfetchd') return { spriteDir: 'sprites/home-centered', spriteid: 'farfetchd-galar', x: 10, y: 5 };
+		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'farfetchd', x: 10, y: 5 };
+		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/home-centered', spriteid: 'fearow', x: 10, y: 5 };
+		if (spriteid === 'paraspore') return { spriteDir: 'sprites/home-centered', spriteid: 'parasect', x: 10, y: 5 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

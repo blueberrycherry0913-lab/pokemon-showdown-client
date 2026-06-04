@@ -934,16 +934,16 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'blastoise-megay') return { spriteDir: 'sprites/dex', spriteid: 'blastoise-mega', x: -2, y: -3 };
-		if (spriteid === 'muk') return { spriteDir: 'sprites/home-centered', spriteid: 'muk-alola', x: 10, y: 5 };
-		if (spriteid === 'muk-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'muk', x: 10, y: 5 };
-		if (spriteid === 'slowbro') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro-galar', x: 10, y: 5 };
-		if (spriteid === 'slowbro-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro', x: 10, y: 5 };
-		if (spriteid === 'slowking') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking-galar', x: 10, y: 5 };
-		if (spriteid === 'slowking-johto') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking', x: 10, y: 5 };
-		if (spriteid === 'farfetchd') return { spriteDir: 'sprites/home-centered', spriteid: 'farfetchd-galar', x: 10, y: 5 };
-		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/home-centered', spriteid: 'farfetchd', x: 10, y: 5 };
-		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/home-centered', spriteid: 'fearow', x: 10, y: 5 };
-		if (spriteid === 'paraspore') return { spriteDir: 'sprites/home-centered', spriteid: 'parasect', x: 10, y: 5 };
+		if (spriteid === 'muk') return { spriteDir: 'sprites/dex', spriteid: 'muk-alola', x: -2, y: -3 };
+		if (spriteid === 'muk-kanto') return { spriteDir: 'sprites/dex', spriteid: 'muk', x: -2, y: -3 };
+		if (spriteid === 'slowbro') return { spriteDir: 'sprites/dex', spriteid: 'slowbro-galar', x: -2, y: -3 };
+		if (spriteid === 'slowbro-kanto') return { spriteDir: 'sprites/dex', spriteid: 'slowbro', x: -2, y: -3 };
+		if (spriteid === 'slowking') return { spriteDir: 'sprites/dex', spriteid: 'slowking-galar', x: -2, y: -3 };
+		if (spriteid === 'slowking-johto') return { spriteDir: 'sprites/dex', spriteid: 'slowking', x: -2, y: -3 };
+		if (spriteid === 'farfetchd') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd-galar', x: -2, y: -3 };
+		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd', x: -2, y: -3 };
+		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/dex', spriteid: 'fearow', x: -2, y: -3 };
+		if (spriteid === 'paraspore') return { spriteDir: 'sprites/dex', spriteid: 'parasect', x: -2, y: -3 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

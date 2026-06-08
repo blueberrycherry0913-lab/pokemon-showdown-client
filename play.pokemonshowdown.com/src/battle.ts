@@ -2309,7 +2309,7 @@ export class Battle {
 				'cor':  ['#A4009A', 'Corroded',    '1/16 HP/turn • −33% Def'],
 				'mlt':  ['#A4009A', 'Melting',     '1/8 HP/turn • −50% Def'],
 				'slp':  ['#AA77AA', 'Asleep',      '2-turn lockout • +1/10 HP healed/turn • +10% dmg taken'],
-				'stun': ['#9AA400', 'Stunned',     'First action skipped • −33% Spe • Pivot moves blocked'],
+				'stun': ['#9AA400', 'Stunned',     '−33% Spe • Pivot moves blocked'],
 				'par':  ['#9AA400', 'Paralyzed',   'First action skipped • −50% Spe • Priority −1'],
 				'frb':  ['#009AA4', 'Frostbitten', '1/16 HP/turn • −33% SpA'],
 				'frz':  ['#009AA4', 'Frozen',      'Phase 1: skip action, −50% dmg in • Phase 2: −50% SpA, 1/8 HP/turn'],

@@ -1975,7 +1975,11 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 				uselessMoves.push(['move', id as ID]);
 			}
 		}
-		return [...usableMoves, ...uselessMoves];
+		const standardMoves: SearchRow[] = [
+			['header', "Standard Moves"],
+			['move', 'tackle' as ID],
+		];
+		return [...standardMoves, ...usableMoves, ...uselessMoves];
 	}
 	filter(row: SearchRow, filters: string[][]) {
 		if (!filters) return true;

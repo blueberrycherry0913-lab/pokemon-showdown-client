@@ -1975,10 +1975,48 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 				uselessMoves.push(['move', id as ID]);
 			}
 		}
-		const standardMoves: SearchRow[] = [
-			['header', "Standard Moves"],
-			['move', 'tackle' as ID],
-		];
+		// Standard Moves: type-appropriate moves for the base species' types
+		const STANDARD_MOVES_BY_TYPE: {[type: string]: string[]} = {
+			Bug:      ['lunge', 'skittersmack', 'xscissor', 'bugbuzz', 'strugglebug', 'signalbeam'],
+			Cosmic:   ['flicker', 'gravwell', 'meteormash', 'paleorbit', 'swift', 'moonblast'],
+			Dark:     ['feintattack', 'assurance', 'lashout', 'rumor', 'nightdaze', 'darkpulse'],
+			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
+			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
+			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],
+			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chstrike', 'aurasphere'],
+			Fire:     ['heater', 'flamewheel', 'firelash', 'ember', 'searingshot', 'flamethrower'],
+			Flying:   ['breezeboost', 'skystrike', 'aerialace', 'gust', 'aircutter', 'airslash'],
+			Ghost:    ['astonish', 'shadowstrike', 'phantomforce', 'grudge', 'bittermalice', 'shadowball'],
+			Grass:    ['vinewhip', 'razorleaf', 'seedbomb', 'leafage', 'magicalleaf', 'energyball'],
+			Ground:   ['dirtdozer', 'bulldoze', 'highhorsepower', 'mudslap', 'mudshot', 'earthpower'],
+			Ice:      ['iceball', 'avalanche', 'iciclecrash', 'powdersnow', 'aurorabeam', 'icebeam'],
+			Normal:   ['tackle', 'slam', 'bodyslam', 'ripple', 'neutralburst', 'powersurge'],
+			Poison:   ['poisonsting', 'blightbrush', 'crosspoison', 'smog', 'sludge', 'sludgebomb'],
+			Psychic:  ['psinudge', 'psycheslam', 'psychocut', 'confusion', 'extrasensory', 'psychic'],
+			Rock:     ['skippingstone', 'rockthrow', 'rockslide', 'gavelpuff', 'shaleburst', 'powergem'],
+			Steel:    ['rivetshot', 'ironclad', 'solidsmash', 'alloyspark', 'magnetbomb', 'flashcannon'],
+			Water:    ['shallowslam', 'dive', 'liquidation', 'watergun', 'waterpulse', 'surf'],
+		};
+		const standardMoves: SearchRow[] = [];
+		if (this.formatType === 'champions' || format.includes('testingstandard')) {
+			// Use base species types (formes use their base species' types)
+			const baseSpecies = dex.species.get(species.baseSpecies);
+			const baseTypes = baseSpecies.types;
+			const standardMoveIds: string[] = [];
+			for (const type of baseTypes) {
+				if (STANDARD_MOVES_BY_TYPE[type]) {
+					for (const id of STANDARD_MOVES_BY_TYPE[type]) {
+						if (!standardMoveIds.includes(id)) standardMoveIds.push(id);
+					}
+				}
+			}
+			if (standardMoveIds.length) {
+				standardMoves.push(['header', "Standard Moves"]);
+				for (const id of standardMoveIds) {
+					standardMoves.push(['move', id as ID]);
+				}
+			}
+		}
 		return [...standardMoves, ...usableMoves, ...uselessMoves];
 	}
 	filter(row: SearchRow, filters: string[][]) {

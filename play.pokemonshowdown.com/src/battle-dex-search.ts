@@ -1808,6 +1808,39 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 			(/^battle(spot|stadium|festival)/.test(format) || format.startsWith('bss') ||
 				format.startsWith('vgc') || (dex.gen === 9 && this.formatType !== 'natdex' && this.formatType !== 'legendsza'));
 
+		// Pre-compute standard move IDs for this species so they can be excluded from other tabs
+		const STANDARD_MOVES_BY_TYPE: {[type: string]: string[]} = {
+			Bug:      ['lunge', 'skittersmack', 'xscissor', 'bugbuzz', 'strugglebug', 'signalbeam'],
+			Cosmic:   ['flicker', 'gravwell', 'meteormash', 'paleorbit', 'swift', 'moonblast'],
+			Dark:     ['feintattack', 'assurance', 'lashout', 'rumor', 'nightdaze', 'darkpulse'],
+			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
+			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
+			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],
+			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chstrike', 'aurasphere'],
+			Fire:     ['heater', 'flamewheel', 'firelash', 'ember', 'searingshot', 'flamethrower'],
+			Flying:   ['breezeboost', 'skystrike', 'aerialace', 'gust', 'aircutter', 'airslash'],
+			Ghost:    ['astonish', 'shadowstrike', 'phantomforce', 'grudge', 'bittermalice', 'shadowball'],
+			Grass:    ['vinewhip', 'razorleaf', 'seedbomb', 'leafage', 'magicalleaf', 'energyball'],
+			Ground:   ['dirtdozer', 'bulldoze', 'highhorsepower', 'mudslap', 'mudshot', 'earthpower'],
+			Ice:      ['iceball', 'avalanche', 'iciclecrash', 'powdersnow', 'aurorabeam', 'icebeam'],
+			Normal:   ['tackle', 'slam', 'bodyslam', 'ripple', 'neutralburst', 'powersurge'],
+			Poison:   ['poisonsting', 'blightbrush', 'crosspoison', 'smog', 'sludge', 'sludgebomb'],
+			Psychic:  ['psinudge', 'psycheslam', 'psychocut', 'confusion', 'extrasensory', 'psychic'],
+			Rock:     ['skippingstone', 'rockthrow', 'rockslide', 'gavelpuff', 'shaleburst', 'powergem'],
+			Steel:    ['rivetshot', 'ironclad', 'solidsmash', 'alloyspark', 'magnetbomb', 'flashcannon'],
+			Water:    ['shallowslam', 'dive', 'liquidation', 'watergun', 'waterpulse', 'surf'],
+		};
+		const isChampions = this.formatType === 'champions' || format.includes('testingstandard');
+		const standardMoveIdSet = new Set<string>();
+		if (isChampions) {
+			const baseSpeciesForStd = dex.species.get(species.baseSpecies);
+			for (const type of baseSpeciesForStd.types) {
+				if (STANDARD_MOVES_BY_TYPE[type]) {
+					for (const id of STANDARD_MOVES_BY_TYPE[type]) standardMoveIdSet.add(id);
+				}
+			}
+		}
+
 		let learnsetid = this.firstLearnsetid(species.id);
 		let moves: string[] = [];
 		let sketchMoves: string[] = [];
@@ -1868,6 +1901,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 						continue;
 					}
 					if (moves.includes(moveid)) continue;
+					if (standardMoveIdSet.has(moveid)) continue;
 					moves.push(moveid);
 					if (moveid === 'sketch') sketch = true;
 					if (moveid === 'hiddenpower') {
@@ -1976,44 +2010,20 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 			}
 		}
 		// Standard Moves: type-appropriate moves for the base species' types
-		const STANDARD_MOVES_BY_TYPE: {[type: string]: string[]} = {
-			Bug:      ['lunge', 'skittersmack', 'xscissor', 'bugbuzz', 'strugglebug', 'signalbeam'],
-			Cosmic:   ['flicker', 'gravwell', 'meteormash', 'paleorbit', 'swift', 'moonblast'],
-			Dark:     ['feintattack', 'assurance', 'lashout', 'rumor', 'nightdaze', 'darkpulse'],
-			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
-			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
-			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],
-			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chstrike', 'aurasphere'],
-			Fire:     ['heater', 'flamewheel', 'firelash', 'ember', 'searingshot', 'flamethrower'],
-			Flying:   ['breezeboost', 'skystrike', 'aerialace', 'gust', 'aircutter', 'airslash'],
-			Ghost:    ['astonish', 'shadowstrike', 'phantomforce', 'grudge', 'bittermalice', 'shadowball'],
-			Grass:    ['vinewhip', 'razorleaf', 'seedbomb', 'leafage', 'magicalleaf', 'energyball'],
-			Ground:   ['dirtdozer', 'bulldoze', 'highhorsepower', 'mudslap', 'mudshot', 'earthpower'],
-			Ice:      ['iceball', 'avalanche', 'iciclecrash', 'powdersnow', 'aurorabeam', 'icebeam'],
-			Normal:   ['tackle', 'slam', 'bodyslam', 'ripple', 'neutralburst', 'powersurge'],
-			Poison:   ['poisonsting', 'blightbrush', 'crosspoison', 'smog', 'sludge', 'sludgebomb'],
-			Psychic:  ['psinudge', 'psycheslam', 'psychocut', 'confusion', 'extrasensory', 'psychic'],
-			Rock:     ['skippingstone', 'rockthrow', 'rockslide', 'gavelpuff', 'shaleburst', 'powergem'],
-			Steel:    ['rivetshot', 'ironclad', 'solidsmash', 'alloyspark', 'magnetbomb', 'flashcannon'],
-			Water:    ['shallowslam', 'dive', 'liquidation', 'watergun', 'waterpulse', 'surf'],
-		};
 		const standardMoves: SearchRow[] = [];
-		if (this.formatType === 'champions' || format.includes('testingstandard')) {
-			// Use base species types (formes use their base species' types)
-			const baseSpecies = dex.species.get(species.baseSpecies);
-			const baseTypes = baseSpecies.types;
-			const standardMoveIds: string[] = [];
-			for (const type of baseTypes) {
+		if (isChampions && standardMoveIdSet.size) {
+			standardMoves.push(['header', "Standard Moves"]);
+			// Emit in type order: base type 1 moves first, then base type 2
+			const baseSpeciesForStd = dex.species.get(species.baseSpecies);
+			const emitted = new Set<string>();
+			for (const type of baseSpeciesForStd.types) {
 				if (STANDARD_MOVES_BY_TYPE[type]) {
 					for (const id of STANDARD_MOVES_BY_TYPE[type]) {
-						if (!standardMoveIds.includes(id)) standardMoveIds.push(id);
+						if (!emitted.has(id)) {
+							emitted.add(id);
+							standardMoves.push(['move', id as ID]);
+						}
 					}
-				}
-			}
-			if (standardMoveIds.length) {
-				standardMoves.push(['header', "Standard Moves"]);
-				for (const id of standardMoveIds) {
-					standardMoves.push(['move', id as ID]);
 				}
 			}
 		}

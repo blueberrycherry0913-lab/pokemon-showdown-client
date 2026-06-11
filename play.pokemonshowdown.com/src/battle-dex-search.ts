@@ -1812,7 +1812,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		const STANDARD_MOVES_BY_TYPE: {[type: string]: string[]} = {
 			Bug:      ['lunge', 'skittersmack', 'xscissor', 'bugbuzz', 'strugglebug', 'signalbeam'],
 			Cosmic:   ['flicker', 'gravwell', 'meteormash', 'paleorbit', 'swift', 'moonblast'],
-			Dark:     ['feintattack', 'assurance', 'lashout', 'rumor', 'nightdaze', 'darkpulse'],
+			Dark:     ['feintattack', 'assurance', 'nightslash', 'rumor', 'nightdaze', 'darkpulse'],
 			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
 			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
 			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],

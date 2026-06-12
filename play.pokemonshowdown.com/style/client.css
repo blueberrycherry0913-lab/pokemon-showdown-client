@@ -2437,6 +2437,22 @@ p.or:after {
 .setcell-ability {
 	float: right;
 }
+.setcell-ability-champions {
+	padding-top: 13px;
+	position: relative;
+}
+.setcell-ability-champions > label {
+	position: absolute;
+	top: -26px;
+	right: 3px;
+	width: 108px;
+}
+.setcell-ability-champions input[name=awakenedability] {
+	position: absolute;
+	top: -13px;
+	right: 3px;
+	margin: 0;
+}
 .setcol-details .itemicon {
 	display: block;
 	width: 24px;

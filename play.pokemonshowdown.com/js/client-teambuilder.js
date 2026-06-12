@@ -1390,16 +1390,21 @@
 			buf += '<div class="setrow">';
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';
 			if (this.curTeam.gen > 2 && !isLetsGo) {
-				buf += '<div class="setcell setcell-ability">';
-				buf += '<label>Ability</label>';
-				buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" />';
 				if (isChampions) {
 					var hSlotAbility = species.abilities['H'] || '';
 					var curAbility2 = set.ability2 || '';
-					buf += '<label>Awakened</label>';
+					// Awakened input sits absolutely above the basic ability input
+					// (same spot the read-only grey display used to occupy); the
+					// basic ability input stays at its normal Y position.
+					buf += '<div class="setcell setcell-ability setcell-ability-champions">';
+					buf += '<label>Abilities</label>';
 					buf += '<input type="text" name="awakenedability" class="textbox chartinput" value="' + BattleLog.escapeHTML(curAbility2 || hSlotAbility) + '" autocomplete="off" />';
+					buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" /></div>';
+				} else {
+					buf += '<div class="setcell setcell-ability">';
+					buf += '<label>Ability</label>';
+					buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" /></div>';
 				}
-				buf += '</div>';
 			}
 			buf += '</div>';
 			buf += '</div>';

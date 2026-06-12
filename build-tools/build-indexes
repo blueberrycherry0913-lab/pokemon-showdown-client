@@ -66,6 +66,36 @@ function familyHasGen1Member(dex, species, seen) {
 	return false;
 }
 
+// Mirrors the server-side isGen8StarterLineage in data/mods/champions/rulesets.ts.
+// True if `species` is from one of the three Galar starter lines (nums 810-818).
+function isGen8StarterLineage(dex, species) {
+	if (!species || !species.exists) return false;
+	if (species.baseSpecies && species.baseSpecies !== species.name) {
+		const base = dex.species.get(species.baseSpecies);
+		if (base.exists && base.id !== species.id && isGen8StarterLineage(dex, base)) return true;
+	}
+	let root = species;
+	let safety = 20;
+	while (root.prevo && safety-- > 0) {
+		const prev = dex.species.get(root.prevo);
+		if (!prev.exists) break;
+		root = prev;
+	}
+	return familyHasGen8StarterMember(dex, root, new Set());
+}
+function familyHasGen8StarterMember(dex, species, seen) {
+	if (seen.has(species.id)) return false;
+	seen.add(species.id);
+	if (species.num >= 810 && species.num <= 818) return true;
+	if (species.evos) {
+		for (const evoName of species.evos) {
+			const evo = dex.species.get(evoName);
+			if (evo.exists && familyHasGen8StarterMember(dex, evo, seen)) return true;
+		}
+	}
+	return false;
+}
+
 function es3stringify(obj) {
 	const buf = JSON.stringify(obj);
 	return buf.replace(/"([A-Za-z][A-Za-z0-9]*)":/g, (fullMatch, key) => (
@@ -400,6 +430,11 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						if (species.natDexTier === 'Illegal') return 'Illegal';
 						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen1';
 					}
+					if (isGen8StarterLineage(Dex.mod(gen), species)) {
+						// GMax formes of Galar starters (e.g. cinderacegmax) stay hidden.
+						if (species.natDexTier === 'Illegal') return 'Illegal';
+						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen8';
+					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
 					}
@@ -702,12 +737,13 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			}
 			if (isChampions) {
 				// Testing Standard / champions: 'Gen1' (fully-evolved Gen 1 lineage)
-				// at the top, then 'Megas' (Mega Evolutions), 'NFE' (still-evolving
-				// Gen 1 lineage), 'Other' (G-Max / Cosplay & Cap Pikachus / LGPE
-				// Starters / Spiky-eared Pichu), then 'Custom' for wholly-custom
-				// mons. Rest of the canonical tiers retained for future use.
+				// at the top, then 'Megas' (Mega Evolutions), 'Gen8' (fully-evolved
+				// Galar starters), 'NFE' (still-evolving Gen 1 + Galar starters),
+				// 'Other' (G-Max / Cosplay & Cap Pikachus / LGPE Starters /
+				// Spiky-eared Pichu), then 'Custom' for wholly-custom mons.
+				// Rest of the canonical tiers retained for future use.
 				return [
-					"Gen1", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Megas", "Gen8", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

@@ -69,9 +69,6 @@
 			'change .evslider': 'statSlided',
 			'input .evslider': 'statSlide',
 
-			// awakened ability dropdown (champions/testingstandard only)
-			'change select[name=awakenedability]': 'awakenedAbilityChange',
-
 			// teambuilder events
 			'click .utilichart a': 'chartClick',
 			'keydown .chartinput': 'chartKeydown',
@@ -1393,33 +1390,13 @@
 			buf += '<div class="setrow">';
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';
 			if (this.curTeam.gen > 2 && !isLetsGo) {
-				buf += '<div class="setcell ' + (isChampions ? 'setcell-ability-champions' : 'setcell-ability') + '">';
+				buf += '<div class="setcell setcell-ability">';
 				if (isChampions) {
 					var hSlotAbility = species.abilities['H'] || '';
 					var curAbility2 = set.ability2 || '';
-					var DOMAIN_SETTER_BY_TYPE_LEGACY = {
-						Normal: 'domainsetternormal', Fire: 'domainsetterfire', Water: 'domainsetterwater',
-						Electric: 'domainsetterelectric', Grass: 'domainsettergrass', Ice: 'domainsetterice',
-						Fighting: 'domainsetterfighting', Poison: 'domainsetterpoison', Ground: 'domainsetterground',
-						Flying: 'domainsetterair', Psychic: 'domainsetterpsychic', Bug: 'domainsetterbug',
-						Rock: 'domainsetterrock', Ghost: 'domainsetterghost', Dragon: 'domainsetterdragon',
-						Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
-						Cosmic: 'domainsettercosmic',
-					};
-					buf += '<label>Abilities</label>';
-					buf += '<select name="awakenedability" style="position:absolute;top:-13px;left:0;width:108px;font-size:10px;">';
-					// Default option: the normal H-slot ability
-					buf += '<option value=""' + (!curAbility2 ? ' selected' : '') + '>' + BattleLog.escapeHTML(hSlotAbility || '—') + '</option>';
-					// Domain-setter options for each of the Pokémon's types
-					for (var _ti = 0; _ti < species.types.length; _ti++) {
-						var _type = species.types[_ti];
-						var _dsId = DOMAIN_SETTER_BY_TYPE_LEGACY[_type];
-						if (_dsId && BattleAbilities[_dsId]) {
-							var _dsName = BattleAbilities[_dsId].name;
-							buf += '<option value="' + BattleLog.escapeHTML(_dsName) + '"' + (curAbility2 === _dsName ? ' selected' : '') + '>' + BattleLog.escapeHTML(_dsName) + '</option>';
-						}
-					}
-					buf += '</select>';
+					buf += '<label>Awakened</label>';
+					buf += '<input type="text" name="awakenedability" class="textbox chartinput" value="' + BattleLog.escapeHTML(curAbility2 || hSlotAbility) + '" autocomplete="off" />';
+					buf += '<label>Ability</label>';
 				} else {
 					buf += '<label>Ability</label>';
 				}
@@ -2224,6 +2201,40 @@
 				this.search.qType = null;
 				this.search.qName = null;
 				this.updateDetailsForm();
+				return;
+			}
+			if (type === 'awakenedability') {
+				this.search.qType = null;
+				this.search.qName = null;
+				var _awSet = this.curSet;
+				if (!_awSet) return;
+				var _awSpecies = this.curTeam.dex.species.get(_awSet.species);
+				var _hSlot = _awSpecies.abilities['H'] || '';
+				var _DSBT = {
+					Normal: 'domainsetternormal', Fire: 'domainsetterfire', Water: 'domainsetterwater',
+					Electric: 'domainsetterelectric', Grass: 'domainsettergrass', Ice: 'domainsetterice',
+					Fighting: 'domainsetterfighting', Poison: 'domainsetterpoison', Ground: 'domainsetterground',
+					Flying: 'domainsetterair', Psychic: 'domainsetterpsychic', Bug: 'domainsetterbug',
+					Rock: 'domainsetterrock', Ghost: 'domainsetterghost', Dragon: 'domainsetterdragon',
+					Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
+					Cosmic: 'domainsettercosmic',
+				};
+				var _awBuf = '<ul class="utilichart">';
+				if (_hSlot) {
+					var _isCur = (!_awSet.ability2 || _awSet.ability2 === _hSlot) ? ' class="cur"' : '';
+					_awBuf += '<li class="result"><a data-entry="awakenedability|' + BattleLog.escapeHTML(_hSlot) + '"' + _isCur + '>' + BattleLog.escapeHTML(_hSlot) + '</a></li>';
+				}
+				for (var _awi = 0; _awi < _awSpecies.types.length; _awi++) {
+					var _awType = _awSpecies.types[_awi];
+					var _awDsId = _DSBT[_awType];
+					if (_awDsId && BattleAbilities[_awDsId]) {
+						var _awDsName = BattleAbilities[_awDsId].name;
+						var _awIsCur = (_awSet.ability2 === _awDsName) ? ' class="cur"' : '';
+						_awBuf += '<li class="result"><a data-entry="awakenedability|' + BattleLog.escapeHTML(_awDsName) + '"' + _awIsCur + '>' + BattleLog.escapeHTML(_awDsName) + '</a></li>';
+					}
+				}
+				_awBuf += '</ul>';
+				this.$chart.html(_awBuf);
 				return;
 			}
 
@@ -3166,6 +3177,7 @@
 			pokemon: 'pokemon',
 			item: 'item',
 			ability: 'ability',
+			awakenedability: 'awakenedability',
 			move1: 'move',
 			move2: 'move',
 			move3: 'move',
@@ -3341,9 +3353,31 @@
 					val = (id in BattleMovedex ? BattleMovedex[id].name : '');
 				}
 				break;
+			case 'awakenedability': {
+				var _awChgSpecies = this.curTeam.dex.species.get(this.curSet.species);
+				var _awHSlot = _awChgSpecies.abilities['H'] || '';
+				if (!id || id === toID(_awHSlot)) { val = _awHSlot; break; }
+				var _DSBT3 = {
+					Normal: 'domainsetternormal', Fire: 'domainsetterfire', Water: 'domainsetterwater',
+					Electric: 'domainsetterelectric', Grass: 'domainsettergrass', Ice: 'domainsetterice',
+					Fighting: 'domainsetterfighting', Poison: 'domainsetterpoison', Ground: 'domainsetterground',
+					Flying: 'domainsetterair', Psychic: 'domainsetterpsychic', Bug: 'domainsetterbug',
+					Rock: 'domainsetterrock', Ghost: 'domainsetterghost', Dragon: 'domainsetterdragon',
+					Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
+					Cosmic: 'domainsettercosmic',
+				};
+				for (var _awi3 = 0; _awi3 < _awChgSpecies.types.length; _awi3++) {
+					var _awDsId3 = _DSBT3[_awChgSpecies.types[_awi3]];
+					if (_awDsId3 && BattleAbilities[_awDsId3] && toID(BattleAbilities[_awDsId3].name) === id) {
+						val = BattleAbilities[_awDsId3].name;
+						break;
+					}
+				}
+				break;
+			}
 			}
 			if (!val) {
-				if (name === 'pokemon' || name === 'ability' || id) {
+				if (name === 'pokemon' || name === 'ability' || name === 'awakenedability' || id) {
 					$(e.currentTarget).addClass('incomplete');
 					return;
 				}
@@ -3471,6 +3505,17 @@
 				this.curSet.ability = val;
 				if (selectNext) this.$('input[name=move1]').select();
 				break;
+			case 'awakenedability': {
+				var _awSetSpecies = this.curTeam.dex.species.get(this.curSet.species);
+				var _awSetHSlot = _awSetSpecies.abilities['H'] || '';
+				if (!val || val === _awSetHSlot) {
+					delete this.curSet.ability2;
+				} else {
+					this.curSet.ability2 = val;
+				}
+				if (selectNext) this.$('input[name=ability]').select();
+				break;
+			}
 			case 'move1':
 				this.unChooseMove(this.curSet.moves[0]);
 				this.curSet.moves[0] = val;

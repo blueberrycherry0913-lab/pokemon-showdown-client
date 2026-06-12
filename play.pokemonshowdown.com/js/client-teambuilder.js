@@ -69,6 +69,9 @@
 			'change .evslider': 'statSlided',
 			'input .evslider': 'statSlide',
 
+			// awakened ability dropdown (champions/testingstandard only)
+			'change select[name=awakenedability]': 'awakenedAbilityChange',
+
 			// teambuilder events
 			'click .utilichart a': 'chartClick',
 			'keydown .chartinput': 'chartKeydown',
@@ -1392,9 +1395,31 @@
 			if (this.curTeam.gen > 2 && !isLetsGo) {
 				buf += '<div class="setcell ' + (isChampions ? 'setcell-ability-champions' : 'setcell-ability') + '">';
 				if (isChampions) {
-					var awakenedAbility = species.abilities['H'];
+					var hSlotAbility = species.abilities['H'] || '';
+					var curAbility2 = set.ability2 || '';
+					var DOMAIN_SETTER_BY_TYPE_LEGACY = {
+						Normal: 'domainsetternormal', Fire: 'domainsetterfire', Water: 'domainsetterwater',
+						Electric: 'domainsetterelectric', Grass: 'domainsettergrass', Ice: 'domainsetterice',
+						Fighting: 'domainsetterfighting', Poison: 'domainsetterpoison', Ground: 'domainsetterground',
+						Flying: 'domainsetterair', Psychic: 'domainsetterpsychic', Bug: 'domainsetterbug',
+						Rock: 'domainsetterrock', Ghost: 'domainsetterghost', Dragon: 'domainsetterdragon',
+						Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
+						Cosmic: 'domainsettercosmic',
+					};
 					buf += '<label>Abilities</label>';
-					buf += '<div class="awakenedability-display">' + (awakenedAbility ? BattleLog.escapeHTML(awakenedAbility) : '&mdash;') + '</div>';
+					buf += '<select name="awakenedability" style="position:absolute;top:-13px;left:0;width:108px;font-size:10px;">';
+					// Default option: the normal H-slot ability
+					buf += '<option value=""' + (!curAbility2 ? ' selected' : '') + '>' + BattleLog.escapeHTML(hSlotAbility || '—') + '</option>';
+					// Domain-setter options for each of the Pokémon's types
+					for (var _ti = 0; _ti < species.types.length; _ti++) {
+						var _type = species.types[_ti];
+						var _dsId = DOMAIN_SETTER_BY_TYPE_LEGACY[_type];
+						if (_dsId && BattleAbilities[_dsId]) {
+							var _dsName = BattleAbilities[_dsId].name;
+							buf += '<option value="' + BattleLog.escapeHTML(_dsName) + '"' + (curAbility2 === _dsName ? ' selected' : '') + '>' + BattleLog.escapeHTML(_dsName) + '</option>';
+						}
+					}
+					buf += '</select>';
 				} else {
 					buf += '<label>Ability</label>';
 				}
@@ -3325,6 +3350,17 @@
 			}
 			this.chartSet(val, selectNext);
 		},
+		awakenedAbilityChange: function (e) {
+			var set = this.curSet;
+			if (!set) return;
+			var val = e.currentTarget.value;
+			if (val) {
+				set.ability2 = val;
+			} else {
+				delete set.ability2;
+			}
+			this.save();
+		},
 		searchChange: function (e) {
 			var DEBOUNCE_THRESHOLD_TEAMS = 500;
 			var searchVal = e.currentTarget.value;
@@ -3646,6 +3682,7 @@
 			if (set.dynamaxLevel) delete set.dynamaxLevel;
 			if (set.gigantamax) delete set.gigantamax;
 			if (set.teraType) delete set.teraType;
+			if (set.ability2) delete set.ability2;
 			if (!(this.curTeam.format.includes('hackmons') || this.curTeam.format.endsWith('bh')) && species.requiredItems.length === 1) {
 				set.item = species.requiredItems[0];
 			} else {

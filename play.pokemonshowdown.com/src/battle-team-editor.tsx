@@ -212,6 +212,7 @@ export class TeamEditorState extends PSModel {
 		set.species = species.name;
 		set.ability = this.getDefaultAbility(set);
 		set.item = this.getDefaultItem(species.name) ?? set.item;
+		delete (set as any).ability2; // reset awakened ability choice on species change
 
 		if (toID(speciesName) === 'Cathy') {
 			set.name = "Cathy";
@@ -2032,9 +2033,41 @@ class TeamWizard extends preact.Component<{
 				</tr>
 				<tr>
 					<td class="set-ability"><div class="border-collapse">
+						{editor.useStatPoints && (() => {
+							const DOMAIN_SETTER_IDS_TSX: {[type: string]: string} = {
+								Normal: 'domainsetternormal', Fire: 'domainsetterfire', Water: 'domainsetterwater',
+								Electric: 'domainsetterelectric', Grass: 'domainsettergrass', Ice: 'domainsetterice',
+								Fighting: 'domainsetterfighting', Poison: 'domainsetterpoison', Ground: 'domainsetterground',
+								Flying: 'domainsetterair', Psychic: 'domainsetterpsychic', Bug: 'domainsetterbug',
+								Rock: 'domainsetterrock', Ghost: 'domainsetterghost', Dragon: 'domainsetterdragon',
+								Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
+								Cosmic: 'domainsettercosmic',
+							};
+							const hSlot = species.abilities['H'] || '';
+							const curA2 = (set as any).ability2 as string | undefined || '';
+							const handleA2Change = (e: Event) => {
+								const val = (e.currentTarget as HTMLSelectElement).value;
+								if (val) { (set as any).ability2 = val; } else { delete (set as any).ability2; }
+								editor.save();
+								this.forceUpdate();
+							};
+							return <select
+								style="font-size:10px;width:100%;margin-bottom:2px;"
+								onChange={handleA2Change}
+							>
+								<option value="" selected={!curA2}>{hSlot || '—'} (Awakened)</option>
+								{species.types.map((type: string) => {
+									const dsId = DOMAIN_SETTER_IDS_TSX[type];
+									if (!dsId) return null;
+									const ab = Dex.abilities.get(dsId);
+									if (!ab.exists) return null;
+									return <option value={ab.name} selected={curA2 === ab.name}>{ab.name}</option>;
+								})}
+							</select>;
+						})()}
 						<button class={`button button-middle${cur('ability')}`} onClick={this.setFocus} value={`ability|${i}`}>
 							{(editor.gen >= 3 || set.ability) && <>
-								<strong class="label">Ability</strong> {}
+								<strong class="label">{editor.useStatPoints ? 'Ability' : 'Ability'}</strong> {}
 								{(set.ability !== 'No Ability' && set.ability) ||
 									(!set.ability ? <em>(choose ability)</em> : <em>(no ability)</em>)}
 							</>}

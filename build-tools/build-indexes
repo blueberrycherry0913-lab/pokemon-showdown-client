@@ -433,7 +433,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 					if (isGen8StarterLineage(Dex.mod(gen), species)) {
 						// GMax formes of Galar starters (e.g. cinderacegmax) stay hidden.
 						if (species.natDexTier === 'Illegal') return 'Illegal';
-						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen9';
+						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen8';
 					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
@@ -737,10 +737,10 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			}
 			if (isChampions) {
 				// Testing Standard / champions: 'Gen1' (fully-evolved Gen 1 lineage)
-				// at the top, then 'Gen9' (fully-evolved Galar starters), 'Megas',
+				// at the top, then 'Gen8' (fully-evolved Galar starters), 'Megas',
 				// 'NFE' (still-evolving Gen 1 + Galar starters), 'Other', 'Custom'.
 				return [
-					"Gen1", "Gen9", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Gen8", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

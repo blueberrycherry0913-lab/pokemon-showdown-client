@@ -2427,23 +2427,6 @@ p.or:after {
 .setcol-details {
 	width: 234px;
 }
-.awakenedability-display {
-	display: block;
-	box-sizing: border-box;
-	border: 1px solid #AAAAAA;
-	border-radius: 3px;
-	padding: 1px 3px;
-	margin: 0 3px 0 0;
-	width: 108px;
-	height: 24px;
-	font-size: 9pt;
-	line-height: 20px;
-	background: #EEEEEE;
-	color: #555555;
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: center;
-}
 .setcell {
 	float: left;
 }

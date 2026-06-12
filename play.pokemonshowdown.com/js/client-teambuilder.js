@@ -1391,16 +1391,15 @@
 			if (this.curTeam.gen > 1 && !isLetsGo) buf += '<div class="setcell setcell-item"><label>Item</label><input type="text" name="item" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.item) + '" autocomplete="off" /></div>';
 			if (this.curTeam.gen > 2 && !isLetsGo) {
 				buf += '<div class="setcell setcell-ability">';
+				buf += '<label>Ability</label>';
+				buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" />';
 				if (isChampions) {
 					var hSlotAbility = species.abilities['H'] || '';
 					var curAbility2 = set.ability2 || '';
 					buf += '<label>Awakened</label>';
 					buf += '<input type="text" name="awakenedability" class="textbox chartinput" value="' + BattleLog.escapeHTML(curAbility2 || hSlotAbility) + '" autocomplete="off" />';
-					buf += '<label>Ability</label>';
-				} else {
-					buf += '<label>Ability</label>';
 				}
-				buf += '<input type="text" name="ability" class="textbox chartinput" value="' + BattleLog.escapeHTML(set.ability) + '" autocomplete="off" /></div>';
+				buf += '</div>';
 			}
 			buf += '</div>';
 			buf += '</div>';
@@ -2206,6 +2205,7 @@
 			if (type === 'awakenedability') {
 				this.search.qType = null;
 				this.search.qName = null;
+				this.search.typedSearch = null; // so chartClick's addFilter bails and routes to chartSet
 				var _awSet = this.curSet;
 				if (!_awSet) return;
 				var _awSpecies = this.curTeam.dex.species.get(_awSet.species);
@@ -2219,19 +2219,21 @@
 					Dark: 'domainsetterdark', Steel: 'domainsettersteel', Fairy: 'domainsetterfairy',
 					Cosmic: 'domainsettercosmic',
 				};
-				var _awBuf = '<ul class="utilichart">';
-				if (_hSlot) {
-					var _isCur = (!_awSet.ability2 || _awSet.ability2 === _hSlot) ? ' class="cur"' : '';
-					_awBuf += '<li class="result"><a data-entry="awakenedability|' + BattleLog.escapeHTML(_hSlot) + '"' + _isCur + '>' + BattleLog.escapeHTML(_hSlot) + '</a></li>';
-				}
+				// Build the option list: H-slot ability + one Domain Setter per type.
+				// Render each via the same renderAbilityRow the basic ability box uses,
+				// so the dropdown looks identical (name + shortDesc columns).
+				var _awOptions = [];
+				if (_hSlot && BattleAbilities[toID(_hSlot)]) _awOptions.push(BattleAbilities[toID(_hSlot)]);
 				for (var _awi = 0; _awi < _awSpecies.types.length; _awi++) {
-					var _awType = _awSpecies.types[_awi];
-					var _awDsId = _DSBT[_awType];
-					if (_awDsId && BattleAbilities[_awDsId]) {
-						var _awDsName = BattleAbilities[_awDsId].name;
-						var _awIsCur = (_awSet.ability2 === _awDsName) ? ' class="cur"' : '';
-						_awBuf += '<li class="result"><a data-entry="awakenedability|' + BattleLog.escapeHTML(_awDsName) + '"' + _awIsCur + '>' + BattleLog.escapeHTML(_awDsName) + '</a></li>';
-					}
+					var _awDsId = _DSBT[_awSpecies.types[_awi]];
+					if (_awDsId && BattleAbilities[_awDsId]) _awOptions.push(BattleAbilities[_awDsId]);
+				}
+				var _curAw = _awSet.ability2 || _hSlot;
+				var _awBuf = '<ul class="utilichart">';
+				for (var _awo = 0; _awo < _awOptions.length; _awo++) {
+					var _awAbil = _awOptions[_awo];
+					var _awAttrs = (_awAbil.name === _curAw) ? ' class="cur"' : '';
+					_awBuf += this.search.renderAbilityRow(_awAbil, 0, 0, '', _awAttrs);
 				}
 				_awBuf += '</ul>';
 				this.$chart.html(_awBuf);
@@ -3383,17 +3385,6 @@
 				}
 			}
 			this.chartSet(val, selectNext);
-		},
-		awakenedAbilityChange: function (e) {
-			var set = this.curSet;
-			if (!set) return;
-			var val = e.currentTarget.value;
-			if (val) {
-				set.ability2 = val;
-			} else {
-				delete set.ability2;
-			}
-			this.save();
 		},
 		searchChange: function (e) {
 			var DEBOUNCE_THRESHOLD_TEAMS = 500;

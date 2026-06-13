@@ -2032,6 +2032,7 @@
 			this.$el.html('<div class="teamwrapper">' + buf + '</div>');
 			if ($(window).width() < 640) this.show();
 			this.$chart = this.$('.teambuilder-results');
+			this.scaleAllAbilityFonts();
 			this.search = new BattleSearch(this.$chart, this.$chart);
 			var self = this;
 			// fun fact: Backbone DOM events don't support scroll...
@@ -2042,9 +2043,22 @@
 				}
 			});
 		},
+		scaleAbilityFont: function (el) {
+			if (!el) return;
+			var len = (el.value || '').length;
+			var size = len <= 14 ? '9pt' : len <= 18 ? '8pt' : len <= 21 ? '7pt' : '6.5pt';
+			el.style.fontSize = size;
+		},
+		scaleAllAbilityFonts: function () {
+			var self = this;
+			this.$('input[name=awakenedability], input[name=ability]').each(function () {
+				self.scaleAbilityFont(this);
+			});
+		},
 		updateSetTop: function () {
 			this.$('.teambar').html(this.renderTeambar());
 			this.$('.teamchart').first().html(this.renderSet(this.curSet, this.curSetLoc));
+			this.scaleAllAbilityFonts();
 		},
 		renderTeambar: function () {
 			var buf = '';
@@ -3509,6 +3523,7 @@
 				} else {
 					this.curSet.ability2 = val;
 				}
+				this.scaleAbilityFont(this.$('input[name=awakenedability]')[0]);
 				if (selectNext) this.$('input[name=ability]').select();
 				break;
 			}

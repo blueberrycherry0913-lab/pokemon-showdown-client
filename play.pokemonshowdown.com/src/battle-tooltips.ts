@@ -890,6 +890,9 @@ export class BattleTooltips {
 			if (move.flags.punch && ability === 'ironfist') {
 				text += `<p class="movetag">&#x2713; Fist <small>(boosted by Iron Fist)</small></p>`;
 			}
+			if (move.flags.ball && ability === 'striker') {
+				text += `<p class="movetag">&#x2713; Ball <small>(boosted by Striker)</small></p>`;
+			}
 			if (move.flags.pulse && ability === 'megalauncher') {
 				text += `<p class="movetag">&#x2713; Pulse <small>(boosted by Mega Launcher)</small></p>`;
 			}
@@ -2625,6 +2628,9 @@ export class BattleTooltips {
 		}
 		if (move.flags['vine']) {
 			value.abilityModify(1.5, "Wild Vines");
+		}
+		if (move.flags['ball']) {
+			value.abilityModify(1.5, "Striker");
 		}
 		if (value.value <= 60) {
 			value.abilityModify(1.5, "Technician");

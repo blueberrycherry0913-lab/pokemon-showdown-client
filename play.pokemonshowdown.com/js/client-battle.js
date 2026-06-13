@@ -721,6 +721,14 @@
 				var hpBar = '<small class="' + (hpRatio < 0.2 ? 'critical' : hpRatio < 0.5 ? 'weak' : 'healthy') + '">HP ' + switchables[pos].hp + '/' + switchables[pos].maxhp + '</small>';
 				requestTitle += ' What will <strong>' + BattleLog.escapeHTML(switchables[pos].name) + '</strong> do? ' + hpBar;
 
+				// Telepathy foresight: opponent's committed move was revealed by the server
+				var foresightBanner = '';
+				if (curActive && curActive.opponentMove) {
+					foresightBanner = '<div class="broadcast-blue" style="text-align:center;padding:4px 10px;margin:2px 0">' +
+						'<strong>Telepathy Foresight!</strong> Opponent chose: <strong>' + BattleLog.escapeHTML(curActive.opponentMove) + '</strong>' +
+						'</div>';
+				}
+
 				var hasMoves = false;
 				var moveMenu = '';
 				var movebuttons = '';
@@ -877,6 +885,7 @@
 				this.$controls.html(
 					'<div class="controls">' +
 					'<div class="whatdo">' + requestTitle + this.getTimerHTML() + '</div>' +
+					foresightBanner +
 					moveControls + shiftControls + switchControls +
 					'</div>'
 				);

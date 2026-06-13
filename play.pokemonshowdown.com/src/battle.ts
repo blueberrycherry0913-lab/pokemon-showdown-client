@@ -2886,10 +2886,11 @@ export class Battle {
 			// Volatile description box: shown in the action log when a custom volatile is applied.
 			// Keyed by args[2] (the raw protocol string) since effect.id derivation varies.
 			if (!kwArgs.already) {
+				const markedHunterName = ofpoke ? ofpoke.name : 'Hunter';
 				const volatileInfoMap: {[key: string]: [string, string, string]} = {
 					'confusion':             ['#AA4477', 'Confused',        '2 turns • Uses a random move instead of chosen'],
 					'interlocked':           ['#5566AA', 'Interlocked',     '3 turns • Both Pokémon trapped • Must target each other'],
-					'move: Marked':          ['#BB6622', 'Marked',          'Hunter deals ×1.5 damage and cannot miss this Pokémon'],
+					'move: Marked':          ['#BB6622', 'Marked',          `Marked by ${markedHunterName} • Hunter deals ×1.5 damage • Cannot miss`],
 					'move: Mind Controlled': ['#9944BB', 'Mind Controlled', 'Opponent picks this Pokémon\'s moves for 2 actions'],
 				};
 				const volatileInfo = volatileInfoMap[args[2] as string];

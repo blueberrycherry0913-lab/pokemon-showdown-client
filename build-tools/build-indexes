@@ -66,13 +66,14 @@ function familyHasGen1Member(dex, species, seen) {
 	return false;
 }
 
-// Mirrors the server-side isGen8StarterLineage in data/mods/champions/rulesets.ts.
-// True if `species` is from one of the three Galar starter lines (nums 810-818).
-function isGen8StarterLineage(dex, species) {
+// Mirrors the server-side isGen8Lineage in data/mods/champions/rulesets.ts.
+// True if `species` is from the Gen 8 lineage (nums 810-905, Grookey-Calyrex),
+// including cross-gen evolutions like Hydrapple (Applin family).
+function isGen8Lineage(dex, species) {
 	if (!species || !species.exists) return false;
 	if (species.baseSpecies && species.baseSpecies !== species.name) {
 		const base = dex.species.get(species.baseSpecies);
-		if (base.exists && base.id !== species.id && isGen8StarterLineage(dex, base)) return true;
+		if (base.exists && base.id !== species.id && isGen8Lineage(dex, base)) return true;
 	}
 	let root = species;
 	let safety = 20;
@@ -81,16 +82,16 @@ function isGen8StarterLineage(dex, species) {
 		if (!prev.exists) break;
 		root = prev;
 	}
-	return familyHasGen8StarterMember(dex, root, new Set());
+	return familyHasGen8Member(dex, root, new Set());
 }
-function familyHasGen8StarterMember(dex, species, seen) {
+function familyHasGen8Member(dex, species, seen) {
 	if (seen.has(species.id)) return false;
 	seen.add(species.id);
-	if (species.num >= 810 && species.num <= 818) return true;
+	if (species.num >= 810 && species.num <= 905) return true;
 	if (species.evos) {
 		for (const evoName of species.evos) {
 			const evo = dex.species.get(evoName);
-			if (evo.exists && familyHasGen8StarterMember(dex, evo, seen)) return true;
+			if (evo.exists && familyHasGen8Member(dex, evo, seen)) return true;
 		}
 	}
 	return false;
@@ -430,8 +431,8 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						if (species.natDexTier === 'Illegal') return 'Illegal';
 						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen1';
 					}
-					if (isGen8StarterLineage(Dex.mod(gen), species)) {
-						// GMax formes of Galar starters (e.g. cinderacegmax) stay hidden.
+					if (isGen8Lineage(Dex.mod(gen), species)) {
+						// GMax formes stay hidden.
 						if (species.natDexTier === 'Illegal') return 'Illegal';
 						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen8';
 					}

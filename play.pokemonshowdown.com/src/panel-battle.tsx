@@ -341,6 +341,9 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		case 'tera':
 			choices.current.tera = checkbox.checked;
 			break;
+		case 'telepathy':
+			choices.current.telepathy = checkbox.checked;
+			break;
 		}
 		this.props.room.update(null);
 	};
@@ -609,6 +612,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 		const canZMove = moveRequest.zMoves && !choices.alreadyZ;
 		const canUltraBurst = moveRequest.canUltraBurst;
 		const canTerastallize = moveRequest.canTerastallize;
+		const canTelepathy = moveRequest.canTelepathy;
 
 		const maybeDisabled = moveRequest.maybeDisabled;
 		const maybeLocked = moveRequest.maybeLocked;
@@ -651,6 +655,10 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				{canTerastallize && <label class={`megaevo${choices.current.tera ? ' cur' : ''}`}>
 					<input type="checkbox" name="tera" checked={choices.current.tera} onChange={this.toggleBoostedMove} /> {}
 					Terastallize
+				</label>}
+				{canTelepathy && <label class={`megaevo${choices.current.telepathy ? ' cur' : ''}`}>
+					<input type="checkbox" name="telepathy" checked={choices.current.telepathy} onChange={this.toggleBoostedMove} /> {}
+					Telepathy
 				</label>}
 				{/* §11 Tera Crystal: in-battle type picker — a grid of type icons shown when engaged. */}
 				{canTerastallize && choices.current.tera && <div class="teratype-grid" style="white-space:normal;max-width:252px">
@@ -902,6 +910,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				if (choice.megay) buf.push(<strong>Mega</strong>, ` Evolve (Y) and `);
 				if (choice.ultra) buf.push(<strong>Ultra</strong>, ` Burst and `);
 				if (choice.tera) buf.push(`Terastallize (`, <strong>{active?.canTerastallize || '???'}</strong>, `) and `);
+				if (choice.telepathy) buf.push(<strong>Telepathy</strong>, ` Foresight and `);
 				if (choice.max && active?.canDynamax) buf.push(active?.gigantamax ? `Gigantamax and ` : `Dynamax and `);
 				buf.push(`use `, <strong>{choices.currentMove(choice, i)?.name}</strong>);
 				if (choice.targetLoc > 0 || battle.gameType === 'freeforall') {

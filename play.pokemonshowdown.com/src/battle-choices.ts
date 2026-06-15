@@ -119,6 +119,7 @@ interface BattleMoveChoice {
 	tera: boolean;
 	/** §11 Tera Crystal: the in-battle-chosen Tera type (canonical Name, e.g. "Fire"). */
 	teraType?: string;
+	telepathy: boolean;
 }
 interface BattleSwitchChoice {
 	choiceType: 'switch' | 'team';
@@ -154,6 +155,7 @@ export class BattleChoiceBuilder {
 		z: false,
 		max: false,
 		tera: false,
+		telepathy: false,
 	};
 	alreadySwitchingIn: number[] = [];
 	alreadyMega = false;
@@ -282,6 +284,7 @@ export class BattleChoiceBuilder {
 				z: false,
 				max: false,
 				tera: false,
+				telepathy: false,
 			};
 		} else if (choice.choiceType === 'switch' || choice.choiceType === 'team') {
 			if (this.currentMoveRequest()?.trapped) {
@@ -393,6 +396,7 @@ export class BattleChoiceBuilder {
 				z: false,
 				max: false,
 				tera: false,
+				telepathy: false,
 			};
 			while (true) {
 				// If data ends with a number, treat it as a target location.
@@ -436,6 +440,9 @@ export class BattleChoiceBuilder {
 				} else if (choice.endsWith(' terastal')) {
 					current.tera = true;
 					choice = choice.slice(0, -9);
+				} else if (choice.endsWith(' telepathy')) {
+					current.telepathy = true;
+					choice = choice.slice(0, -10);
 				} else {
 					break;
 				}
@@ -579,7 +586,8 @@ export class BattleChoiceBuilder {
 			(choice.ultra ? ' ultra' : '') +
 			(choice.z ? ' zmove' : '') +
 			// §11 Tera Crystal: emit the chosen type (lowercased ID) when one was picked.
-			(choice.tera ? (choice.teraType ? ' terastallize ' + toID(choice.teraType) : ' terastallize') : '');
+			(choice.tera ? (choice.teraType ? ' terastallize ' + toID(choice.teraType) : ' terastallize') : '') +
+			(choice.telepathy ? ' telepathy' : '');
 	}
 
 	/**

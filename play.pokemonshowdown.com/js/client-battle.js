@@ -632,6 +632,7 @@
 			var maxMoves = curActive.maxMoves || switchables[pos].maxMoves;
 			var gigantamax = curActive.maxMoves && curActive.maxMoves.gigantamax;
 			var canTerastallize = curActive.canTerastallize || switchables[pos].canTerastallize;
+			var canTelepathy = curActive.canTelepathy || switchables[pos].canTelepathy;
 			if (canZMove && typeof canZMove[0] === 'string') {
 				canZMove = _.map(canZMove, function (move) {
 					return { move: move, target: Dex.moves.get(move).target };
@@ -814,6 +815,10 @@
 				}
 				if (canDynamax) {
 					checkboxes.push('<label class="megaevo"><input type="checkbox" name="dynamax" />&nbsp;Dynamax</label>');
+				}
+				if (canTelepathy) {
+					var telepathyEngaged = !!(this.choice && this.choice.telepathy);
+					checkboxes.push('<label class="megaevo"><input type="checkbox" name="telepathy" ' + (telepathyEngaged ? 'checked' : '') + ' />&nbsp;Telepathy&nbsp;Foresight</label>');
 				}
 				if (canTerastallize) {
 					// §11 Tera Crystal: a "Terastallize" toggle that reveals a grid of type icons.
@@ -1128,6 +1133,10 @@
 								buf += 'Terastallize, then ';
 								targetPos = parts[3];
 							}
+							if (targetPos === 'telepathy') {
+								buf += 'Telepathy Foresight, then ';
+								targetPos = parts[3];
+							}
 							if (targetPos) {
 								var targetActive = this.battle.farSide.active;
 								if (targetPos < 0) {
@@ -1379,12 +1388,14 @@
 				// chooseTera / chooseTeraType handlers). No type picked = bare 'terastallize' (preset).
 				var teraSuffix = (this.choice && this.choice.tera) ?
 					(this.choice.teraType ? ' terastallize ' + toID(this.choice.teraType) : ' terastallize') : '';
+				var isTelepathy = !!(this.$('input[name=telepathy]')[0] || '').checked;
+				var telepathySuffix = isTelepathy ? ' telepathy' : '';
 
 				var target = e.getAttribute('data-target');
 				var choosableTargets = { normal: 1, any: 1, adjacentAlly: 1, adjacentAllyOrSelf: 1, adjacentFoe: 1 };
 				if (this.battle.gameType === 'freeforall') delete choosableTargets['adjacentAllyOrSelf'];
 
-				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix);
+				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix + telepathySuffix);
 				if (nearActive.length > 1 && target in choosableTargets) {
 					this.choice.type = 'movetarget';
 					this.choice.moveTarget = target;

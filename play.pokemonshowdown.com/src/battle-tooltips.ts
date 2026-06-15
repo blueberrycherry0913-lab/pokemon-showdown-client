@@ -1428,20 +1428,6 @@ export class BattleTooltips {
 			stats.spa = Math.floor(stats.spa * 1.5);
 			stats.spd = Math.floor(stats.spd * 1.5);
 		}
-		if (clientPokemon && (ability === 'plus' || ability === 'minus')) {
-			let allyActive = clientPokemon.side.active;
-			if (allyActive.length > 1) {
-				let abilityName = (ability === 'plus' ? 'Plus' : 'Minus');
-				for (const ally of allyActive) {
-					if (!ally || ally === clientPokemon || ally.fainted) continue;
-					let allyAbility = this.getAllyAbility(ally);
-					if (allyAbility !== 'Plus' && allyAbility !== 'Minus') continue;
-					if (this.battle.gen <= 4 && allyAbility === abilityName) continue;
-					stats.spa = Math.floor(stats.spa * 1.5);
-					break;
-				}
-			}
-		}
 		if (item === 'assaultvest') {
 			stats.spd = Math.floor(stats.spd * 1.5);
 		}
@@ -2320,8 +2306,8 @@ export class BattleTooltips {
 		}
 
 		if (value.tryAbility('Hustle') && move.category !== 'Status') {
-			accuracyModifiers.push(3277);
-			value.abilityModify(0.8, "Hustle");
+			accuracyModifiers.push(3686);
+			value.abilityModify(0.9, "Hustle");
 		} else if (value.tryAbility('Compound Eyes')) {
 			accuracyModifiers.push(5325);
 			value.abilityModify(1.3, "Compound Eyes");
@@ -2615,7 +2601,11 @@ export class BattleTooltips {
 
 		// Other ability boosts
 		if (move.category !== 'Status') {
-			value.abilityModify(1.5, "Hustle");
+			value.abilityModify(1.3, "Hustle");
+		}
+		if (move.type === 'Electric' && move.category !== 'Status') {
+			value.abilityModify(1.1, "Plus");
+			value.abilityModify(1.1, "Minus");
 		}
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");

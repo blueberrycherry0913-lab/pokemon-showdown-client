@@ -1326,7 +1326,7 @@ export class BattleTooltips {
 		if (ability === 'purepower' || ability === 'hugepower') {
 			stats.atk *= 2;
 		}
-		if (ability === 'hustle' || (ability === 'gorillatactics' && !clientPokemon?.volatiles['dynamax'])) {
+		if (ability === 'gorillatactics' && !clientPokemon?.volatiles['dynamax']) {
 			stats.atk = Math.floor(stats.atk * 1.5);
 		}
 		if (weather) {
@@ -2319,7 +2319,7 @@ export class BattleTooltips {
 			}
 		}
 
-		if (value.tryAbility('Hustle') && move.category === 'Physical') {
+		if (value.tryAbility('Hustle') && move.category !== 'Status') {
 			accuracyModifiers.push(3277);
 			value.abilityModify(0.8, "Hustle");
 		} else if (value.tryAbility('Compound Eyes')) {
@@ -2614,6 +2614,9 @@ export class BattleTooltips {
 		if (!value.value) return value;
 
 		// Other ability boosts
+		if (move.category !== 'Status') {
+			value.abilityModify(1.5, "Hustle");
+		}
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");
 		}

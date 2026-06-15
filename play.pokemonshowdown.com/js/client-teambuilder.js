@@ -2275,7 +2275,7 @@
 					this.$chart.scrollTop(0);
 				}
 				this.search.$inputEl = $inputEl;
-				this.search.setType(type, this.curTeam.format || 'gen9testingstandard', this.curSet, cur);
+				this.search.setType(type, (this.curTeam.format && this.curTeam.format !== 'gen9') ? this.curTeam.format : 'gen9testingstandard', this.curSet, cur);
 				this.qInitial = q;
 				this.search.qName = this.curChartName;
 				if (wasIncomplete) {

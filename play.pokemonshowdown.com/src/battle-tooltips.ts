@@ -2969,7 +2969,15 @@ export class BattleTooltips {
 		// Reworked Thick Club: +50% BP to Contact and Bone moves for Marowak/Cubone/Osteokhan.
 		if (item.id === 'thickclub' && ['Cubone', 'Marowak', 'Osteokhan'].includes(speciesName)) {
 			if (move.flags['contact'] || move.flags['bone']) {
-				value.abilityMods.push({label: 'Thick Club (×1.5)', factor: 1.5});
+				value.abilityMods.push({label: 'Thick Club', factor: 1.5});
+			}
+			return value;
+		}
+
+		// Leek: +50% BP to Contact moves for Farfetch'd/Sirfetch'd.
+		if (item.id === 'leek' && (speciesName === "Farfetch’d" || speciesName === 'Sirfetch’d')) {
+			if (move.flags['contact']) {
+				value.abilityMods.push({label: 'Leek', factor: 1.5});
 			}
 			return value;
 		}

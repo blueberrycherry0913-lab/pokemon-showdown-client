@@ -2972,6 +2972,24 @@ export class BattleTooltips {
 			value.itemModify(1.1);
 		}
 
+		// Custom fan-game Weapon morphing items (§ custom items -8/-9/-10).
+		// Check both the pre-morph 'weapon' id and the post-morph ids so the tooltip
+		// is correct whether or not the client has observed the -item reveal.
+		const marowakLine = ['Cubone', 'Marowak', 'Osteokhan'];
+		const tinkatonLine = ['Tinkatink', 'Tinkatuff', 'Tinkaton'];
+		if ((item.id === 'weapon' && marowakLine.includes(speciesName)) || item.id === 'thickclubweapon') {
+			if (move.flags['contact'] || move.flags['bone']) {
+				value.abilityMods.push({label: 'Thick Club (×1.5)', factor: 1.5});
+			}
+			return value;
+		}
+		if ((item.id === 'weapon' && tinkatonLine.includes(speciesName)) || item.id === 'gigatonhammer') {
+			if (move.flags['contact']) {
+				value.abilityMods.push({label: 'Gigaton Hammer (×1.5)', factor: 1.5});
+			}
+			return value;
+		}
+
 		return value;
 	}
 	getPokemonTypes(pokemon: Pokemon | ServerPokemon, preterastallized = false): readonly Dex.TypeName[] {

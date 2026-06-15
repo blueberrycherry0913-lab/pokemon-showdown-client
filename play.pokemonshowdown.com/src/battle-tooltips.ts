@@ -2015,8 +2015,9 @@ export class BattleTooltips {
 				}
 			}
 		}
-		// Charged Spines: all non-Status moves display as Electric while volatile is active
-		if (category !== 'Status' && pokemon.volatiles['chargedspineselectrify']) {
+		// Charged Spines: all non-Status moves display as Electric while volatile is active.
+		// Client tracks this as 'chargedspines' (toID of the '-start' effect name).
+		if (category !== 'Status' && pokemon.volatiles['chargedspines']) {
 			moveType = 'Electric';
 		}
 

@@ -2892,6 +2892,7 @@ export class Battle {
 					'interlocked':           ['#5566AA', 'Interlocked',     '3 turns • Both Pokémon trapped • Must target each other'],
 					'move: Marked':          ['#BB6622', 'Marked',          `Marked by ${markedHunterName} • Hunter deals ×1.5 damage • Cannot miss`],
 					'move: Mind Controlled': ['#9944BB', 'Mind Controlled', 'Opponent picks this Pokémon\'s moves for 2 actions'],
+					'Charged Spines':        ['#EEB800', 'Charged Up',      '2 turns • All moves become Electric-type'],
 				};
 				const volatileInfo = volatileInfoMap[args[2] as string];
 				if (volatileInfo) {

@@ -2026,6 +2026,11 @@ export class BattleTooltips {
 				}
 			}
 		}
+		// Charged Spines: all non-Status moves display as Electric while volatile is active
+		if (category !== 'Status' && pokemon.volatiles['chargedspineselectrify']) {
+			moveType = 'Electric';
+		}
+
 		return [moveType, category];
 	}
 	static getTypeAbilityWeakness(attackType: Dex.TypeName, abilityid: ID, dex: ModdedDex = Dex, strict?: boolean) {

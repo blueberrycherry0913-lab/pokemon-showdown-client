@@ -25,6 +25,7 @@ export class ModifiableValue {
 	serverPokemon: ServerPokemon;
 	itemName: string;
 	abilityName: string;
+	awakenedAbilityName: string;
 	weatherName: string;
 	isAccuracy = false;
 	constructor(battle: Battle, pokemon: Pokemon, serverPokemon: ServerPokemon) {
@@ -37,6 +38,11 @@ export class ModifiableValue {
 		this.itemName = this.battle.dex.items.get(serverPokemon.item).name;
 		const ability = serverPokemon.ability || pokemon?.ability || serverPokemon.baseAbility;
 		this.abilityName = this.battle.dex.abilities.get(ability).name;
+		const species = this.battle.dex.species.get(
+			serverPokemon.speciesForme || serverPokemon.name || ''
+		);
+		const awakenedId = species?.abilities?.['H'];
+		this.awakenedAbilityName = awakenedId ? this.battle.dex.abilities.get(awakenedId).name : '';
 		this.weatherName = this.battle.dex.moves.get(battle.weather).exists ?
 			this.battle.dex.moves.get(battle.weather).name : this.battle.dex.abilities.get(battle.weather).name;
 	}
@@ -67,7 +73,7 @@ export class ModifiableValue {
 		return true;
 	}
 	tryAbility(abilityName: string) {
-		if (abilityName !== this.abilityName) return false;
+		if (abilityName !== this.abilityName && abilityName !== this.awakenedAbilityName) return false;
 		if (this.pokemon?.volatiles['gastroacid']) {
 			this.comment.push(` (${abilityName} suppressed by Gastro Acid)`);
 			return false;

@@ -1034,7 +1034,10 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 	}
 	getBaseResults(): SearchRow[] {
 		const format = this.format;
-		if (!format) return this.getDefaultResults();
+		const useChampionsDefault = !format;
+		if (!format && !BattleTeambuilderTable['champions']?.tierSet && !BattleTeambuilderTable['champions']?.tiers) {
+			return this.getDefaultResults();
+		}
 		const isVGCOrBS = format.startsWith('battlespot') || format.startsWith('bss') ||
 			format.startsWith('battlestadium') || format.startsWith('vgc') || format === '4v4doublesuu';
 		const isHackmons = format.includes('hackmons') || format.endsWith('bh');
@@ -1042,7 +1045,9 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		const dex = this.dex;
 
 		let table = BattleTeambuilderTable;
-		if ((format.endsWith('cap') || format.endsWith('caplc')) && dex.gen < 9) {
+		if (useChampionsDefault) {
+			table = table[`champions`];
+		} else if ((format.endsWith('cap') || format.endsWith('caplc')) && dex.gen < 9) {
 			table = table[`gen${dex.gen}`];
 		} else if (this.formatType === 'champions') {
 			table = table[`champions`];
@@ -1176,7 +1181,7 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			tierSet = tierSet.slice(slices.Uber);
 		} else if (this.formatType === 'rs' || this.formatType === 'frlg') {
 			tierSet = tierSet.slice(slices.Regular);
-		} else if (this.formatType === 'champions' && format !== 'ou' && format !== 'ubers') {
+		} else if (useChampionsDefault || (this.formatType === 'champions' && format !== 'ou' && format !== 'ubers')) {
 			// Testing Standard (and any future champions-mod format that doesn't
 			// route to a specific OU/Ubers slice): keep the full tierSet so
 			// 'Generation 1' / 'Generation 1 NFE' / 'Custom' headers all render.

@@ -2705,11 +2705,11 @@ export class BattleTooltips {
 				} else if (allyAbility === 'Aura Break') {
 					auraBroken = true;
 				} else if (allyAbility === 'Battery' && ally !== pokemon && move.category === 'Special') {
-					value.modify(1.3, 'Battery');
+					value.abilityModify(1.3, 'Battery');
 				} else if (allyAbility === 'Power Spot' && ally !== pokemon) {
-					value.modify(1.3, 'Power Spot');
+					value.abilityModify(1.3, 'Power Spot');
 				} else if (allyAbility === 'Steely Spirit' && moveType === 'Steel') {
-					value.modify(1.5, 'Steely Spirit');
+					value.abilityModify(1.5, 'Steely Spirit');
 				}
 			}
 			for (const foe of pokemon.side.foe.active) {
@@ -2724,9 +2724,9 @@ export class BattleTooltips {
 			}
 			if (auraBoosted) {
 				if (auraBroken) {
-					value.modify(0.75, auraBoosted + ' + Aura Break');
+					value.abilityModify(0.75, auraBoosted + ' + Aura Break');
 				} else {
-					value.modify(1.33, auraBoosted);
+					value.abilityModify(1.33, auraBoosted);
 				}
 			}
 		}
@@ -2840,7 +2840,7 @@ export class BattleTooltips {
 			if (move.recoil || move.hasCrashDamage) {
 				value.abilityModify(1.2, 'Hogwash');
 				if (pokemon.name === "Billo") {
-					value.modify(1.2);
+					value.abilityModify(1.2, 'Hogwash (Billo)');
 				}
 			}
 			if (target?.gender === "M" && pokemon.getSpeciesForme().includes("Hearthflame")) {

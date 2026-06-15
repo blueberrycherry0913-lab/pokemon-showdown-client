@@ -104,19 +104,9 @@ export class ModifiableValue {
 	}
 	abilityModify(factor: number, abilityName: string) {
 		if (!this.tryAbility(abilityName)) return false;
+		// Record the modifier for the Alt True Power chain only.
+		// Do NOT mutate this.value — the basic "Base Power:" line always shows the raw BP.
 		this.abilityMods.push({label: abilityName, factor});
-		// Apply the factor but suppress the comment — ability multipliers are
-		// shown only in the Alt True Power chain, not the default display.
-		// Mirrors modify() logic; Technician's maxValue guard is preserved explicitly.
-		if (factor === 0) {
-			this.value = 0;
-			this.maxValue = 0;
-		} else {
-			this.value *= factor;
-			if (!(abilityName === 'Technician' && this.maxValue > 60)) {
-				this.maxValue *= factor;
-			}
-		}
 		return true;
 	}
 	weatherModify(factor: number, weatherName?: string, name?: string) {
@@ -737,10 +727,9 @@ export class BattleTooltips {
 					else stabLabel = `${origLabel} (×${stabMult})`;
 				}
 
-				// Back-calculate raw BP before ability mods were applied
-				const abilityModProduct = value.abilityMods.reduce((p, m) => p * m.factor, 1);
-				const rawBP = Math.round(value.value / abilityModProduct);
-				const rawBPMax = value.maxValue ? Math.round(value.maxValue / abilityModProduct) : 0;
+				// value.value is always the raw BP (abilityModify never mutates it)
+				const rawBP = value.value;
+				const rawBPMax = value.maxValue || 0;
 
 				// Build multiplier chain: STAB first, then ability mods
 				const parts: string[] = [];

@@ -3084,8 +3084,8 @@ export class Battle {
 			case 'typeeffect': {
 				// Blanket type effects (§1.5): colored chip in the action log
 				const typeName = (kwArgs as any).type as string;
-				const msg = (kwArgs as any).msg as string;
-				if (typeName && msg) {
+				const msgKey = (kwArgs as any).msg as string;
+				if (typeName && msgKey) {
 					const typeColors: {[key: string]: string} = {
 						Normal: '#9FA19F', Fire: '#E62829', Water: '#2980EF', Electric: '#FAC000',
 						Grass: '#3FA129', Ice: '#3DCEF3', Fighting: '#FF8000', Poison: '#9141CB',
@@ -3093,8 +3093,31 @@ export class Battle {
 						Rock: '#AFA981', Ghost: '#704170', Dragon: '#5060E1', Dark: '#624D4E',
 						Steel: '#60A1B8', Fairy: '#EF70EF', Cosmic: '#6633AA',
 					};
+					const typeEffectMessages: {[key: string]: (mon: string, type: string) => string} = {
+						'Burn Immunity': (mon, ty) => `${mon}'s ${ty} type protected it from being burned!`,
+						'Paralysis Immunity': (mon, ty) => `${mon}'s ${ty} type blocked paralysis!`,
+						'Freeze Immunity': (mon, ty) => `${mon}'s ${ty} type blocked the freeze effect!`,
+						'Poison Immunity': (mon, ty) => `${mon}'s ${ty} type resisted the poison!`,
+						'Sleep Immunity': (mon, ty) => `${mon}'s ${ty} type blocked the sleep!`,
+						'Trap Immunity': (mon, ty) => `${mon}'s ${ty} type slipped free of the trap!`,
+						'Flinch Immunity': (mon, ty) => `${mon}'s ${ty} type steadied it against the flinch!`,
+						'Hazard Immunity': (mon, ty) => `${mon}'s ${ty} type ignored the hazard!`,
+						'Absorbed Spikes': (mon, ty) => `${mon}'s ${ty} type absorbed the Spikes for the team!`,
+						'Absorbed Stealth Rock': (mon, ty) => `${mon}'s ${ty} type absorbed the Stealth Rock for the team!`,
+						'Absorbed Toxic Spikes': (mon, ty) => `${mon}'s ${ty} type absorbed the Toxic Spikes for the team!`,
+						'Dark Move Immunity': (mon, ty) => `${mon}'s ${ty} type shook off the Dark-type move!`,
+						'Prankster Immunity': (mon, ty) => `${mon}'s ${ty} type blocked the Prankster-boosted move!`,
+						'Phazing Immunity': (mon, ty) => `${mon}'s ${ty} type refused to be forced out!`,
+						'Status Purge': (mon, ty) => `${mon}'s ${ty} type cleansed its status condition!`,
+						'Wind Speed Boost': (mon, ty) => `${mon}'s ${ty} type rode the wind for a speed boost!`,
+						'Tailwind Speed Boost': (mon, ty) => `${mon}'s ${ty} type rode the Tailwind for a speed boost!`,
+					};
 					const color = typeColors[typeName] || '#888';
-					this.scene.log.addDiv('battle-history', `<div style="font-size:10px; padding:1px 0 1px 6px; border-left:3px solid ${color}; margin: 1px 0; color: #888"><b style="color:${color}">${typeName} type</b> — ${msg}</div>`);
+					const monName = poke ? poke.name : '???';
+					const displayType = typeName === 'Flying' ? 'Air' : typeName;
+					const msgFn = typeEffectMessages[msgKey];
+					const msgText = msgFn ? msgFn(monName, displayType) : `${monName}'s ${displayType} type — ${msgKey}`;
+					this.scene.log.addDiv('battle-history', `<div style="font-size:10px; padding:1px 0 1px 6px; border-left:3px solid ${color}; margin: 1px 0; color: #888"><b style="color:${color}">${displayType} type</b> — ${msgText}</div>`);
 				}
 				break;
 			}

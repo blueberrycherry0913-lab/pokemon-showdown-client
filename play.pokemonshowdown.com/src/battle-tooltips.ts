@@ -1097,7 +1097,8 @@ export class BattleTooltips {
 			text += abilityText;
 			if (abilityText && itemText) {
 				// ability/item on one line for your own switch tooltips, two lines everywhere else
-				text += (!isActive && serverPokemon ? ' / ' : '</p><p>');
+				// Exception: if abilityText is already multi-line (e.g. dual-ability system), always use two lines
+				text += (!isActive && serverPokemon && !abilityText.includes('</p><p>') ? ' / ' : '</p><p>');
 			}
 			text += itemText;
 			text += '</p>';

@@ -193,6 +193,32 @@
 					}
 				};
 			}
+
+			// --- Default teams loader ---
+			// Reads play.pokemonshowdown.com/default-teams.txt (gitignored, edit freely).
+			// On every load, any team whose name isn't already in localStorage is prepended.
+			// Format: standard Showdown export with === [gen9testingstandard] Team Name === headers.
+			Storage.whenTeamsLoaded(function () {
+				fetch('default-teams.txt?nocache=' + Date.now())
+					.then(function (r) { return r.ok ? r.text() : ''; })
+					.then(function (text) {
+						if (!text.trim()) return;
+						var defaults = [];
+						Storage.importTeam(text, defaults);
+						if (!defaults.length) return;
+						var existingNames = {};
+						for (var i = 0; i < Storage.teams.length; i++) existingNames[Storage.teams[i].name] = true;
+						var added = false;
+						for (var j = defaults.length - 1; j >= 0; j--) {
+							if (!existingNames[defaults[j].name]) {
+								Storage.teams.unshift(defaults[j]);
+								added = true;
+							}
+						}
+						if (added) Storage.saveTeams();
+					})
+					.catch(function () {}); // file absent = no-op
+			});
 		</script>
 
 	</body>

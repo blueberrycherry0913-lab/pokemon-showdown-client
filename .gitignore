@@ -11,6 +11,7 @@ npm-debug.log
 
 /play.pokemonshowdown.com/sprites/
 /play.pokemonshowdown.com/audio/
+/play.pokemonshowdown.com/default-teams.txt
 
 # built from other sources
 /play.pokemonshowdown.com/index.php

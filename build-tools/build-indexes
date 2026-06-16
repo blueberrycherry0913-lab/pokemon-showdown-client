@@ -445,7 +445,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen8';
 					}
 					if (isCosmicAddition(species)) {
-						return 'Cosmic Additions';
+						return 'Cosmic';
 					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
@@ -752,7 +752,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				// at the top, then 'Gen8' (fully-evolved Galar starters), 'Megas',
 				// 'NFE' (still-evolving Gen 1 + Galar starters), 'Other', 'Custom'.
 				return [
-					"Gen1", "Gen8", "Cosmic Additions", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Gen8", "Cosmic", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

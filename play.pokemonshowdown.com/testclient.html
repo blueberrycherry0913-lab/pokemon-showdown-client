@@ -129,6 +129,26 @@
 			window.onload = () => {
 				window.app = new App();
 
+				// Auto-login: reads which profile is active from localStorage (set by the
+				// launch-showdown-dual.bat shim), looks up credentials in testclient-key.js
+				// (gitignored — passwords never reach the repo), then calls passwordRename
+				// once challstr is received and the upkeep check finds no existing session.
+				(function() {
+					if (typeof SHOWDOWN_AUTO_LOGINS === 'undefined') return;
+					var profile = localStorage.showdownProfile;
+					if (!profile || !SHOWDOWN_AUTO_LOGINS[profile]) return;
+					var creds = SHOWDOWN_AUTO_LOGINS[profile];
+					var orig = app.user.receiveChallstr.bind(app.user);
+					app.user.receiveChallstr = function(challstr) {
+						orig(challstr);
+						setTimeout(function() {
+							if (!app.user.get('named')) {
+								app.user.passwordRename(creds.username, creds.password);
+							}
+						}, 2000);
+					};
+				})();
+
 				// --- Permanent analytics/leaderboard tab ---
 				var ANALYTICS_ID = 'view-analytics';
 

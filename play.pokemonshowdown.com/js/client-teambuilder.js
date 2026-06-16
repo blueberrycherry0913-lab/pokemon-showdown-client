@@ -864,11 +864,11 @@
 					iconCache: ''
 				};
 			} else {
-				var format = this.curFolder || 'gen9';
+				var format = this.curFolder || 'gen9testingstandard';
 				var folder = '';
 				if (format && format.charAt(format.length - 1) === '/') {
 					folder = format.slice(0, -1);
-					format = 'gen9';
+					format = 'gen9testingstandard';
 				}
 				newTeam = {
 					name: (isBox ? 'Box ' : 'Untitled ') + (teams.length + 1),

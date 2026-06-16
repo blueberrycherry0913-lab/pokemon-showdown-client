@@ -97,6 +97,14 @@ function familyHasGen8Member(dex, species, seen) {
 	return false;
 }
 
+// Mirrors the server-side isCosmicAddition in data/mods/champions/rulesets.ts.
+// Hand-picked Pokémon added to Testing Standard for Cosmic-type coverage.
+const COSMIC_ADDITION_NUMS = new Set([178, 606, 774]); // Xatu, Beheeyem, Minior
+function isCosmicAddition(species) {
+	if (!species || !species.exists) return false;
+	return COSMIC_ADDITION_NUMS.has(species.num);
+}
+
 function es3stringify(obj) {
 	const buf = JSON.stringify(obj);
 	return buf.replace(/"([A-Za-z][A-Za-z0-9]*)":/g, (fullMatch, key) => (
@@ -436,6 +444,9 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						if (species.natDexTier === 'Illegal') return 'Illegal';
 						return (species.nfe || species.tier === 'NFE') ? 'NFE' : 'Gen8';
 					}
+					if (isCosmicAddition(species)) {
+						return 'Cosmic Additions';
+					}
 					if (species.isNonstandard === 'custom') {
 						return 'Custom';
 					}
@@ -741,7 +752,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				// at the top, then 'Gen8' (fully-evolved Galar starters), 'Megas',
 				// 'NFE' (still-evolving Gen 1 + Galar starters), 'Other', 'Custom'.
 				return [
-					"Gen1", "Gen8", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Gen8", "Cosmic Additions", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

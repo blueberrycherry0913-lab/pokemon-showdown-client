@@ -888,6 +888,9 @@ export class BattleTooltips {
 			if (move.flags.ball && ability === 'striker') {
 				text += `<p class="movetag">&#x2713; Ball <small>(boosted by Striker)</small></p>`;
 			}
+			if (move.flags.piercing && ability === 'skewer') {
+				text += `<p class="movetag">&#x2713; Piercing <small>(boosted by Skewer)</small></p>`;
+			}
 			if (move.flags.pulse && ability === 'megalauncher') {
 				text += `<p class="movetag">&#x2713; Pulse <small>(boosted by Mega Launcher)</small></p>`;
 			}
@@ -1794,9 +1797,10 @@ export class BattleTooltips {
 			max = tr(tr(tr((2 * baseSpe + maxIv) * level / 100 + 5) * maxNature) * tr((70 / 255 / 10 + 1) * 100) / 100);
 			if (tier.includes('No Restrictions')) max += 200;
 			else if (tier.includes('Random')) max += 20;
-		} else if (tier.includes('Champions')) {
-			min = tr(minNature * (baseSpe + 20));
-			max = tr(maxNature * (baseSpe + 32 + 20));
+		} else if (tier.includes('Champions') || tier.toLowerCase().includes('testingstandard')) {
+			// SP formula: (base + sp + 5) * nature (Force IV 0 active; constant is 5 not 20)
+			min = tr(minNature * (baseSpe + 5));
+			max = tr(maxNature * (baseSpe + 32 + 5));
 		} else {
 			let maxIvEvOffset = maxIv + ((isRandomBattle && gen >= 3) ? 21 : 63);
 			max = tr(tr((2 * baseSpe + maxIvEvOffset) * level / 100 + 5) * maxNature);
@@ -2619,6 +2623,9 @@ export class BattleTooltips {
 		}
 		if (move.flags['ball']) {
 			value.abilityModify(1.5, "Striker");
+		}
+		if (move.flags['piercing']) {
+			value.abilityModify(1.5, "Skewer");
 		}
 		if (value.value <= 60) {
 			value.abilityModify(1.5, "Technician");

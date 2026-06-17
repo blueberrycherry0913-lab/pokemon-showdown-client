@@ -714,12 +714,15 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 					tsOverrideTier[id] = 'Illegal';
 				}
 			}
-			BattleTeambuilderTable['testingstandard'] = {};
-			BattleTeambuilderTable['testingstandard'].learnsets = BattleTeambuilderTable['champions'].learnsets;
-			BattleTeambuilderTable['testingstandard'].tiers = tiers;
-			BattleTeambuilderTable['testingstandard'].items = items;
-			BattleTeambuilderTable['testingstandard'].overrideTier = tsOverrideTier;
-			BattleTeambuilderTable['testingstandard'].formatSlices = formatSlices;
+			// testingstandard table is populated after the tierOrder loop fills tiers.
+			BattleTeambuilderTable['testingstandard'] = {
+				learnsets: BattleTeambuilderTable['champions'].learnsets,
+				items: items,
+				overrideTier: tsOverrideTier,
+				formatSlices: formatSlices,
+				// tiers assigned below after tierOrder loop
+				_tsBanSets: {TS_GEN1_LEGEND_IDS, TS_GEN8_LEGEND_IDS, TS_EXPLICIT_BAN_IDS},
+			};
 		} else if (isVGC) {
 			BattleTeambuilderTable[gen + 'vgc'] = {};
 			BattleTeambuilderTable[gen + 'vgc'].tiers = tiers;
@@ -827,6 +830,21 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				tiers.push(['header', tier]);
 			}
 			tiers.push(...tierTable[tier]);
+		}
+		if (BattleTeambuilderTable['testingstandard']?._tsBanSets) {
+			const {TS_GEN1_LEGEND_IDS, TS_GEN8_LEGEND_IDS, TS_EXPLICIT_BAN_IDS} =
+				BattleTeambuilderTable['testingstandard']._tsBanSets;
+			const isTsBanned = (id) => {
+				const sp = Dex.mod(gen).species.get(id);
+				const baseId = Dex.mod(gen).species.get(sp.baseSpecies).id;
+				return sp.isMega ||
+					TS_GEN1_LEGEND_IDS.has(sp.id) || TS_GEN1_LEGEND_IDS.has(baseId) ||
+					TS_GEN8_LEGEND_IDS.has(sp.id) || TS_GEN8_LEGEND_IDS.has(baseId) ||
+					TS_EXPLICIT_BAN_IDS.has(sp.id);
+			};
+			BattleTeambuilderTable['testingstandard'].tiers =
+				tiers.filter(row => typeof row !== 'string' || !isTsBanned(row));
+			delete BattleTeambuilderTable['testingstandard']._tsBanSets;
 		}
 		if (!isDoubles) {
 			if (!formatSlices['OU']) formatSlices['OU'] = formatSlices['New'];

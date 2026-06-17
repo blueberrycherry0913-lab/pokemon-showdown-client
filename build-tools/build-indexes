@@ -843,7 +843,12 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 					TS_EXPLICIT_BAN_IDS.has(sp.id);
 			};
 			BattleTeambuilderTable['testingstandard'].tiers =
-				tiers.filter(row => typeof row !== 'string' || !isTsBanned(row));
+				tiers.filter(row => {
+					if (typeof row !== 'string') {
+						return !(Array.isArray(row) && row[1] === 'Megas');
+					}
+					return !isTsBanned(row);
+				});
 			delete BattleTeambuilderTable['testingstandard']._tsBanSets;
 		}
 		if (!isDoubles) {

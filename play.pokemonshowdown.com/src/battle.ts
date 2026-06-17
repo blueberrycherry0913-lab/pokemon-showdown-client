@@ -405,7 +405,7 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 		// slot separately), so we skip confirmation when the revealed ability is the awakened one.
 		// The activation animation still fires (activateAbility runs before this).
 		const battle = this.side.battle;
-		if (toID(battle.tier).includes('testingstandard') || toID(battle.tier).includes('champions')) {
+		if (toID(battle.tier).includes('testingstandard') || toID(battle.tier).includes('mythicsandmegas') || toID(battle.tier).includes('champions')) {
 			const awakened = battle.dex.species.get(this.speciesForme).abilities?.['H'];
 			if (awakened && toID(awakened) === toID(ability)) return;
 		}

@@ -650,7 +650,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			format = format.slice(7) as ID;
 			if (!format) format = 'ou' as ID;
 		}
-		if (format.includes('champions') || format.includes('testingstandard')) {
+		if (format.includes('champions') || format.includes('testingstandard') || format.includes('mythicsandmegas')) {
 			this.formatType = 'champions';
 			this.dex = Dex.mod('champions' as ID);
 			if (format.includes('champions')) {
@@ -1349,7 +1349,7 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 			abilitySet.push(['ability', toID(species.abilities['1'])]);
 		}
 		if (species.abilities['H']) {
-			const isChampions = format.includes('testingstandard') || format.includes('champions');
+			const isChampions = format.includes('testingstandard') || format.includes('mythicsandmegas') || format.includes('champions');
 			abilitySet.push(['header', isChampions ? "Awakened Ability" : "Hidden Ability"]);
 			abilitySet.push(['ability', toID(species.abilities['H'])]);
 		}
@@ -1830,7 +1830,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 			Steel:    ['rivetshot', 'ironclad', 'solidsmash', 'alloyspark', 'magnetbomb', 'flashcannon'],
 			Water:    ['shallowslam', 'dive', 'liquidation', 'watergun', 'waterpulse', 'surf'],
 		};
-		const isChampions = this.formatType === 'champions' || format.includes('testingstandard');
+		const isChampions = this.formatType === 'champions' || format.includes('testingstandard') || format.includes('mythicsandmegas');
 		const standardMoveIdSet = new Set<string>();
 		if (isChampions) {
 			const baseSpeciesForStd = dex.species.get(species.baseSpecies);

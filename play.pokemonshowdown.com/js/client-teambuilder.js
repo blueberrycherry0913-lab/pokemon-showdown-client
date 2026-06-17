@@ -33,7 +33,7 @@
 				if (this.curTeam.format.includes('legends')) {
 					this.curTeam.dex = Dex.mod('gen9legendsou');
 				}
-				if ((this.curTeam.format.includes('champions') || this.curTeam.format.includes('testingstandard'))) {
+				if ((this.curTeam.format.includes('champions') || this.curTeam.format.includes('testingstandard') || this.curTeam.format.includes('mythicsandmegas'))) {
 					this.curTeam.dex = Dex.mod('champions');
 				}
 				Storage.activeSetList = this.curSetList;
@@ -1294,7 +1294,7 @@
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
 			var species = this.curTeam.dex.species.get(set.species);
-			var isChampions = (baseFormat.includes('champions') || baseFormat.includes('testingstandard'));
+			var isChampions = (baseFormat.includes('champions') || baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas'));
 			var isLetsGo = baseFormat.includes('letsgo');
 			var isBDSP = baseFormat.includes('bdsp');
 			var isNatDex = baseFormat.includes('nationaldex') || baseFormat.includes('natdex');
@@ -1438,7 +1438,7 @@
 					// Testing Standard's SP system + 0-IV baseline produces lower
 					// final stats than canon Lv50; use a more lenient ceiling so
 					// typical mons land yellow-green/green instead of orange.
-					var isTestingStandard = baseFormat.includes('testingstandard');
+					var isTestingStandard = baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas');
 					highestStat = j === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
@@ -1933,7 +1933,7 @@
 			curSet.name = this.curSet.name || undefined;
 
 			// never preserve current set tera, even if smogon set used default
-			if (this.curSet.gen === 9 && !(this.curTeam.format.includes('champions') || this.curTeam.format.includes('testingstandard'))) {
+			if (this.curSet.gen === 9 && !(this.curTeam.format.includes('champions') || this.curTeam.format.includes('testingstandard') || this.curTeam.format.includes('mythicsandmegas'))) {
 				curSet.teraType = sampleSet.teraType || species.requiredTeraType || species.types[0];
 			}
 
@@ -2118,7 +2118,7 @@
 
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
-			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('testingstandard'));
+			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas'));
 			var supportsEVs = !baseFormat.includes('letsgo');
 			var isVGC = baseFormat.includes('battlespot') || baseFormat.includes('bss') ||
 				baseFormat.includes('vgc') || baseFormat.includes('battlefestival');
@@ -2139,7 +2139,7 @@
 				}
 				var highestStat = stat === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
-					var isTestingStandard = baseFormat.includes('testingstandard');
+					var isTestingStandard = baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas');
 					highestStat = stat === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
@@ -2169,7 +2169,7 @@
 				if (stat === 'spd' && this.curTeam.gen === 1) continue;
 				var highestStat = stat === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
-					var isTestingStandard = baseFormat.includes('testingstandard');
+					var isTestingStandard = baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas');
 					highestStat = stat === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {
@@ -2443,7 +2443,7 @@
 
 			var baseFormat = this.curTeam.format;
 			if (baseFormat.substr(-5) === 'draft') baseFormat = baseFormat.substr(0, baseFormat.length - 5);
-			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('testingstandard'));
+			var usesStatPoints = (baseFormat.includes('champions') || baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas'));
 			var supportsEVs = !baseFormat.includes('letsgo') && !usesStatPoints;
 			// var supportsAVs = !supportsEVs && baseFormat.endsWith('norestrictions');
 			var defaultEV = this.curTeam.gen <= 2 ? 252 : 0;
@@ -2475,7 +2475,7 @@
 				stats[i] = this.getStat(i);
 				var highestStat = i === 'hp' ? 714 : 499;
 				if (usesStatPoints || isVGC) {
-					var isTestingStandard = baseFormat.includes('testingstandard');
+					var isTestingStandard = baseFormat.includes('testingstandard') || baseFormat.includes('mythicsandmegas');
 					highestStat = i === 'hp' ? (isTestingStandard ? 320 : 362) : (isTestingStandard ? 220 : 252);
 				}
 				if (isLC) {

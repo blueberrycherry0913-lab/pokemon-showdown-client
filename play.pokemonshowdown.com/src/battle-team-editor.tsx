@@ -100,7 +100,7 @@ export class TeamEditorState extends PSModel {
 		this.isLetsGo = formatid.includes('letsgo');
 		this.isNatDex = formatid.includes('nationaldex') || formatid.includes('natdex');
 		this.isBDSP = formatid.includes('bdsp');
-		this.useStatPoints = formatid.includes('champions') || formatid.includes('testingstandard');
+		this.useStatPoints = formatid.includes('champions') || formatid.includes('testingstandard') || formatid.includes('mythicsandmegas');
 		if (formatid.includes('almostanyability') || formatid.includes('aaa')) {
 			this.abilityLegality = 'hackmons';
 		} else {
@@ -120,7 +120,7 @@ export class TeamEditorState extends PSModel {
 		if (
 			formatid.includes('vgc') || formatid.includes('bss') || formatid.includes('ultrasinnohclassic') ||
 			formatid.includes('battlespot') || formatid.includes('battlestadium') || formatid.includes('battlefestival') ||
-			formatid.includes('letsgo') || formatid.includes('champions') || formatid.includes('testingstandard')
+			formatid.includes('letsgo') || formatid.includes('champions') || formatid.includes('testingstandard') || formatid.includes('mythicsandmegas')
 		) {
 			this.defaultLevel = 50;
 		}
@@ -2488,7 +2488,7 @@ class StatForm extends preact.Component<{
 			let ev: number | string = set.evs ? (set.evs[statID] || 0) : defaultEV;
 			// Testing Standard's SP system + 0-IV baseline produces lower final
 			// stats than canon Lv50, so use a more lenient ceiling for the gradient.
-			const isTestingStandard = editor.format.includes('testingstandard');
+			const isTestingStandard = editor.format.includes('testingstandard') || editor.format.includes('mythicsandmegas');
 			const maxStat = isTestingStandard ? (statID === 'hp' ? 320 : 220) : (statID === 'hp' ?
 				Math.floor(176 * editor.defaultLevel / 25) + 10 :
 				Math.floor(247 * editor.defaultLevel / 50) + 5);
@@ -2754,7 +2754,7 @@ class StatForm extends preact.Component<{
 	minus: Dex.StatNameExceptHP | null = null;
 	renderStatbar(stat: number, statID: StatName) {
 		const { editor } = this.props;
-		const isTestingStandard = editor.format.includes('testingstandard');
+		const isTestingStandard = editor.format.includes('testingstandard') || editor.format.includes('mythicsandmegas');
 		const maxStat = isTestingStandard ? (statID === 'hp' ? 320 : 220) : (statID === 'hp' ?
 			Math.floor(176 * editor.defaultLevel / 25) + 10 :
 			Math.floor(247 * editor.defaultLevel / 50) + 5);

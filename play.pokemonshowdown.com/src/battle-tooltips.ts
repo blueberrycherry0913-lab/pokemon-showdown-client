@@ -1230,6 +1230,7 @@ export class BattleTooltips {
 		// in `ability`, so derive the awakened ability from the species H slot here so
 		// awakened-ability stat modifiers (Burning Soul, Harder They Fall) display.
 		const isChampionsFormat = toID(this.battle.tier).includes('testingstandard') ||
+			toID(this.battle.tier).includes('mythicsandmegas') ||
 			toID(this.battle.tier).includes('champions');
 		let awakenedAbility = '' as ID;
 		if (isChampionsFormat) {
@@ -1798,7 +1799,7 @@ export class BattleTooltips {
 			max = tr(tr(tr((2 * baseSpe + maxIv) * level / 100 + 5) * maxNature) * tr((70 / 255 / 10 + 1) * 100) / 100);
 			if (tier.includes('No Restrictions')) max += 200;
 			else if (tier.includes('Random')) max += 20;
-		} else if (tier.includes('Champions') || tier.toLowerCase().includes('testingstandard')) {
+		} else if (tier.includes('Champions') || tier.toLowerCase().includes('testingstandard') || tier.toLowerCase().includes('mythicsandmegas')) {
 			// SP formula: (base + sp + 5) * nature (Force IV 0 active; constant is 5 not 20)
 			min = tr(minNature * (baseSpe + 5));
 			max = tr(maxNature * (baseSpe + 32 + 5));
@@ -3071,7 +3072,7 @@ export class BattleTooltips {
 			}
 		}
 		const tier = this.battle.tier;
-		const isChampions = toID(tier).includes('testingstandard') || toID(tier).includes('champions');
+		const isChampions = toID(tier).includes('testingstandard') || toID(tier).includes('mythicsandmegas') || toID(tier).includes('champions');
 		// Dual-ability system (champions/testingstandard): derive awakened (H-slot) ability
 		// from species data. It's always known (same for every Pokémon of that species) and
 		// must NOT appear in the "Possible abilities" list for the basic ability slot.
@@ -3124,7 +3125,7 @@ export class BattleStatGuesser {
 			this.formatid.includes('metronomebattle') ||
 			this.formatid.endsWith('norestrictions')
 		);
-		this.useStatPoints = this.formatid.includes('champions') || this.formatid.includes('testingstandard');
+		this.useStatPoints = this.formatid.includes('champions') || this.formatid.includes('testingstandard') || this.formatid.includes('mythicsandmegas');
 		this.supportsEVs = !this.formatid.includes('letsgo') && !this.useStatPoints;
 		this.supportsAVs = !this.supportsEVs && this.formatid.endsWith('norestrictions');
 	}
@@ -3695,7 +3696,7 @@ export class BattleStatGuesser {
 
 		// Testing Standard inherits SP system but with a 0-IV baseline:
 		// +60 (HP) / +5 (non-HP) instead of canon champions' +75 / +20.
-		const force0IVs = this.formatid.includes('testingstandard');
+		const force0IVs = this.formatid.includes('testingstandard') || this.formatid.includes('mythicsandmegas');
 		if (stat === 'hp') {
 			if (baseStat === 1) return 1;
 			if (this.useStatPoints) return baseStat + ev + (force0IVs ? 60 : 75);
@@ -3732,7 +3733,7 @@ export function BattleStatOptimizer(set: Dex.PokemonSet, formatid: ID) {
 		((formatid.endsWith('hackmons') || formatid.endsWith('bh')) && dex.gen !== 6) ||
 		formatid.includes('metronomebattle') || formatid.endsWith('norestrictions')
 	);
-	const useStatPoints = formatid.includes('champions') || formatid.includes('testingstandard');
+	const useStatPoints = formatid.includes('champions') || formatid.includes('testingstandard') || formatid.includes('mythicsandmegas');
 	const supportsEVs = !formatid.includes('letsgo') && !useStatPoints;
 	if (!(useStatPoints || supportsEVs) || ignoreEVLimits) return null;
 

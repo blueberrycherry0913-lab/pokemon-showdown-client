@@ -583,6 +583,8 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	protected formatType: 'doubles' | 'bdsp' | 'bdspdoubles' | 'rs' | 'frlg' | 'bw1' | 'letsgo' | 'metronome' | 'natdex' |
 		'nfe' | 'ssdlc1' | 'ssdlc1doubles' | 'predlc' | 'predlcdoubles' | 'predlcnatdex' | 'svdlc1' | 'svdlc1doubles' |
 		'svdlc1natdex' | 'stadium' | 'lc' | 'legendsza' | 'champions' | null = null;
+	/** Which champions-mod teambuilder table to use. 'testingstandard' hides Megas and legendaries. */
+	protected championsTableKey: 'champions' | 'testingstandard' = 'champions';
 	isDoubles = false;
 
 	/**
@@ -659,7 +661,10 @@ abstract class BattleTypedSearch<T extends SearchType> {
 				format = format.slice(9) as ID;
 				if (format !== 'ou') format = 'ubers' as ID;
 			}
-			// Testing Standard: leave format as 'testingstandard' so none of the
+			// Testing Standard uses a separate teambuilder table that hides Megas and
+			// legendaries. Mythics and Megas uses the full 'champions' table.
+			this.championsTableKey = format.includes('testingstandard') ? 'testingstandard' : 'champions';
+			// Testing Standard / Mythics and Megas: leave format as the full ID so none of the
 			// later tier-slice conditions in BattlePokemonSearch.getBaseResults
 			// match (no slice ⇒ full tier list rendered, including 'Generation 1'
 			// and 'Generation 1 NFE' headers at the top).
@@ -833,7 +838,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		if (this.formatType === 'rs') table = table['gen3rs'];
 		if (this.formatType === 'frlg') table = table['gen3frlg'];
 		if (this.formatType === 'legendsza') table = table['gen9legendsou'];
-		if (this.formatType === 'champions') table = table['champions'];
+		if (this.formatType === 'champions') table = table[this.championsTableKey];
 		if (speciesid in table.learnsets) return speciesid;
 		const species = this.dex.species.get(speciesid);
 		if (!species.exists) return '' as ID;
@@ -906,7 +911,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			if (this.formatType === 'rs') table = table['gen3rs'];
 			if (this.formatType === 'frlg') table = table['gen3frlg'];
 			if (this.formatType === 'legendsza') table = table['gen9legendsou'];
-			if (this.formatType === 'champions') table = table['champions'];
+			if (this.formatType === 'champions') table = table[this.championsTableKey];
 			let learnset = table.learnsets[learnsetid];
 			const eggMovesOnly = this.eggMovesOnly(learnsetid, speciesid);
 			if (learnset && (moveid in learnset) && (!this.format.startsWith('tradebacks') ? learnset[moveid].includes(genChar) :
@@ -1045,7 +1050,7 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		if ((format.endsWith('cap') || format.endsWith('caplc')) && dex.gen < 9) {
 			table = table[`gen${dex.gen}`];
 		} else if (this.formatType === 'champions') {
-			table = table[`champions`];
+			table = table[this.championsTableKey];
 		} else if (isVGCOrBS) {
 			table = table[`gen${dex.gen}vgc`];
 		} else if (dex.gen === 9 && isHackmons && !this.formatType) {
@@ -1431,7 +1436,7 @@ class BattleItemSearch extends BattleTypedSearch<'item'> {
 		} else if (this.formatType === 'legendsza') {
 			table = table[`gen9legendsou`];
 		} else if (this.formatType === 'champions') {
-			table = table[`champions`];
+			table = table[this.championsTableKey];
 		} else if (this.dex.gen < 9) {
 			table = table[`gen${this.dex.gen}`];
 		}

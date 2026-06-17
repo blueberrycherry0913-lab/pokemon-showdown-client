@@ -678,6 +678,48 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			BattleTeambuilderTable['champions'].items = items;
 			BattleTeambuilderTable['champions'].overrideTier = overrideTier;
 			BattleTeambuilderTable['champions'].formatSlices = formatSlices;
+
+			// Build a second table for Testing Standard that hides Megas, Gen 1
+			// legendaries/mythicals, Gen 8 legendaries/mythicals, and the explicit
+			// ban list. Mythics and Megas uses the 'champions' table above.
+			const TS_GEN1_LEGEND_IDS = new Set([
+				'articuno', 'zapdos', 'moltres', 'mewtwo', 'mew',
+			]);
+			const TS_GEN8_LEGEND_IDS = new Set([
+				'urshifu', 'urshifurapidstrike',
+				'zacian', 'zaciancrowned',
+				'zamazenta', 'zamazentacrowned',
+				'zarude', 'zarudedada',
+				'spectrier', 'regidrago', 'regieleki', 'eternatus',
+				'enamorus', 'enamorustherian',
+				'calyrex', 'calyrexice', 'calyrexshadow',
+			]);
+			const TS_EXPLICIT_BAN_IDS = new Set([
+				'arctovish', 'arctozolt', 'dracovish', 'dracozolt',
+				'basculegion', 'basculegionf',
+				'cursola', 'overqwil', 'sneasler', 'ursaluna', 'ursalunabloodmoon', 'wyrdeer',
+				'obstagoon',
+			]);
+			const tsOverrideTier = Object.assign({}, overrideTier);
+			for (const id of Object.keys(tsOverrideTier)) {
+				if (tsOverrideTier[id] === 'Illegal') continue;
+				const sp = Dex.mod(gen).species.get(id);
+				const baseId = Dex.mod(gen).species.get(sp.baseSpecies).id;
+				if (
+					sp.isMega ||
+					TS_GEN1_LEGEND_IDS.has(sp.id) || TS_GEN1_LEGEND_IDS.has(baseId) ||
+					TS_GEN8_LEGEND_IDS.has(sp.id) || TS_GEN8_LEGEND_IDS.has(baseId) ||
+					TS_EXPLICIT_BAN_IDS.has(sp.id)
+				) {
+					tsOverrideTier[id] = 'Illegal';
+				}
+			}
+			BattleTeambuilderTable['testingstandard'] = {};
+			BattleTeambuilderTable['testingstandard'].learnsets = BattleTeambuilderTable['champions'].learnsets;
+			BattleTeambuilderTable['testingstandard'].tiers = tiers;
+			BattleTeambuilderTable['testingstandard'].items = items;
+			BattleTeambuilderTable['testingstandard'].overrideTier = tsOverrideTier;
+			BattleTeambuilderTable['testingstandard'].formatSlices = formatSlices;
 		} else if (isVGC) {
 			BattleTeambuilderTable[gen + 'vgc'] = {};
 			BattleTeambuilderTable[gen + 'vgc'].tiers = tiers;

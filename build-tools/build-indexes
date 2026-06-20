@@ -100,6 +100,10 @@ function familyHasGen8Member(dex, species, seen) {
 // Mirrors the server-side isCosmicAddition in data/mods/champions/rulesets.ts.
 // Hand-picked Pokémon added to Testing Standard for Cosmic-type coverage.
 const COSMIC_ADDITION_NUMS = new Set([178, 606, 774]); // Xatu, Beheeyem, Minior
+
+// Custom (isNonstandard: 'custom') species that should appear in the Gen1 bucket
+// rather than the Custom bucket because they slot into an existing Gen 1 dex number.
+const GEN1_CUSTOM_SLOTS = new Set(['osteokhan']); // Osteokhan (num 105, replaces Marowak slot)
 function isCosmicAddition(species) {
 	if (!species || !species.exists) return false;
 	return COSMIC_ADDITION_NUMS.has(species.num);
@@ -430,8 +434,9 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 								'Spiky-eared', 'Starter',
 							].includes(species.forme)) return 'Other';
 						}
-						// Custom species (user-invented) bucket under 'Custom' regardless of tier.
-						if (species.isNonstandard === 'custom') return 'Custom';
+						// Custom species (user-invented) bucket under 'Custom' regardless of tier,
+						// unless they are explicitly slotted into Gen1 (e.g. Osteokhan at num 105).
+						if (species.isNonstandard === 'custom' && !GEN1_CUSTOM_SLOTS.has(species.id)) return 'Custom';
 						// Honor an explicit Illegal tag even for Gen 1 lineage — lets the user
 						// gate specific regional/alt formes (Alola/Galar/Hisui/Paldea, Golem,
 						// Tauros, etc.) out of the teambuilder. Megas/Other/Custom already

@@ -623,9 +623,9 @@ export const Dex = new class implements ModdedDex {
 		if (name === 'ninetales-fire') name = 'ninetales';
 		else if (name === 'ninetales-ice') name = 'ninetales-alola';
 		if (name === 'toxtricity-amped') name = 'toxtricity';
-		if (name === 'taurospaldea' || name === 'tauroscombat' || name === 'tauros-combat') name = 'tauros-paldea-combat';
-		else if (name === 'taurosblaze' || name === 'tauros-blaze') name = 'tauros-paldea-blaze';
-		else if (name === 'taurosaqua' || name === 'tauros-aqua') name = 'tauros-paldea-aqua';
+		if (name === 'taurospaldea' || name === 'tauroscombat' || name === 'tauros-combat') name = 'tauros-paldeacombat';
+		else if (name === 'taurosblaze' || name === 'tauros-blaze') name = 'tauros-paldeablaze';
+		else if (name === 'taurosaqua' || name === 'tauros-aqua') name = 'tauros-paldeaaqua';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -690,6 +690,9 @@ export const Dex = new class implements ModdedDex {
 		else if (speciesid === 'farfetchdkanto') speciesid = 'farfetchd';
 		else if (speciesid === 'petrifearow') speciesid = 'fearow';
 		else if (speciesid === 'paraspore') speciesid = 'parasect';
+		else if (speciesid === 'tauroscombat') speciesid = 'taurospaldeacombat';
+		else if (speciesid === 'taurosblaze') speciesid = 'taurospaldeablaze';
+		else if (speciesid === 'taurosaqua') speciesid = 'taurospaldeaaqua';
 		if (species.isTotem) speciesid = toID(name);
 		if (window.BattlePokemonSprites) miscData = BattlePokemonSprites[speciesid];
 		if (!miscData && window.BattlePokemonSpritesBW) miscData = BattlePokemonSpritesBW[speciesid];
@@ -858,6 +861,9 @@ export const Dex = new class implements ModdedDex {
 		else if (id === 'paraspore') id = 'parasect' as ID;
 		else if (id === 'koffing') id = 'koffinggalar' as ID;
 		else if (id === 'weezing') id = 'weezinggalar' as ID;
+		else if (id === 'tauroscombat') id = 'taurospaldeacombat' as ID;
+		else if (id === 'taurosblaze') id = 'taurospaldeablaze' as ID;
+		else if (id === 'taurosaqua') id = 'taurospaldeaaqua' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -945,9 +951,9 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'ninetales-fire') return { spriteDir: 'sprites/gen5', spriteid: 'ninetales', x: -2, y: -3 };
 		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/dex', spriteid: 'ninetales-alola', x: -2, y: -3 };
 		if (spriteid === 'toxtricity-amped') return { spriteDir: 'sprites/home-centered', spriteid: 'toxtricity', x: -2, y: -3 };
-		if (spriteid === 'taurospaldea' || spriteid === 'tauroscombat' || spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-combat', x: 8, y: 10, h: 96 };
-		if (spriteid === 'taurosblaze' || spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-blaze', x: 8, y: 10, h: 96 };
-		if (spriteid === 'taurosaqua' || spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-aqua', x: 8, y: 10, h: 96 };
+		if (spriteid === 'taurospaldea' || spriteid === 'tauroscombat' || spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeacombat', x: 8, y: 10, h: 96 };
+		if (spriteid === 'taurosblaze' || spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeablaze', x: 8, y: 10, h: 96 };
+		if (spriteid === 'taurosaqua' || spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeaaqua', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };

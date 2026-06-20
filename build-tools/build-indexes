@@ -434,9 +434,14 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 								'Spiky-eared', 'Starter',
 							].includes(species.forme)) return 'Other';
 						}
-						// Custom species (user-invented) are hidden (Illegal) unless explicitly
-						// slotted into Gen1 (e.g. Osteokhan at num 105).
-						if (species.isNonstandard === 'custom' && !GEN1_CUSTOM_SLOTS.has(species.id)) return 'Illegal';
+						// Custom species explicitly slotted into Gen1 (e.g. Osteokhan, num 105)
+						// bypass BOTH the custom gate and the natDexTier:'Illegal' gate — a
+						// custom species defaults to natDexTier 'Illegal' with no explicit tier,
+						// so it must be handled before those checks. Mirrors the server's
+						// natdexmod custom-Gen1 bypass.
+						if (GEN1_CUSTOM_SLOTS.has(species.id)) return species.nfe ? 'NFE' : 'Gen1';
+						// Other custom species (user-invented) are hidden (Illegal).
+						if (species.isNonstandard === 'custom') return 'Illegal';
 						// Honor an explicit Illegal tag even for Gen 1 lineage — lets the user
 						// gate specific regional/alt formes (Alola/Galar/Hisui/Paldea, Golem,
 						// Tauros, etc.) out of the teambuilder. Megas/Other/Custom already

@@ -620,7 +620,12 @@ export const Dex = new class implements ModdedDex {
 		if (name === 'cocommander') name = 'exeggutor-alola';
 		else if (name === 'magolem') name = 'golem-alola';
 		else if (name === 'galvenut') name = 'electrode-hisui';
-		if (name === 'ninetales-ice') name = 'ninetales-alola';
+		if (name === 'ninetales-fire') name = 'ninetales';
+		else if (name === 'ninetales-ice') name = 'ninetales-alola';
+		if (name === 'toxtricity-amped') name = 'toxtricity';
+		if (name === 'tauros-combat') name = 'tauros-paldea-combat';
+		else if (name === 'tauros-blaze') name = 'tauros-paldea-blaze';
+		else if (name === 'tauros-aqua') name = 'tauros-paldea-aqua';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -933,7 +938,12 @@ export const Dex = new class implements ModdedDex {
 			species = Dex.species.get('exeggutoralola');
 			spriteid = 'exeggutor-alola';
 		}
-		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/home-centered', spriteid: 'ninetales-alola', x: -2, y: -3 };
+		if (spriteid === 'ninetales-fire') return { spriteDir: 'sprites/gen5', spriteid: 'ninetales', x: -2, y: -3 };
+		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/dex', spriteid: 'ninetales-alola', x: -2, y: -3 };
+		if (spriteid === 'toxtricity-amped') return { spriteDir: 'sprites/home-centered', spriteid: 'toxtricity', x: -2, y: -3 };
+		if (spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-combat', x: -2, y: -3 };
+		if (spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-blaze', x: -2, y: -3 };
+		if (spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-aqua', x: -2, y: -3 };
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };

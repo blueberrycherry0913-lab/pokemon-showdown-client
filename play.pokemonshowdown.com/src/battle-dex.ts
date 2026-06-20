@@ -620,6 +620,7 @@ export const Dex = new class implements ModdedDex {
 		if (name === 'cocommander') name = 'exeggutor-alola';
 		else if (name === 'magolem') name = 'golem-alola';
 		else if (name === 'galvenut') name = 'electrode-hisui';
+		if (name === 'ninetales-ice') name = 'ninetales-alola';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -667,6 +668,7 @@ export const Dex = new class implements ModdedDex {
 		// Custom-renamed species reuse a canonical form's animation data.
 		if (speciesid === 'exeggutor' && species.spriteid === 'cocommander') speciesid = 'exeggutoralola';
 		else if (speciesid === 'magolem' || speciesid === 'golemalola') speciesid = 'golemalola';
+		if (speciesid === 'ninetalesice') speciesid = 'ninetalesalola';
 		if (speciesid === 'venusaurmegax') speciesid = 'venusaurgmax';
 		else if (speciesid === 'venusaurmegay') speciesid = 'venusaurmega';
 		else if (speciesid === 'blastoisemegax') speciesid = 'blastoisegmax';
@@ -832,6 +834,7 @@ export const Dex = new class implements ModdedDex {
 		if (id === 'magolem') id = 'golemalola' as ID;
 		else if (id === 'cocommander') id = 'exeggutoralola' as ID;
 		else if (id === 'galvenut') id = 'electrodehisui' as ID;
+		if (id === 'ninetalesice') id = 'ninetalesalola' as ID;
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;
@@ -930,6 +933,7 @@ export const Dex = new class implements ModdedDex {
 			species = Dex.species.get('exeggutoralola');
 			spriteid = 'exeggutor-alola';
 		}
+		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/home-centered', spriteid: 'ninetales-alola', x: -2, y: -3 };
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };

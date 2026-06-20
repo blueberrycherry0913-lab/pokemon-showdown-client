@@ -640,6 +640,8 @@ export const Dex = new class implements ModdedDex {
 		else if (name === 'farfetchd-kanto') name = 'farfetchd';
 		else if (name === 'petrifearow') name = 'fearow';
 		else if (name === 'paraspore') name = 'parasect';
+		else if (name === 'koffing') name = 'koffing-galar';
+		else if (name === 'weezing') name = 'weezing-galar';
 		let dir;
 		let facing;
 		if (isFront) {
@@ -854,6 +856,8 @@ export const Dex = new class implements ModdedDex {
 		else if (id === 'farfetchdkanto') id = 'farfetchd' as ID;
 		else if (id === 'petrifearow') id = 'fearow' as ID;
 		else if (id === 'paraspore') id = 'parasect' as ID;
+		else if (id === 'koffing') id = 'koffinggalar' as ID;
+		else if (id === 'weezing') id = 'weezinggalar' as ID;
 		let num = 0;
 		if (window.BattlePokemonSprites?.[id]?.num) {
 			num = BattlePokemonSprites[id].num;
@@ -958,6 +962,8 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd', x: -2, y: -3 };
 		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/dex', spriteid: 'fearow', x: -2, y: -3 };
 		if (spriteid === 'paraspore') return { spriteDir: 'sprites/dex', spriteid: 'parasect', x: -2, y: -3 };
+		if (spriteid === 'koffing') return { spriteDir: 'sprites/home-centered', spriteid: 'koffing-galar', x: -2, y: -3 };
+		if (spriteid === 'weezing') return { spriteDir: 'sprites/home-centered', spriteid: 'weezing-galar', x: -2, y: -3 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

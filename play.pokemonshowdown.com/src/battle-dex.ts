@@ -623,9 +623,9 @@ export const Dex = new class implements ModdedDex {
 		if (name === 'ninetales-fire') name = 'ninetales';
 		else if (name === 'ninetales-ice') name = 'ninetales-alola';
 		if (name === 'toxtricity-amped') name = 'toxtricity';
-		if (name === 'tauros-combat') name = 'tauros-paldea-combat';
-		else if (name === 'tauros-blaze') name = 'tauros-paldea-blaze';
-		else if (name === 'tauros-aqua') name = 'tauros-paldea-aqua';
+		if (name === 'taurospaldea' || name === 'tauroscombat' || name === 'tauros-combat') name = 'tauros-paldea-combat';
+		else if (name === 'taurosblaze' || name === 'tauros-blaze') name = 'tauros-paldea-blaze';
+		else if (name === 'taurosaqua' || name === 'tauros-aqua') name = 'tauros-paldea-aqua';
 		if (name === 'venusaur-megax') name = 'venusaur-gmax';
 		else if (name === 'venusaur-megay') name = 'venusaur-mega';
 		else if (name === 'blastoise-megax') name = 'blastoise-gmax';
@@ -945,9 +945,9 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'ninetales-fire') return { spriteDir: 'sprites/gen5', spriteid: 'ninetales', x: -2, y: -3 };
 		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/dex', spriteid: 'ninetales-alola', x: -2, y: -3 };
 		if (spriteid === 'toxtricity-amped') return { spriteDir: 'sprites/home-centered', spriteid: 'toxtricity', x: -2, y: -3 };
-		if (spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-combat', x: -2, y: -3 };
-		if (spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-blaze', x: -2, y: -3 };
-		if (spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-aqua', x: -2, y: -3 };
+		if (spriteid === 'taurospaldea' || spriteid === 'tauroscombat' || spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-combat', x: 8, y: 10, h: 96 };
+		if (spriteid === 'taurosblaze' || spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-blaze', x: 8, y: 10, h: 96 };
+		if (spriteid === 'taurosaqua' || spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldea-aqua', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
 		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };
@@ -962,8 +962,8 @@ export const Dex = new class implements ModdedDex {
 		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd', x: -2, y: -3 };
 		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/dex', spriteid: 'fearow', x: -2, y: -3 };
 		if (spriteid === 'paraspore') return { spriteDir: 'sprites/dex', spriteid: 'parasect', x: -2, y: -3 };
-		if (spriteid === 'koffing') return { spriteDir: 'sprites/home-centered', spriteid: 'koffing-galar', x: -2, y: -3 };
-		if (spriteid === 'weezing') return { spriteDir: 'sprites/home-centered', spriteid: 'weezing-galar', x: -2, y: -3 };
+		if (spriteid === 'koffing') return { spriteDir: 'sprites/home-centered', spriteid: 'koffing-galar', x: 8, y: 10, h: 96 };
+		if (spriteid === 'weezing') return { spriteDir: 'sprites/home-centered', spriteid: 'weezing-galar', x: 8, y: 10, h: 96 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {

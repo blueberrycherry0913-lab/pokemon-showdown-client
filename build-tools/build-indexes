@@ -434,9 +434,9 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 								'Spiky-eared', 'Starter',
 							].includes(species.forme)) return 'Other';
 						}
-						// Custom species (user-invented) bucket under 'Custom' regardless of tier,
-						// unless they are explicitly slotted into Gen1 (e.g. Osteokhan at num 105).
-						if (species.isNonstandard === 'custom' && !GEN1_CUSTOM_SLOTS.has(species.id)) return 'Custom';
+						// Custom species (user-invented) are hidden (Illegal) unless explicitly
+						// slotted into Gen1 (e.g. Osteokhan at num 105).
+						if (species.isNonstandard === 'custom' && !GEN1_CUSTOM_SLOTS.has(species.id)) return 'Illegal';
 						// Honor an explicit Illegal tag even for Gen 1 lineage — lets the user
 						// gate specific regional/alt formes (Alola/Galar/Hisui/Paldea, Golem,
 						// Tauros, etc.) out of the teambuilder. Megas/Other/Custom already
@@ -453,7 +453,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 						return 'Cosmic';
 					}
 					if (species.isNonstandard === 'custom') {
-						return 'Custom';
+						return 'Illegal';
 					}
 					return 'Illegal';
 				}
@@ -800,9 +800,10 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			if (isChampions) {
 				// Testing Standard / champions: 'Gen1' (fully-evolved Gen 1 lineage)
 				// at the top, then 'Gen8' (fully-evolved Galar starters), 'Megas',
-				// 'NFE' (still-evolving Gen 1 + Galar starters), 'Other', 'Custom'.
+				// 'NFE' (still-evolving Gen 1 + Galar starters), 'Other'.
+				// 'Custom' tab is intentionally omitted — custom species are hidden (Illegal).
 				return [
-					"Gen1", "Gen8", "Cosmic", "Megas", "NFE", "Other", "Custom", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
+					"Gen1", "Gen8", "Cosmic", "Megas", "NFE", "Other", "Past", "CAP", "CAP NFE", "CAP LC", "AG", "Uber", "(Uber)", "OU", "(OU)", "UUBL", "UU", "RUBL", "RU", "NUBL", "NU", "PUBL", "PU", "ZUBL", "ZU", "New", "LC", "Unreleased",
 				];
 			}
 			return [

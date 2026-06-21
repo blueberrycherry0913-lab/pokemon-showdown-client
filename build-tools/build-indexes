@@ -1662,12 +1662,19 @@ process.stdout.write("Building `data/pokedex.js`... ");
 		}
 	}
 	// Alias custom-named formes: when toID(species.name) != dex key, the client's
-	// Dex.species.get(name) lookup would miss. Add a second entry under the name ID.
+	// Dex.species.get(name) lookup would miss. Add a second entry under the name ID —
+	// BUT only when the nameId isn't already covered by BattleAliases (aliases.js).
+	// If BattleAliases already maps "cocommander" → "Exeggutor", the Dex lookup uses
+	// that and no BattlePokedex alias is needed. Creating a duplicate BattlePokedex
+	// key causes getTable() to iterate "cocommander" without it being in legalityFilter,
+	// making the species appear under "Illegal" in the teambuilder.
+	const ServerAliases = requireNoCache('../caches/pokemon-showdown/dist/data/aliases.js').Aliases;
+	const serverAliasIds = new Set(Object.keys(ServerAliases).map(k => k.toLowerCase()));
 	for (const id in Pokedex) {
 		const entry = Pokedex[id];
 		if (entry.name) {
 			const nameId = toID(entry.name);
-			if (nameId !== id && !Pokedex[nameId]) {
+			if (nameId !== id && !Pokedex[nameId] && !serverAliasIds.has(nameId)) {
 				Pokedex[nameId] = entry;
 			}
 		}

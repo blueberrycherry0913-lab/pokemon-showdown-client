@@ -831,6 +831,17 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		return results;
 	}
 	protected firstLearnsetid(speciesid: ID) {
+		// Renamed base species: toID(name) !== original dex key, so redirect to the learnset key.
+		const LEARNSET_REDIRECTS: {[id: string]: string} = {
+			ninetalesfire: 'ninetales',
+			cocommander: 'exeggutor',
+			indeedeem: 'indeedee',
+			toxtricityamped: 'toxtricity',
+			tauroscombat: 'taurospaldeacombat',
+			taurosblaze: 'taurospaldeablaze',
+			taurosaqua: 'taurospaldeaaqua',
+		};
+		if (speciesid in LEARNSET_REDIRECTS) speciesid = LEARNSET_REDIRECTS[speciesid] as ID;
 		let table = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
 		if (this.formatType === 'letsgo') table = table['gen7letsgo'];
@@ -1821,7 +1832,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
 			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
 			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],
-			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chstrike', 'aurasphere'],
+			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chistrike', 'aurasphere'],
 			Fire:     ['heater', 'flamewheel', 'firelash', 'ember', 'searingshot', 'flamethrower'],
 			Flying:   ['breezeboost', 'skystrike', 'aerialace', 'gust', 'aircutter', 'airslash'],
 			Ghost:    ['astonish', 'shadowstrike', 'phantomforce', 'grudge', 'bittermalice', 'shadowball'],

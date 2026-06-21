@@ -844,7 +844,10 @@ export const Dex = new class implements ModdedDex {
 		if (id === 'magolem') id = 'golemalola' as ID;
 		else if (id === 'cocommander') id = 'exeggutoralola' as ID;
 		else if (id === 'galvenut') id = 'electrodehisui' as ID;
-		if (id === 'ninetalesice') id = 'ninetalesalola' as ID;
+		if (id === 'ninetalesfire') id = 'ninetales' as ID;
+		else if (id === 'ninetalesice') id = 'ninetalesalola' as ID;
+		if (id === 'indeedeem') id = 'indeedee' as ID;
+		if (id === 'toxtricityamped') id = 'toxtricity' as ID;
 		if (id === 'venusaurmegax') id = 'venusaurgmax' as ID;
 		else if (id === 'venusaurmegay') id = 'venusaurmega' as ID;
 		else if (id === 'blastoisemegax') id = 'blastoisegmax' as ID;

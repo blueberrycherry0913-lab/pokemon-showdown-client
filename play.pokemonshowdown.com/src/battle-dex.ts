@@ -953,26 +953,26 @@ export const Dex = new class implements ModdedDex {
 		}
 		if (spriteid === 'ninetales-fire') return { spriteDir: 'sprites/gen5', spriteid: 'ninetales', x: -2, y: -3 };
 		if (spriteid === 'ninetales-ice') return { spriteDir: 'sprites/dex', spriteid: 'ninetales-alola', x: -2, y: -3 };
-		if (spriteid === 'toxtricity-amped') return { spriteDir: 'sprites/home-centered', spriteid: 'toxtricity', x: -2, y: -3 };
-		if (spriteid === 'taurospaldea' || spriteid === 'tauroscombat' || spriteid === 'tauros-combat') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeacombat', x: 8, y: 10, h: 96 };
-		if (spriteid === 'taurosblaze' || spriteid === 'tauros-blaze') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeablaze', x: 8, y: 10, h: 96 };
-		if (spriteid === 'taurosaqua' || spriteid === 'tauros-aqua') return { spriteDir: 'sprites/home-centered', spriteid: 'tauros-paldeaaqua', x: 8, y: 10, h: 96 };
-		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'venusaur-gmax', x: 8, y: 10, h: 96 };
+		if (spriteid === 'toxtricity-amped') return { spriteDir: 'sprites/dex', spriteid: 'toxtricity', x: -2, y: -3 };
+		if (spriteid === 'taurospaldea' || spriteid === 'tauroscombat' || spriteid === 'tauros-combat') return { spriteDir: 'sprites/gen5', spriteid: 'tauros-paldeacombat', x: 10, y: 5 };
+		if (spriteid === 'taurosblaze' || spriteid === 'tauros-blaze') return { spriteDir: 'sprites/gen5', spriteid: 'tauros-paldeablaze', x: 10, y: 5 };
+		if (spriteid === 'taurosaqua' || spriteid === 'tauros-aqua') return { spriteDir: 'sprites/gen5', spriteid: 'tauros-paldeaaqua', x: 10, y: 5 };
+		if (spriteid === 'venusaur-megax') return { spriteDir: 'sprites/gen5', spriteid: 'venusaur-gmax', x: 10, y: 5 };
 		if (spriteid === 'venusaur-megay') return { spriteDir: 'sprites/dex', spriteid: 'venusaur-mega', x: -2, y: -3 };
-		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/home-centered', spriteid: 'blastoise-gmax', x: 8, y: 10, h: 96 };
+		if (spriteid === 'blastoise-megax') return { spriteDir: 'sprites/gen5', spriteid: 'blastoise-gmax', x: 10, y: 5 };
 		if (spriteid === 'blastoise-megay') return { spriteDir: 'sprites/dex', spriteid: 'blastoise-mega', x: -2, y: -3 };
 		if (spriteid === 'muk') return { spriteDir: 'sprites/dex', spriteid: 'muk-alola', x: -2, y: -3 };
 		if (spriteid === 'muk-kanto') return { spriteDir: 'sprites/dex', spriteid: 'muk', x: -2, y: -3 };
-		if (spriteid === 'slowbro') return { spriteDir: 'sprites/home-centered', spriteid: 'slowbro-galar', x: 8, y: 10, h: 96 };
+		if (spriteid === 'slowbro') return { spriteDir: 'sprites/gen5', spriteid: 'slowbro-galar', x: 10, y: 5 };
 		if (spriteid === 'slowbro-kanto') return { spriteDir: 'sprites/dex', spriteid: 'slowbro', x: -2, y: -3 };
-		if (spriteid === 'slowking') return { spriteDir: 'sprites/home-centered', spriteid: 'slowking-galar', x: 8, y: 10, h: 96 };
+		if (spriteid === 'slowking') return { spriteDir: 'sprites/gen5', spriteid: 'slowking-galar', x: 10, y: 5 };
 		if (spriteid === 'slowking-johto') return { spriteDir: 'sprites/dex', spriteid: 'slowking', x: -2, y: -3 };
-		if (spriteid === 'farfetchd') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd-galar', x: -2, y: -3 };
+		if (spriteid === 'farfetchd') return { spriteDir: 'sprites/gen5', spriteid: 'farfetchd-galar', x: 10, y: 5 };
 		if (spriteid === 'farfetchd-kanto') return { spriteDir: 'sprites/dex', spriteid: 'farfetchd', x: -2, y: -3 };
 		if (spriteid === 'petrifearow') return { spriteDir: 'sprites/dex', spriteid: 'fearow', x: -2, y: -3 };
 		if (spriteid === 'paraspore') return { spriteDir: 'sprites/dex', spriteid: 'parasect', x: -2, y: -3 };
-		if (spriteid === 'koffing') return { spriteDir: 'sprites/home-centered', spriteid: 'koffing-galar', x: 8, y: 10, h: 96 };
-		if (spriteid === 'weezing') return { spriteDir: 'sprites/home-centered', spriteid: 'weezing-galar', x: 8, y: 10, h: 96 };
+		if (spriteid === 'koffing') return { spriteDir: 'sprites/dex', spriteid: 'koffing', x: -2, y: -3 };
+		if (spriteid === 'weezing') return { spriteDir: 'sprites/gen5', spriteid: 'weezing-galar', x: 10, y: 5 };
 		if (species.exists === false) return { spriteDir: 'sprites/gen5', spriteid: '0', x: 10, y: 5 };
 		if (Dex.afdMode) {
 			return {
@@ -998,17 +998,12 @@ export const Dex = new class implements ModdedDex {
 			species.id === "xerneasneutral") && ![
 			"floetteeternal", "pichuspikyeared", "pikachubelle", "pikachucosplay", "pikachulibre", "pikachuphd", "pikachupopstar", "pikachurockstar",
 		].includes(species.id) && !(species.isMega && species.gen === 9);
-		if (gen >= 8 && homeExists) {
-			spriteData.spriteDir = 'sprites/home-centered';
-			spriteData.x = 8;
-			spriteData.y = 10;
-			spriteData.h = 96;
-			return spriteData;
-		}
+		// sprites/home-centered no longer served by CDN; fall through to dex sprites
 		let xydexExists = (!species.isNonstandard || species.isNonstandard === 'Past' || species.isNonstandard === 'CAP') || [
 			"pikachustarter", "eeveestarter", "meltan", "melmetal", "pokestarufo", "pokestarufo2", "pokestarbrycenman", "pokestarmt", "pokestarmt2", "pokestargiant", "pokestarhumanoid", "pokestarmonster", "pokestarf00", "pokestarf002", "pokestarspirit",
 		].includes(species.id);
-		if (species.gen >= 8 && species.isNonstandard !== 'CAP') xydexExists = false;
+		// sprites/dex exists for Gen 8+ Pokémon too — keep xydexExists true for all
+		if (homeExists) xydexExists = true;
 		if (gen >= 6 && xydexExists) {
 			if (species.gen >= 7) {
 				spriteData.x = -6;

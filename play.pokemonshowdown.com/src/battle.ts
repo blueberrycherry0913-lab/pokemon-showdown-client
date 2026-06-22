@@ -2888,9 +2888,11 @@ export class Battle {
 			// Keyed by args[2] (the raw protocol string) since effect.id derivation varies.
 			if (!kwArgs.already) {
 				const markedHunterName = ofpoke ? ofpoke.name : 'Hunter';
+				const charmerName = ofpoke ? ofpoke.name : 'the Charmer';
 				const volatileInfoMap: {[key: string]: [string, string, string]} = {
 					'confusion':             ['#AA4477', 'Confused',        '2 turns • Uses a random move instead of chosen'],
 					'interlocked':           ['#5566AA', 'Interlocked',     '3 turns • Both Pokémon trapped • Must target each other'],
+					'move: Charmed':         ['#EE66AA', 'Charmed',         `Charmed by ${charmerName} • 3 turns • Damaging moves vs ${charmerName} deal ×0.25`],
 					'move: Marked':          ['#BB6622', 'Marked',          `Marked by ${markedHunterName} • Hunter deals ×1.5 damage • Cannot miss`],
 					'move: Mind Controlled': ['#9944BB', 'Mind Controlled', 'Opponent picks this Pokémon\'s moves for 2 actions'],
 					'Charged Spines':        ['#EEB800', 'Charged Up',      '2 turns • All moves become Electric-type'],

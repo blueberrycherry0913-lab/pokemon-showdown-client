@@ -747,7 +747,8 @@ export class Side {
 			this.sideConditions[condition] = [effect.name, 1, 5, 0];
 			break;
 		case 'tailwind':
-			this.sideConditions[condition] = [effect.name, 1, this.battle.gen >= 5 ? persist ? 6 : 4 : persist ? 5 : 3, 0];
+			// Testing Standard: Tailwind lasts 5 turns (7 with Persistent), not the canon 4.
+			this.sideConditions[condition] = [effect.name, 1, this.battle.gen >= 5 ? persist ? 7 : 5 : persist ? 5 : 3, 0];
 			break;
 		case 'luckychant':
 			this.sideConditions[condition] = [effect.name, 1, 5, 0];

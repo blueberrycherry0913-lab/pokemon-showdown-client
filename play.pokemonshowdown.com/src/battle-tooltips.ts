@@ -802,7 +802,7 @@ export class BattleTooltips {
 			let domainAccPart = '';
 			if (!this.battle.hasPseudoWeather('Anti-Domain')) {
 				for (const [domainName, typeName] of domainAccEntries) {
-					if (typeName === moveType && this.pokemonHasType(pokemon, typeName as Dex.TypeName) &&
+					if (typeName === moveType && this.pokemonHasType(pokemon, typeName as Dex.TypeName, this.getPokemonTypes(pokemon, true)) &&
 						this.battle.hasPseudoWeather(domainName)) {
 						const boosted = Math.round(accuracy.value * 1.2 * 10) / 10;
 						domainAccPart = ` × ${domainName} (×1.2) = ${boosted}%`;
@@ -1588,7 +1588,7 @@ export class BattleTooltips {
 		];
 		if (!this.battle.hasPseudoWeather('Anti-Domain')) {
 			for (const [domainName, typeName] of domainTypeEntries) {
-				if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName)) {
+				if (this.battle.hasPseudoWeather(domainName) && this.pokemonHasType(pokemon, typeName as Dex.TypeName, this.getPokemonTypes(pokemon, true))) {
 					stats.atk = Math.floor(stats.atk * 1.2);
 					stats.def = Math.floor(stats.def * 1.2);
 					stats.spa = Math.floor(stats.spa * 1.2);

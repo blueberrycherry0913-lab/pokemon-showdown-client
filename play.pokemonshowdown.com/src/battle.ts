@@ -2891,6 +2891,7 @@ export class Battle {
 				const charmerName = ofpoke ? ofpoke.name : 'the Charmer';
 				const volatileInfoMap: {[key: string]: [string, string, string]} = {
 					'confusion':             ['#AA4477', 'Confused',        '2 turns • Uses a random move instead of chosen'],
+					'deathgrip':             ['#993333', 'Death Grip',      '3 turns • Both Pokémon trapped • Must target each other • Trapped target loses 1/8 HP/turn'],
 					'interlocked':           ['#5566AA', 'Interlocked',     '3 turns • Both Pokémon trapped • Must target each other'],
 					'move: Charmed':         ['#EE66AA', 'Charmed',         `Charmed by ${charmerName} • 3 turns • Must target ${charmerName} • Damaging moves vs ${charmerName} deal ×0.25`],
 					'move: Marked':          ['#BB6622', 'Marked',          `Marked by ${markedHunterName} • Hunter deals ×1.5 damage • Cannot miss`],

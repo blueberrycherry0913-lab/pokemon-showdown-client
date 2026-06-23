@@ -3078,8 +3078,13 @@ export class BattleTooltips {
 		// must NOT appear in the "Possible abilities" list for the basic ability slot.
 		let awakenedAbilityName = '';
 		if (isChampions) {
+			// Use getSpeciesForme() (not the raw speciesForme field) so a transformed
+			// Pokemon (Ditto/Imposter) derives its awakened ability from the COPIED species.
+			// After |-transform| the client sets volatiles.formechange but leaves the raw
+			// speciesForme as "Ditto", so the raw field would wrongly show Ditto's own
+			// awakened (Imposter) instead of the copied target's (e.g. Annihilape's Defiant).
 			const species = this.battle.dex.species.get(
-				clientPokemon?.speciesForme || serverPokemon?.speciesForme || serverPokemon?.name || ''
+				clientPokemon?.getSpeciesForme() || serverPokemon?.speciesForme || serverPokemon?.name || ''
 			);
 			const awakenedId = species?.abilities?.['H'];
 			if (awakenedId) awakenedAbilityName = this.battle.dex.abilities.get(awakenedId).name;

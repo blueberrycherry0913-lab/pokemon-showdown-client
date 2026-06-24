@@ -666,7 +666,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				</label>}
 				{canQuickTunnel && <label class={`megaevo${choices.current.quickTunnel ? ' cur' : ''}`}>
 					<input type="checkbox" name="quicktunnel" checked={choices.current.quickTunnel} onChange={this.toggleBoostedMove} /> {}
-					Quick Tunnel
+					Escape Tunnel
 				</label>}
 				{/* §11 Tera Crystal: in-battle type picker — a grid of type icons shown when engaged. */}
 				{canTerastallize && choices.current.tera && <div class="teratype-grid" style="white-space:normal;max-width:252px">
@@ -919,7 +919,7 @@ class BattlePanel extends PSRoomPanel<BattleRoom> {
 				if (choice.ultra) buf.push(<strong>Ultra</strong>, ` Burst and `);
 				if (choice.tera) buf.push(`Terastallize (`, <strong>{active?.canTerastallize || '???'}</strong>, `) and `);
 				if (choice.telepathy) buf.push(<strong>Telepathy</strong>, ` Foresight and `);
-				if (choice.quickTunnel) buf.push(<strong>Quick Tunnel</strong>, ` and `);
+				if (choice.quickTunnel) buf.push(<strong>Escape Tunnel</strong>, ` and `);
 				if (choice.max && active?.canDynamax) buf.push(active?.gigantamax ? `Gigantamax and ` : `Dynamax and `);
 				buf.push(`use `, <strong>{choices.currentMove(choice, i)?.name}</strong>);
 				if (choice.targetLoc > 0 || battle.gameType === 'freeforall') {

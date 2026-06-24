@@ -848,7 +848,7 @@
 					// Quick Tunneler: a pre-turn toggle (like Tera/Mega). When engaged, a chosen
 					// contact Ground-type move will switch this Pokémon out after it lands.
 					var tunnelEngaged = !!(this.choice && this.choice.tunnel);
-					checkboxes.push('<label class="megaevo"><input type="checkbox" name="quicktunnel" ' + (tunnelEngaged ? 'checked' : '') + ' />&nbsp;Quick&nbsp;Tunnel</label>');
+					checkboxes.push('<label class="megaevo"><input type="checkbox" name="quicktunnel" ' + (tunnelEngaged ? 'checked' : '') + ' />&nbsp;Escape&nbsp;Tunnel</label>');
 				}
 				if (checkboxes.length) {
 					moveMenu += '<div class="megaevo-box">' + checkboxes.join('') + '</div>';

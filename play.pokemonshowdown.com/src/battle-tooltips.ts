@@ -1547,7 +1547,7 @@ export class BattleTooltips {
 			}
 		}
 
-		const sideConditions = this.battle.mySide.sideConditions;
+		const sideConditions = (clientPokemon?.side || this.battle.mySide).sideConditions;
 		if (sideConditions['tailwind']) {
 			speedModifiers.push(2);
 		}

@@ -633,6 +633,7 @@
 			var gigantamax = curActive.maxMoves && curActive.maxMoves.gigantamax;
 			var canTerastallize = curActive.canTerastallize || switchables[pos].canTerastallize;
 			var canTelepathy = curActive.canTelepathy || switchables[pos].canTelepathy;
+			var canQuickTunnel = curActive.canQuickTunnel || switchables[pos].canQuickTunnel;
 			if (canZMove && typeof canZMove[0] === 'string') {
 				canZMove = _.map(canZMove, function (move) {
 					return { move: move, target: Dex.moves.get(move).target };
@@ -842,6 +843,12 @@
 					}
 					teraControl += '</div>';
 					checkboxes.push(teraControl);
+				}
+				if (canQuickTunnel) {
+					// Quick Tunneler: a pre-turn toggle (like Tera/Mega). When engaged, a chosen
+					// contact Ground-type move will switch this Pokémon out after it lands.
+					var tunnelEngaged = !!(this.choice && this.choice.tunnel);
+					checkboxes.push('<label class="megaevo"><input type="checkbox" name="quicktunnel" ' + (tunnelEngaged ? 'checked' : '') + ' />&nbsp;Quick&nbsp;Tunnel</label>');
 				}
 				if (checkboxes.length) {
 					moveMenu += '<div class="megaevo-box">' + checkboxes.join('') + '</div>';
@@ -1390,12 +1397,17 @@
 					(this.choice.teraType ? ' terastallize ' + toID(this.choice.teraType) : ' terastallize') : '';
 				var isTelepathy = !!(this.$('input[name=telepathy]')[0] || '').checked;
 				var telepathySuffix = isTelepathy ? ' telepathy' : '';
+				// Quick Tunneler: read the toggle and persist it on this.choice so it survives
+				// a movetarget re-render. Sent as a ' tunnel' suffix the server parses.
+				var isQuickTunnel = !!(this.$('input[name=quicktunnel]')[0] || '').checked;
+				if (this.choice) this.choice.tunnel = isQuickTunnel;
+				var tunnelSuffix = isQuickTunnel ? ' tunnel' : '';
 
 				var target = e.getAttribute('data-target');
 				var choosableTargets = { normal: 1, any: 1, adjacentAlly: 1, adjacentAllyOrSelf: 1, adjacentFoe: 1 };
 				if (this.battle.gameType === 'freeforall') delete choosableTargets['adjacentAllyOrSelf'];
 
-				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix + telepathySuffix);
+				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix + telepathySuffix + tunnelSuffix);
 				if (nearActive.length > 1 && target in choosableTargets) {
 					this.choice.type = 'movetarget';
 					this.choice.moveTarget = target;

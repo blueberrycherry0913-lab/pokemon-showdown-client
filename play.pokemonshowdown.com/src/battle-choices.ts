@@ -55,6 +55,8 @@ export interface BattleRequestActivePokemon {
 	canMegaEvoY?: boolean;
 	canUltraBurst?: boolean;
 	canTerastallize?: string;
+	canTelepathy?: boolean;
+	canQuickTunnel?: boolean;
 	trapped?: boolean;
 	maybeTrapped?: boolean;
 	maybeDisabled?: boolean;
@@ -120,6 +122,8 @@ interface BattleMoveChoice {
 	/** §11 Tera Crystal: the in-battle-chosen Tera type (canonical Name, e.g. "Fire"). */
 	teraType?: string;
 	telepathy: boolean;
+	/** Quick Tunneler: pre-turn toggle; contact Ground-type moves self-switch when set. */
+	quickTunnel: boolean;
 }
 interface BattleSwitchChoice {
 	choiceType: 'switch' | 'team';
@@ -156,6 +160,7 @@ export class BattleChoiceBuilder {
 		max: false,
 		tera: false,
 		telepathy: false,
+		quickTunnel: false,
 	};
 	alreadySwitchingIn: number[] = [];
 	alreadyMega = false;
@@ -285,6 +290,7 @@ export class BattleChoiceBuilder {
 				max: false,
 				tera: false,
 				telepathy: false,
+				quickTunnel: false,
 			};
 		} else if (choice.choiceType === 'switch' || choice.choiceType === 'team') {
 			if (this.currentMoveRequest()?.trapped) {
@@ -397,6 +403,7 @@ export class BattleChoiceBuilder {
 				max: false,
 				tera: false,
 				telepathy: false,
+				quickTunnel: false,
 			};
 			while (true) {
 				// If data ends with a number, treat it as a target location.
@@ -443,6 +450,9 @@ export class BattleChoiceBuilder {
 				} else if (choice.endsWith(' telepathy')) {
 					current.telepathy = true;
 					choice = choice.slice(0, -10);
+				} else if (choice.endsWith(' tunnel')) {
+					current.quickTunnel = true;
+					choice = choice.slice(0, -7);
 				} else {
 					break;
 				}
@@ -587,7 +597,8 @@ export class BattleChoiceBuilder {
 			(choice.z ? ' zmove' : '') +
 			// §11 Tera Crystal: emit the chosen type (lowercased ID) when one was picked.
 			(choice.tera ? (choice.teraType ? ' terastallize ' + toID(choice.teraType) : ' terastallize') : '') +
-			(choice.telepathy ? ' telepathy' : '');
+			(choice.telepathy ? ' telepathy' : '') +
+			(choice.quickTunnel ? ' tunnel' : '');
 	}
 
 	/**

@@ -2457,6 +2457,9 @@ export class Battle {
 				case 'airballoon':
 					this.scene.resultAnim(poke, 'Balloon', 'good');
 					break;
+				case 'terastallizationcrystal':
+					this.scene.resultAnim(poke, 'Tera Crystal', 'good');
+					break;
 				}
 			}
 			this.log(args, kwArgs);

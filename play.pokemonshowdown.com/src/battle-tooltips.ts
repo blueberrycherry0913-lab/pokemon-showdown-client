@@ -1549,7 +1549,7 @@ export class BattleTooltips {
 
 		const sideConditions = (clientPokemon?.side || this.battle.mySide).sideConditions;
 		if (sideConditions['tailwind']) {
-			speedModifiers.push(2);
+			speedModifiers.push(1.5);
 		}
 		if (sideConditions['grasspledge']) {
 			speedModifiers.push(0.25);

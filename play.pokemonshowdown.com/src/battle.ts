@@ -95,6 +95,10 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 	itemEffect = '';
 	prevItem = '';
 	prevItemEffect = '';
+	// Second held-item display slot (items can be acquired in-battle via theft/Bestow; cap 2).
+	item2 = '';
+	itemEffect2 = '';
+	prevItem2 = '';
 	terastallized = '';
 	teraType = '';
 
@@ -1064,6 +1068,8 @@ export interface ServerPokemon extends PokemonDetails, PokemonHealth {
 	ability?: string;
 	/** currently an ID, will revise to name */
 	item: string;
+	/** second held item (slot 2), only present when the Pokémon holds two items */
+	item2?: string;
 	/** currently an ID, will revise to name */
 	pokeball: string;
 	/** always the Tera Type of the Pokemon, regardless of whether it is terastallized or not */
@@ -2399,6 +2405,12 @@ export class Battle {
 					throw new Error('No Pokemon in -item message');
 				}
 			}
+			// Two-item support: if this Pokémon already displays a different item, keep it in the
+			// second display slot rather than overwriting it (the new item becomes the primary).
+			if (poke.item && poke.item !== item.name) {
+				poke.item2 = poke.item;
+				poke.itemEffect2 = poke.itemEffect;
+			}
 			poke.item = item.name;
 			poke.itemEffect = '';
 			poke.removeVolatile('airballoon' as ID);
@@ -2470,10 +2482,24 @@ export class Battle {
 			let item = Dex.items.get(args[2]);
 			let effect = Dex.getEffect(kwArgs.from);
 			if (this.gen > 4 || effect.id !== 'knockoff') {
-				poke.item = '';
-				poke.itemEffect = '';
-				poke.prevItem = item.name;
-				poke.prevItemEffect = '';
+				if (poke.item2 && poke.item2 === item.name) {
+					// the second-slot item left; primary stays
+					poke.prevItem2 = poke.item2;
+					poke.item2 = '';
+					poke.itemEffect2 = '';
+				} else {
+					poke.item = '';
+					poke.itemEffect = '';
+					poke.prevItem = item.name;
+					poke.prevItemEffect = '';
+					// promote any second item into the primary display slot
+					if (poke.item2) {
+						poke.item = poke.item2;
+						poke.itemEffect = poke.itemEffect2;
+						poke.item2 = '';
+						poke.itemEffect2 = '';
+					}
+				}
 			}
 			poke.removeVolatile('airballoon' as ID);
 			poke.addVolatile('itemremoved' as ID);

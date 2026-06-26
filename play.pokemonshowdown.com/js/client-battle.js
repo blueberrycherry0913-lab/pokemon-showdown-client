@@ -602,6 +602,31 @@
 				return;
 			}
 
+			// Fling item picker: when a Pokémon holds two items and chooses Fling, show the two
+			// held items as move slots 1 & 2 (reusing the move-button layout / dynamic positioning).
+			if (type === 'flingitem') {
+				var flPos = this.choice.choices.length - 1; // the Fling move was already pushed for this active slot
+				var flPoke = this.battle.myPokemon && this.battle.myPokemon[flPos];
+				if (!flPoke) { this.choice.type = 'move'; return; }
+				var flItems = [flPoke.item, flPoke.item2];
+				var flButtons = '';
+				for (var fi = 0; fi < flItems.length; fi++) {
+					var flItem = Dex.items.get(flItems[fi]);
+					var flFling = flItem.fling;
+					var flBp = flFling ? flFling.basePower : 0;
+					flButtons += '<button class="movebutton" name="chooseFlingItem" value="' + (fi + 1) + '">' +
+						BattleLog.escapeHTML(flItem.name) +
+						'<br /><small class="type">Fling</small> <small class="pp">' + (flBp ? flBp + ' BP' : '&ndash;') + '</small>&nbsp;</button> ';
+				}
+				this.$controls.html(
+					'<div class="controls">' +
+					'<div class="whatdo"><button name="clearChoice">Back</button> Fling which item? <span style="float:right">' + this.getTimerHTML() + '</span></div>' +
+					'<div class="movecontrols"><div class="movemenu">' + flButtons + '</div></div>' +
+					'</div>'
+				);
+				return;
+			}
+
 			var switchables = this.request && this.request.side ? this.battle.myPokemon : [];
 
 			if (type !== 'movetarget') {
@@ -1408,6 +1433,17 @@
 				if (this.battle.gameType === 'freeforall') delete choosableTargets['adjacentAllyOrSelf'];
 
 				this.choice.choices.push('move ' + pos + (isMega ? ' mega' : '') + (isMegaX ? ' megax' : isMegaY ? ' megay' : '') + (isZMove ? ' zmove' : '') + (isUltraBurst ? ' ultra' : '') + (isDynamax ? ' dynamax' : '') + teraSuffix + telepathySuffix + tunnelSuffix);
+				// Fling with two held items: go to an item picker (shows the two items as move slots).
+				var moveId = toID(e.getAttribute('data-move'));
+				var flChoiceIndex = this.choice.choices.length - 1; // active slot index = choices made so far
+				var flPoke = this.battle.myPokemon && this.battle.myPokemon[flChoiceIndex];
+				if (moveId === 'fling' && flPoke && flPoke.item && flPoke.item2) {
+					// Remember if a target still needs choosing (doubles); pick the item first.
+					this.choice.flingTarget = (nearActive.length > 1 && target in choosableTargets) ? target : null;
+					this.choice.type = 'flingitem';
+					this.updateControlsForPlayer();
+					return false;
+				}
 				if (nearActive.length > 1 && target in choosableTargets) {
 					this.choice.type = 'movetarget';
 					this.choice.moveTarget = target;
@@ -1421,6 +1457,23 @@
 		chooseMoveTarget: function (posString) {
 			this.choice.choices[this.choice.choices.length - 1] += ' ' + posString;
 			this.chooseMove();
+		},
+		// Fling item picker: append the chosen slot (server reads ' fling1'/' fling2'), then
+		// either finish or, in doubles, proceed to the target selector.
+		chooseFlingItem: function (slot) {
+			if (!this.choice) return;
+			this.tooltips.hideTooltip();
+			this.choice.choices[this.choice.choices.length - 1] += ' fling' + slot;
+			this.choice.type = 'move';
+			if (this.choice.flingTarget) {
+				var tgt = this.choice.flingTarget;
+				this.choice.flingTarget = null;
+				this.choice.type = 'movetarget';
+				this.choice.moveTarget = tgt;
+				this.updateControlsForPlayer();
+				return;
+			}
+			this.endChoice();
 		},
 		// §11 Tera Crystal: toggle Terastallization on/off. Engaging reveals the type-icon
 		// grid (rendered in updateMoveControls); the chosen type defaults to the preset until

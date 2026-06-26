@@ -1076,6 +1076,11 @@ export class BattleTooltips {
 				itemEffect += clientPokemon.prevItemEffect ? prevItem + ' was ' + clientPokemon.prevItemEffect : 'was ' + prevItem;
 			}
 			if (serverPokemon.item) item = this.battle.dex.items.get(serverPokemon.item).name;
+			// Second held item (slot 2) — authoritative + in slot order from the request data.
+			if (serverPokemon.item2) {
+				const item2name = this.battle.dex.items.get(serverPokemon.item2).name;
+				item = item && item !== 'None' ? item + ', ' + item2name : item2name;
+			}
 			if (itemEffect) itemEffect = ' (' + itemEffect + ')';
 			if (item) itemText = '<small>Item:</small> ' + item + itemEffect;
 		} else if (clientPokemon) {
@@ -1088,6 +1093,10 @@ export class BattleTooltips {
 				itemEffect += clientPokemon.prevItemEffect ? prevItem + ' was ' + clientPokemon.prevItemEffect : 'was ' + prevItem;
 			}
 			if (pokemon.item) item = this.battle.dex.items.get(pokemon.item).name;
+			if (clientPokemon.item2) {
+				const item2name = this.battle.dex.items.get(clientPokemon.item2).name;
+				item = item && item !== 'None' ? item + ', ' + item2name : item2name;
+			}
 			if (itemEffect) itemEffect = ' (' + itemEffect + ')';
 			if (item) itemText = '<small>Item:</small> ' + item + itemEffect;
 		}

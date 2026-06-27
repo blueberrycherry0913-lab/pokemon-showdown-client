@@ -1956,6 +1956,20 @@ export class BattleTooltips {
 					if (value.abilityModify(0, 'Galvanize')) moveType = 'Electric';
 					if (value.abilityModify(0, 'Pixilate')) moveType = 'Fairy';
 					if (value.abilityModify(0, 'Refrigerate')) moveType = 'Ice';
+					// Custom -ize abilities (nums 10037–10049)
+					if (value.abilityModify(0, 'Pyrolize')) moveType = 'Fire';
+					if (value.abilityModify(0, 'Hydrate')) moveType = 'Water';
+					if (value.abilityModify(0, 'Verdant')) moveType = 'Grass';
+					if (value.abilityModify(0, 'Brawler')) moveType = 'Fighting';
+					if (value.abilityModify(0, 'Toxify')) moveType = 'Poison';
+					if (value.abilityModify(0, 'Terraform')) moveType = 'Ground';
+					if (value.abilityModify(0, 'Cerebrate')) moveType = 'Psychic';
+					if (value.abilityModify(0, 'Infestate')) moveType = 'Bug';
+					if (value.abilityModify(0, 'Petrify')) moveType = 'Rock';
+					if (value.abilityModify(0, 'Spectralize')) moveType = 'Ghost';
+					if (value.abilityModify(0, 'Blacken')) moveType = 'Dark';
+					if (value.abilityModify(0, 'Reinforce')) moveType = 'Steel';
+					if (value.abilityModify(0, 'Astralize')) moveType = 'Cosmic' as Dex.TypeName;
 				}
 				if (value.abilityModify(0, 'Normalize')) moveType = 'Normal';
 			}
@@ -2685,6 +2699,20 @@ export class BattleTooltips {
 				value.abilityModify(1.2, "Galvanize");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Pixilate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Refrigerate");
+				// Custom -ize abilities (nums 10037–10049)
+				value.abilityModify(1.2, "Pyrolize");
+				value.abilityModify(1.2, "Hydrate");
+				value.abilityModify(1.2, "Verdant");
+				value.abilityModify(1.2, "Brawler");
+				value.abilityModify(1.2, "Toxify");
+				value.abilityModify(1.2, "Terraform");
+				value.abilityModify(1.2, "Cerebrate");
+				value.abilityModify(1.2, "Infestate");
+				value.abilityModify(1.2, "Petrify");
+				value.abilityModify(1.2, "Spectralize");
+				value.abilityModify(1.2, "Blacken");
+				value.abilityModify(1.2, "Reinforce");
+				value.abilityModify(1.2, "Astralize");
 			}
 			if (this.battle.gen > 6) {
 				value.abilityModify(1.2, "Normalize");

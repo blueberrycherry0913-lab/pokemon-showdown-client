@@ -2315,7 +2315,7 @@ export class Battle {
 				'tox':  ['#A4009A', 'Toxic',       '1/10 HP/turn • −50% SpD'],
 				'cor':  ['#A4009A', 'Corroded',    '1/16 HP/turn • −25% Def'],
 				'mlt':  ['#A4009A', 'Melting',     '1/10 HP/turn • −50% Def'],
-				'slp':  ['#AA77AA', 'Asleep',      '2-turn lockout • +1/16 HP healed/turn • +10% dmg taken'],
+				'slp':  ['#AA77AA', 'Asleep',      '2-turn lockout • +1/10 HP healed/turn • +10% dmg taken'],
 				'stun': ['#9AA400', 'Stunned',     '−25% Spe • Pivot moves blocked'],
 				'par':  ['#9AA400', 'Paralyzed',   'First action skipped • −50% Spe • Priority −1'],
 				'frb':  ['#009AA4', 'Frostbitten', '1/16 HP/turn • −25% SpA'],

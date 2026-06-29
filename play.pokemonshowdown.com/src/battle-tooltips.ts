@@ -2635,7 +2635,7 @@ export class BattleTooltips {
 			value.abilityModify(1.5, "Flare Boost");
 		}
 		if (move.flags['punch']) {
-			value.abilityModify(1.2, 'Iron Fist');
+			value.abilityModify(1.5, 'Iron Fist');
 		}
 		if (move.flags['pulse']) {
 			value.abilityModify(1.5, "Mega Launcher");
@@ -2672,6 +2672,24 @@ export class BattleTooltips {
 		}
 		if (move.flags['slicing']) {
 			value.abilityModify(1.5, "Sharpness");
+		}
+		if (move.flags['kicking']) {
+			value.abilityModify(1.5, "Iron Foot");
+		}
+		if (move.flags['beam'] || move.flags['heavyprojectile']) {
+			value.abilityModify(1.3, "Heavy Cannon");
+		}
+		if (move.flags['pulse']) {
+			value.abilityModify(1.5, "Pulse Generator");
+		}
+		if (move.flags['bite']) {
+			value.abilityModify(1.1, "Death Roll");
+		}
+		if (move.category !== 'Status') {
+			value.abilityModify(1.25, "Generalist");
+		}
+		if (pokemon.status === 'slp') {
+			value.abilityModify(2, "Angry Sleeper");
 		}
 		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
 			if (pokemon.volatiles[`fallen${i}`]) {
@@ -3007,9 +3025,11 @@ export class BattleTooltips {
 		}
 
 		if (itemName === 'Muscle Band' && move.category === 'Physical' ||
-			itemName === 'Wise Glasses' && move.category === 'Special' ||
-			itemName === 'Punching Glove' && move.flags['punch']) {
+			itemName === 'Wise Glasses' && move.category === 'Special') {
 			value.itemModify(1.1);
+		}
+		if (itemName === 'Punching Glove' && move.flags['punch'] && value.value) {
+			value.abilityMods.push({label: 'Punching Glove', factor: 1.1});
 		}
 
 		// Reworked Thick Club: +50% BP to Contact and Bone moves for Marowak/Cubone/Osteokhan.

@@ -1830,9 +1830,9 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 			Cosmic:   ['flicker', 'gravwell', 'meteormash', 'paleorbit', 'swift', 'moonblast'],
 			Dark:     ['feintattack', 'assurance', 'nightslash', 'rumor', 'nightdaze', 'darkpulse'],
 			Dragon:   ['rumble', 'breakingswipe', 'dragonhammer', 'fizzle', 'wyrmsurge', 'dragonpulse'],
-			Electric: ['sparking', 'wildcharge', 'supercellslam', 'thundershock', 'shockwave', 'thunderbolt'],
+			Electric: ['sparking', 'wildcharge', 'supercellslam', 'shock', 'shockwave', 'thunderbolt'],
 			Fairy:    ['pixiewelt', 'glimmeringrush', 'playrough', 'fairywind', 'faecurrent', 'dazzlinggleam'],
-			Fighting: ['rocksmash', 'fury', 'strength', 'fightingspirit', 'chistrike', 'aurasphere'],
+			Fighting: ['smash', 'fury', 'truestrength', 'fightingspirit', 'chistrike', 'aurasphere'],
 			Fire:     ['heater', 'flamewheel', 'firelash', 'ember', 'searingshot', 'flamethrower'],
 			Flying:   ['breezeboost', 'skystrike', 'aerialace', 'gust', 'aircutter', 'airslash'],
 			Ghost:    ['astonish', 'shadowstrike', 'phantomforce', 'grudge', 'bittermalice', 'shadowball'],
@@ -1849,7 +1849,9 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		const isChampions = this.formatType === 'champions' || format.includes('testingstandard') || format.includes('mythicsandmegas');
 		const standardMoveIdSet = new Set<string>();
 		if (isChampions) {
-			const baseSpeciesForStd = dex.species.get(species.baseSpecies);
+			const stdLearnsetid = this.firstLearnsetid(species.id);
+			const baseSpeciesForStd = (stdLearnsetid && dex.species.get(stdLearnsetid).exists) ?
+				dex.species.get(stdLearnsetid) : species;
 			for (const type of baseSpeciesForStd.types) {
 				if (STANDARD_MOVES_BY_TYPE[type]) {
 					for (const id of STANDARD_MOVES_BY_TYPE[type]) standardMoveIdSet.add(id);
@@ -2030,7 +2032,9 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		if (isChampions && standardMoveIdSet.size) {
 			standardMoves.push(['header', "Standard Moves"]);
 			// Emit in type order: base type 1 moves first, then base type 2
-			const baseSpeciesForStd = dex.species.get(species.baseSpecies);
+			const stdLearnsetid = this.firstLearnsetid(species.id);
+			const baseSpeciesForStd = (stdLearnsetid && dex.species.get(stdLearnsetid).exists) ?
+				dex.species.get(stdLearnsetid) : species;
 			const emitted = new Set<string>();
 			for (const type of baseSpeciesForStd.types) {
 				if (STANDARD_MOVES_BY_TYPE[type]) {
